@@ -1,0 +1,284 @@
+/* *{
+    color: white;
+}
+
+body{
+    background-color: aqua;
+    background-size: cover;
+    font-family: Arial;
+} */
+.wrap{
+    max-width: 350px;
+    padding: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background: #02339F;
+    margin-top: 110px;
+    /* margin-left: 900px; */
+    border-radius: 20px;
+    color: #fff;
+    /* position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); */
+}
+/* form{
+    margin-top:50px;
+
+} */
+input{
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    border: none;
+    outline: none;
+    border:1px solid gray;
+    font-size: 15px;
+    border-radius: 5px;
+}
+h2{
+    margin-bottom: 10px;
+    padding: 0;
+    font-size: 2em;
+    text-align: center;
+}
+
+
+input[type="submit"] {
+    font-size: 16px;
+    margin-top: 10px;
+    color: #fff;
+    font-weight: bold;
+    /* background: #cc0033; */
+    /* border: 1px solid #fff; */
+    cursor: pointer;
+}
+
+/* input[type="submit"]:hover{
+    background: orange;
+
+} */
+
+.openbtn{
+    /* background: #f1f1f1; */
+    border: none;
+    /* padding: 10px 15px;
+    font-size: 20px; */
+    cursor: pointer;
+    /* float: right; */
+}
+
+.openbtn:hover{
+    background: #bbb;
+
+}
+
+.overlay{
+    height: 100%;
+    width: 100%;
+    /* margin-left: 120px; */
+    display: none;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.7);
+}
+
+/* .closebtn{
+    position: absolute;
+    top: 20px;
+    right: 45px;
+    font-size: 60px;
+    cursor: pointer;
+    color: #fff;
+    
+}
+
+.closebtn:hover{
+    color:#ccc
+} */
+
+.confirm{
+    margin-top: 20px;
+    background-color: #66BB66;
+}
+
+.confirm:hover{
+    background-color: #559b55;
+}
+
+.cancel{
+    background-color: #EE4444;
+}
+
+.cancel:hover{
+    background-color: #a12f2f;
+}
+
+.buttons {
+    /* width: 200px;
+    margin: 0 auto;
+    display: inline; */
+
+    /* text-align: center;
+    align-items: center;
+    flex-direction: row; */
+
+    position: relative;
+    /* right: 100px; */
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    /* float: right; */
+    
+}
+    
+.action_btn {
+
+    width: 200px;
+    margin: 0 auto;
+    display: inline;
+    margin: 10px;
+}
+
+/* QR Button */
+
+.buttonQR {
+    width: 45%;
+    align-items: center;
+    /* text-align: center; */
+    flex-direction:column;
+    /* float: center; */
+    margin-left: 80px;
+    /* display: flex; */
+}
+
+/* #qr{
+        text-align: center;
+    align-items: center;
+    flex-direction:column;
+} */
+
+
+/* From Dashboard CSS */
+
+#clearh1{
+    color: #FFCC66;
+    font-size: 2em;
+    text-align: center;
+}
+
+#historyh1{
+    color: #FFCC66;
+    font-size: 2em;
+    text-align: center;
+}
+
+/* #generateh1{
+    color: #FFCC66;
+    font-size: 2em;
+    text-align: center;
+} */
+
+
+/* From Borrow CSS */
+
+ /* TextField Numbers */
+
+ #number {
+    width: 25%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+
+@media (max-width: 780px) {
+    #number{
+        width: 100%;
+    }
+}
+
+#reserveh1{
+    color: #FFCC66;
+    font-size: 2em;
+    text-align: center;
+}
+
+#reserveh2{
+    margin: 0;
+    padding: 0;
+    font-size: 25px;
+    text-align: center;
+}
+
+#backpackh1{
+    /* color: #FFCC66; */
+    font-size: 2em;
+    text-align: center;
+}
+
+/* From Return CSS */
+
+#markh1{
+    color: #FFCC66 ;
+    font-size: 2em;
+    text-align: center;
+}
+
+#markh2{
+    margin: 0;
+    padding: 0;
+    font-size: 25px;
+    text-align: center;
+}
+
+#returnh1{
+    color: #FFCC66 ;
+    font-size: 2em;
+    text-align: center;
+}
+
+#returnh2{
+    margin: 0;
+    padding: 0;
+    font-size: 25px;
+    text-align: center;
+}
+
+
+/* From Inventory CSS */
+
+#deleteh1{
+    color: #FFCC66 ;
+    font-size: 2em;
+    text-align: center;
+}
+
+#deleteh2{
+    margin: 0;
+    padding: 0;
+    font-size: 25px;
+    text-align: center;
+}
+
+/* From Userreserve CSS */
+
+#userh1{
+    color: #FFCC66;
+    font-size: 2em;
+    text-align: center;
+}
+
+#userh2{
+    margin: 0;
+    padding: 0;
+    font-size: 25px;
+    text-align: center;
+}
