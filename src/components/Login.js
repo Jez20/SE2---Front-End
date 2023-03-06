@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import axios from "axios"
-import { withRouter } from 'react-router-dom';
 //import { getMyData } from './api';
-//import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../css/login.css'
 
 
@@ -28,6 +29,7 @@ function Login() {
   const[email, setEmail] = useState("")
   const[password, setPass] = useState("")
   //const history = useHistory()
+  
 
   function handleEmailChange(event){
     setEmail(event.target.value);
@@ -49,7 +51,7 @@ function Login() {
     const response = await axios.post("http://127.0.0.1:8000/login/", data);
     console.log(response.data)
     console.log(document.cookie)
-    window.location.href = '/Login';
+    window.location.href = '/Borrow';
     //const sessionId = response.headers.get('sessionid');
     //console.log(`Session ID: ${sessionId}`);
     //props.history.push('/Index.js');
@@ -58,6 +60,7 @@ function Login() {
   }
   catch (error){
     console.error(error)
+    toast.error('Invalid email or password');
   }
 }
 
@@ -85,6 +88,7 @@ return (
                 value = {email}
                 onChange={handleEmailChange}
                 id="email"
+                required
               />
             </div>
             <div className="form-group last mb-3">
@@ -96,6 +100,7 @@ return (
                 value = {password}
                 onChange= {handlePassword}
                 id="password"
+                required
               />
             </div>
             <input
@@ -105,7 +110,7 @@ return (
             />
             <div className="d-flex mb-5 align-items-center"></div>
             <p className="text-center">
-              <a href="#" onclick={myFunction} className="forgot-pass">
+              <a href="#" onClick={myFunction} className="forgot-pass">
                 Don't Have an Account Yet?
               </a>
             </p>
@@ -120,6 +125,7 @@ return (
       </div>
     </div>
   </div>
+  <ToastContainer />
 </div>
 
 )
