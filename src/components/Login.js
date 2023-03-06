@@ -49,7 +49,7 @@ function Login() {
     const response = await axios.post("http://127.0.0.1:8000/login/", data);
     console.log(response.data)
     console.log(document.cookie)
-    window.location.href = '/';
+    window.location.href = '/Login';
     //const sessionId = response.headers.get('sessionid');
     //console.log(`Session ID: ${sessionId}`);
     //props.history.push('/Index.js');
