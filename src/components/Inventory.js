@@ -10,7 +10,6 @@ function Inventory() {
 
   // NOTES FOR BACK-END: click the button located in Action column
   // in the inventory table, to get the Data for axios
-  
   // states for inventory
     const [itemCode, setItemCode] = useState("");
     const [itemName, setItemName] = useState("");
@@ -19,7 +18,9 @@ function Inventory() {
 
     const getInventory = () => {
       try {
-        axios.get("http://127.0.0.1:8000/inventory/", {withCredentials: true})
+        const id = localStorage.getItem('sessionid')
+        console.log(id)
+        axios.get("http://127.0.0.1:8000/inventory/", {headers:{'sessionid': id}})
           .then((response) => {
             console.log(response);
             setItemCode(response.data.item_code);
