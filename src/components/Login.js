@@ -39,7 +39,8 @@ function Login() {
     setPass(event.target.value)
   }
 
-  async function loginSubmit() {
+  async function loginSubmit(event) {
+    event.preventDefault();
     const data = {
       email: email,
       password: password
@@ -110,16 +111,10 @@ return (
             />
             <div className="d-flex mb-5 align-items-center"></div>
             <p className="text-center">
-              <a href="#" onClick={myFunction} className="forgot-pass">
+              <a href="#" onClick={handleRegisterClick} className="forgot-pass">
                 Don't Have an Account Yet?
               </a>
             </p>
-            {/* !-- The actual snackbar */}
-            <div id="snackbar">
-              Please Contract Your School IT Professor
-              <br />
-              for your Account Registration
-            </div>
           </form>
         </div>
       </div>
@@ -131,16 +126,17 @@ return (
 )
 }
 
-function myFunction() {
-    // Get the snackbar DIV
-    var x = document.getElementById("snackbar");
-  
-    // Add the "show" class to DIV
-    x.className = "show";
-  
-    // After 3 seconds, remove the show class from DIV
-    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
-  } 
+function handleRegisterClick() {
+  toast.info('Please Contact Your School IT Professor for your Account Registration', {
+    position: 'bottom-center',
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+}
 
 export default Login
 
