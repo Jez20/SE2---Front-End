@@ -1,9 +1,68 @@
-import React from 'react'
-import inventory from '../css/inventory.module.css'
-import '../css/overlay.css'
+import React, { useEffect, useState } from 'react';
+import inventory from '../css/inventory.module.css';
+import '../css/overlay.css';
+import axios from "axios";
+
 
 function Inventory() {
-  return (
+
+  // syntax 1
+
+  // NOTES FOR BACK-END: click the button located in Action column
+  // in the inventory table, to get the Data for axios
+  
+  // states for inventory
+    const [itemCode, setItemCode] = useState("");
+    const [itemName, setItemName] = useState("");
+    const [itemCondition, setItemCondition] = useState("");
+    const [status, setStatus] = useState("");
+
+    const getInventory = () => {
+      try {
+        axios.get("http://127.0.0.1:8000/inventory/", {withCredentials: true})
+          .then((response) => {
+            console.log(response);
+            setItemCode(response.data.item_code);
+            setItemName(response.data.item_name);
+            setItemCondition(response.data.item_condition);
+            setStatus(response.data.status);
+          });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    
+  /*
+  // syntax 2
+  axios.get("http://127.0.0.1:8000/inventory/", {
+    withCredentials: true
+  })
+    .then(response => {
+      const data = response.data;
+      // Use the response data to create a table
+      const tableBody = document.querySelector('tbody');
+      tableBody.innerHTML = createTableRows(data);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+
+  function createTableRows(data) {
+    return data.map(row => {
+      return `
+        <tr>
+          <td>${row.status}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+  */
+  
+
+    
+
+
+return (
 <>
   <nav>
     <div className={inventory.logoName}>
@@ -126,6 +185,15 @@ function Inventory() {
               </tr>
             </thead>
             <tbody>
+
+              <tr>
+                <td>{itemCode}</td>
+                <td>{itemName}</td>
+                <td>{itemCondition}</td>
+                <td>{status}</td>
+                <td><button onClick={getInventory}></button></td>
+              </tr>
+
               <tr>
                 <td>Item-001</td>
                 <td>Ball</td>
