@@ -127,7 +127,7 @@ return (
 }
 
 function handleRegisterClick() {
-  toast.info('Please Contact Your School IT Professor for your Account Registration', {
+  toast.info('Please Contact Your School IT or staff for your Account Registration', {
     position: 'bottom-center',
     autoClose: 3000,
     hideProgressBar: true,
