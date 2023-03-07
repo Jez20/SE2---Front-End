@@ -1,31 +1,14 @@
 import React, { useState } from 'react'
 import axios from "axios"
-//import { getMyData } from './api';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../css/login.css'
 
-
-// import IconButton from "@material-ui/core/IconButton";
-// import Snackbar from "@material-ui/core/Snackbar";
-// import CloseIcon from "@material-ui/icons/Close";
-// import Button from "@material-ui/core/Button";
-
-
 function Login() {
   //React Snackbar code Start
   const [open, setOpen] = React.useState(false);
-  const handleToClose = (event, reason) => {
-    if ("clickaway" == reason) return;
-    setOpen(false);
-  };
-  
-  const handleClickEvent = () => {
-    setOpen(true);
-  }; //React Snackbar code end
-
-  //Axios
+  const navigate = useNavigate();
   const[email, setEmail] = useState("")
   const[password, setPass] = useState("")
   //const history = useHistory()
@@ -52,11 +35,10 @@ function Login() {
     const response = await axios.post("http://127.0.0.1:8000/login/", data);
     console.log(response.data)
     console.log(document.cookie)
-    window.location.href = '/Borrow';
-    //const sessionId = response.headers.get('sessionid');
-    //console.log(`Session ID: ${sessionId}`);
-    //props.history.push('/Index.js');
+    navigate('/Index');
+    //window.location.href = '/Index';
 
+    
     
   }
   catch (error){

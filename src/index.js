@@ -13,6 +13,7 @@ import Userdashboard from './components/Userdashboard';
 import Userreserve from './components/Userreserve';
 import Adduser from './components/Adduser';
 import Login from './components/Login';
+import Index from './components/Index';
 
 import {
   createBrowserRouter,
@@ -27,7 +28,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <App/>,
+    element: <Index/>,
+  },
+  {
+    path: "/Index",
+    element: <Index/>,
   },
   {
     path: "/Borrow",
