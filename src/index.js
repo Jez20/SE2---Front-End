@@ -1,8 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
 
 import Borrow from './components/Borrow';
 import Return from './components/Return';
@@ -16,64 +14,33 @@ import Login from './components/Login';
 import Index from './components/Index';
 
 import {
-  createBrowserRouter,
-  RouterProvider,
+  BrowserRouter as Router,
+  Routes,
   Route,
-}from "react-router-dom";
+  Navigate,
+} from "react-router-dom";
 
-const router = createBrowserRouter([
-  {
-    path: "/Login",
-    element: <Login/>,
-  },
-  {
-    path: "/",
-    element: <Index/>,
-  },
-  {
-    path: "/Index",
-    element: <Index/>,
-  },
-  {
-    path: "/Borrow",
-    element: <Borrow/>,
-  },
-  {
-    path: "/Reservation",
-    element: <Reservation/>,
-  },
-  {
-    path: "/Return",
-    element: <Return/>,
-  },
-  {
-    path: "/Inventory",
-    element: <Inventory/>,
-  },
-  {
-    path: "/Users",
-    element: <Users/>,
-  },
-  {
-    path: "/Adduser",
-    element: <Adduser/>,
-  },
-  {
-    path: "/Userdashboard",
-    element: <Userdashboard/>,
-  },
-  {
-    path: "/Userreserve",
-    element: <Userreserve/>,
-  },
-]);
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to="/Login" />} />
+      <Route path="/Login" element={<Login />} />
+      <Route path="/Index" element={<Index />} />
+      <Route path="/Borrow" element={<Borrow />} />
+      <Route path="/Reservation" element={<Reservation />} />
+      <Route path="/Return" element={<Return />} />
+      <Route path="/Inventory" element={<Inventory />} />
+      <Route path="/Users" element={<Users />} />
+      <Route path="/Adduser" element={<Adduser />} />
+      <Route path="/Userdashboard" element={<Userdashboard />} />
+      <Route path="/Userreserve" element={<Userreserve />} />
+    </Routes>
+  );
+}
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <RouterProvider router={router} />
+ReactDOM.render(
+  <Router>
+    <App />
+  </Router>,
+  document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

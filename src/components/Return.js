@@ -15,7 +15,7 @@ function Return() {
     <div className={returncss.menuItems}>
       <ul className={returncss.navLinks}>
         <li>
-          <a href="/">
+          <a href="/Index">
             <i className="bx bxs-dashboard icon" />
             <span className={returncss.linkName}>Dashboard</span>
           </a>

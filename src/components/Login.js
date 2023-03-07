@@ -32,29 +32,10 @@ function Login() {
     console.log(password)
     
     try{
-      const response = await axios.post("http://127.0.0.1:8000/login/",  {
-        email: email,
-        password: password
-      }, {withCredentials: true});
-      const respondedDdata = response.data;
-      const sessionId = respondedDdata.sessionid;
-      localStorage.setItem('sessionid', respondedDdata.sessionid);
-  
-    // Set the session ID cookie
-      document.cookie = `sessionid=${sessionId}; path=/;`;
-      const headers = new Headers();
-  
-  // Set the Cookie header to the session ID value
-      headers.append('Cookie', `sessionid=${sessionId}`);
-      console.log(response.data)
-      console.log(document.cookie)
-      navigate('/Index');
-      //const sessionId = response.headers.get('sessionid');
-      //console.log(`Session ID: ${sessionId}`);
-      //props.history.push('/Index.js');
-
-    
-    
+    const response = await axios.post("http://127.0.0.1:8000/login/", data);
+    console.log(response.data)
+    console.log(document.cookie)
+    navigate('/Index');
   }
   catch (error){
     console.error(error)

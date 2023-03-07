@@ -40,7 +40,7 @@ function Borrow() {
     <div className={borrow.menuItems}>
       <ul className={borrow.navLinks}>
         <li>
-          <a href="/">
+          <a href="/Index">
             <i className="bx bxs-dashboard icon" />
             <span className={borrow.linkName}>Dashboard</span>
           </a>

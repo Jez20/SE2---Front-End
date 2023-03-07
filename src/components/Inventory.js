@@ -75,7 +75,7 @@ return (
     <div className={inventory.menuItems}>
       <ul className={inventory.navLinks}>
         <li>
-          <a href="/">
+          <a href="/Index">
             <i className="bx bxs-dashboard icon" />
             <span className={inventory.linkName}>Dashboard</span>
           </a>

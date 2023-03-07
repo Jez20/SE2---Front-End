@@ -15,7 +15,7 @@ function Users() {
     <div className="menu-items">
       <ul className="nav-links">
         <li>
-          <a href="/">
+          <a href="/Index">
             <i className="bx bxs-dashboard icon" />
             <span className="link-name">Dashboard</span>
           </a>

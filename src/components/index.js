@@ -16,7 +16,7 @@ function Index() {
     <div className={dashboard.menuItems}>
       <ul className={dashboard.navLinks}>
         <li>
-          <a href="/">
+          <a href="/Index">
             <i className="bx bxs-dashboard icon" />
             <span className={dashboard.linkName}>Dashboard</span>
           </a>
@@ -405,7 +405,7 @@ function burger() {
   const body = document.querySelector("body"),
      modeToggle = body.querySelector(".mode-toggle");
   const sidebar = body.querySelector("nav");
-  const sidebarToggle = body.querySelector(`.${dashboard.sidebarToggle}`);
+  const sidebarToggle = body.querySelector(".sidebar-toggle");
 
   sidebarToggle.addEventListener("click", () => {
     sidebar.classList.toggle("close");
