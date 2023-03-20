@@ -18,7 +18,7 @@ function Inventory() {
 
     const getInventory = () => {
       try {
-        const id = localStorage.getItem('sessionid')
+        const id = sessionStorage.getItem('sessionid')
         console.log(id)
         axios.get("http://127.0.0.1:8000/inventory/", {headers:{'sessionid': id}})
           .then((response) => {
