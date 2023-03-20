@@ -6,10 +6,8 @@ import axios from "axios";
 
 function Inventory() {
 
+  /*
   // syntax 1
-
-  // NOTES FOR BACK-END: click the button located in Action column
-  // in the inventory table, to get the Data for axios
   // states for inventory
     const [itemCode, setItemCode] = useState("");
     const [itemName, setItemName] = useState("");
@@ -32,12 +30,12 @@ function Inventory() {
         console.error(error);
       }
     };
+    */
     
-  /*
-  // syntax 2
-  axios.get("http://127.0.0.1:8000/inventory/", {
-    withCredentials: true
-  })
+  // syntax 2 - dynamic table generator
+  const id = sessionStorage.getItem('sessionid')
+  console.log(id)
+  axios.get("http://127.0.0.1:8000/inventory/", {headers:{'sessionid': id}})
     .then(response => {
       const data = response.data;
       // Use the response data to create a table
@@ -52,12 +50,32 @@ function Inventory() {
     return data.map(row => {
       return `
         <tr>
-          <td>${row.status}</td>
+          <td>${row.item_code}</td>
+          <td>${row.item_name}</td>
+          <td>${row.item_condition}</td>
+          <td>${row.category.category_name}</td>
+          <td>
+            <div class=${inventory.category}>
+              <button class="${inventory.update} ${inventory.category}" 
+                onClick="openFormUpdateItems()">
+                <i class="bx bxs-pencil action"></i>
+                Update
+              </button>
+              <button class="${inventory.generate} ${inventory.category}" 
+                onClick="openFormGenerateQR()">
+                <i class="bx bx-qr"></i> Generate QR
+              </button>
+              <button class="${inventory.del} ${inventory.category}" 
+                onClick="openFormDeleteItems()">
+                <i class="bx bxs-trash-alt icon"></i> Delete
+              </button>
+            </div>
+          </td>
         </tr>
       `;
     }).join('');
   }
-  */
+  
   
 
     
@@ -187,13 +205,8 @@ return (
             </thead>
             <tbody>
 
-              <tr>
-                <td>{itemCode}</td>
-                <td>{itemName}</td>
-                <td>{itemCondition}</td>
-                <td>{status}</td>
-                <td><button onClick={getInventory}></button></td>
-              </tr>
+              {/* Testing Grounds - kyle - DELETE ALL HARDCODED CODE BELOW LATER*/}
+
 
               <tr>
                 <td>Item-001</td>
