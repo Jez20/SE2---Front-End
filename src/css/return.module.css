@@ -910,6 +910,7 @@ div.activityData .box{
   label.checkbox {
     /* margin-right: 1rem; */
     padding-left: 1.75rem;
+    height: 1.75rem;
     position: relative;
     -webkit-user-select: none;
     -moz-user-select: none;

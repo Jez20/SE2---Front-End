@@ -6,6 +6,7 @@ import axios from "axios";
 
 function Users() { 
   const [users, setUsers] = useState([]);
+  const [phoneNumber, setPhoneNumber] = useState([]);
 
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/user/')
@@ -145,16 +146,16 @@ function Users() {
                       type="text"
                       className="number"
                       name="phone"
-                      placeholder={user.phone_number}
+                      value={user.phone_number}
                     />
                   </form>
                 </td>
                 <td>
                   <select id="role1">
                     <option value="select">{user.role}</option>
-                    <option value="cond">Super Admin</option>
-                    <option value="cond">Admin</option>
-                    <option value="cond">Student</option>
+                    <option value="cond">{user.super_admin}</option>
+                    <option value="cond">{user.admin}</option>
+                    <option value="cond">{user.super_admin}</option>
                   </select>
                 </td>
                 <td>

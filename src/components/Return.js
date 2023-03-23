@@ -118,7 +118,6 @@ function Return() {
                 <th>Notes</th>
                 <th>For Return</th>
                 <th>Lost</th>
-                <th>Replaced</th>
               </tr>
             </thead>
             <tbody>
@@ -129,24 +128,16 @@ function Return() {
                 <td>2022-12-07</td>
                 <td>12:32:30</td>
                 <td>
-                  <div className="form-group">
-                    <label htmlFor="exampleFormControlTextarea1" />
-                    <textarea
-                      className="form-control"
-                      id="textarea1"
-                      rows={3}
-                      style={{ width: "auto", resize: "none", size: "100%" }}
-                      value={""}
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div className={returncss.checkboxes}>
-                    <label className={returncss.checkbox}>
-                      <input type="checkbox" />
-                      <span className={returncss.indicator} />
-                    </label>
-                  </div>
+                <div className="form-group">
+                  <label htmlFor="exampleFormControlTextarea1" />
+                  <textarea
+                    className="form-control"
+                    id="textarea1"
+                    rows={3}
+                    style={{ width: "auto", resize: "none", size: "100%" }}
+                    value={""}
+                  ></textarea> {/* added closing tag */}
+                </div>
                 </td>
                 <td>
                   <div className={returncss.checkboxes}>
@@ -199,14 +190,6 @@ function Return() {
                     </label>
                   </div>
                 </td>
-                <td>
-                  <div className={returncss.checkboxes}>
-                    <label className={returncss.checkbox}>
-                      <input type="checkbox" />
-                      <span className={returncss.indicator} />
-                    </label>
-                  </div>
-                </td>
               </tr>
               <tr>
                 <td>Item-001</td>
@@ -224,14 +207,6 @@ function Return() {
                       style={{ width: "auto", resize: "none" }}
                       value={""}
                     />
-                  </div>
-                </td>
-                <td>
-                  <div className={returncss.checkboxes}>
-                    <label className={returncss.checkbox}>
-                      <input type="checkbox" />
-                      <span className={returncss.indicator} />
-                    </label>
                   </div>
                 </td>
                 <td>

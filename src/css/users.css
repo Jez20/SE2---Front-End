@@ -902,6 +902,7 @@ div.activity-data .box{
   label.checkbox {
     /* margin-right: 1rem; */
     padding-left: 1.75rem;
+    height: 1.75rem;
     position: relative;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -949,7 +950,8 @@ div.activity-data .box{
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
-    pointer-events: none;
+    color: black;
+    /* pointer-events: none; */
   }
 
 /* Overlay */
