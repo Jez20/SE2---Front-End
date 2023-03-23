@@ -3,82 +3,97 @@ import inventory from '../css/inventory.module.css';
 import '../css/overlay.css';
 import axios from "axios";
 
+  const id = sessionStorage.getItem('sessionid')
+  console.log("Session ID: " + id)
 
 function Inventory() {
 
-  /*
-  // syntax 1
-  // states for inventory
-    const [itemCode, setItemCode] = useState("");
-    const [itemName, setItemName] = useState("");
-    const [itemCondition, setItemCondition] = useState("");
-    const [status, setStatus] = useState("");
+  // states:
+  const[items, setItem] = useState([])
+  const[itemCode, setItemCode] = useState("")
+  const[itemName, setItemName] = useState("")
+  const[itemCondition, setItemCondition] = useState("")
+  const[itemCategory, setItemCategory] = useState("")
+  //const[status, setStatus] = useState("")
 
-    const getInventory = () => {
-      try {
-        const id = sessionStorage.getItem('sessionid')
-        console.log(id)
-        axios.get("http://127.0.0.1:8000/inventory/", {headers:{'sessionid': id}})
-          .then((response) => {
-            console.log(response);
-            setItemCode(response.data.item_code);
-            setItemName(response.data.item_name);
-            setItemCondition(response.data.item_condition);
-            setStatus(response.data.status);
-          });
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    */
-    
-  // syntax 2 - dynamic table generator
-  const id = sessionStorage.getItem('sessionid')
-  console.log(id)
-  axios.get("http://127.0.0.1:8000/inventory/", {headers:{'sessionid': id}})
-    .then(response => {
-      const data = response.data;
-      // Use the response data to create a table
-      const tableBody = document.querySelector('tbody');
-      tableBody.innerHTML = createTableRows(data);
+  // hook
+  useEffect(() => {
+    refreshInventoryTable();
+  }, []);
+
+  // Get The Inventory
+  const refreshInventoryTable = () =>{
+    axios.get("http://127.0.0.1:8000/inventory/", {headers:{'sessionid': id}})
+    .then(
+    response => {
+        setItem(response.data);
     })
     .catch(error => {
       console.error(error);
     });
-
-  function createTableRows(data) {
-    return data.map(row => {
-      return `
-        <tr>
-          <td>${row.item_code}</td>
-          <td>${row.item_name}</td>
-          <td>${row.item_condition}</td>
-          <td>${row.category.category_name}</td>
-          <td>
-            <div class=${inventory.category}>
-              <button class="${inventory.update} ${inventory.category}" 
-                onClick="openFormUpdateItems()">
-                <i class="bx bxs-pencil action"></i>
-                Update
-              </button>
-              <button class="${inventory.generate} ${inventory.category}" 
-                onClick="openFormGenerateQR()">
-                <i class="bx bx-qr"></i> Generate QR
-              </button>
-              <button class="${inventory.del} ${inventory.category}" 
-                onClick="openFormDeleteItems()">
-                <i class="bx bxs-trash-alt icon"></i> Delete
-              </button>
-            </div>
-          </td>
-        </tr>
-      `;
-    }).join('');
+}
+  
+  // + Add Item using axios.post
+  function handleItemName(event){
+    setItemName(event.target.value);
   }
-  
-  
 
-    
+  function handleItemCondition(event){
+    setItemCondition(event.target.value);
+  }
+
+  function handleItemCategory(event){
+    setItemCategory(event.target.value);
+  }
+
+  function handleSubmitAddItem(event){
+    event.preventDefault();
+    const dataPostObj = {
+      item_name: itemName,
+      item_condition: itemCondition,
+      category: itemCategory, // num
+      status: "TEST_STATUS"
+    }
+    const dataPost = [
+      dataPostObj
+    ]
+    console.log(dataPost);
+    console.log(itemName);
+    console.log(itemCondition);
+    console.log(itemCategory);
+
+    axios.post("http://127.0.0.1:8000/inventory/", dataPost, {headers:{'sessionid': id}})
+    .then((response) => {
+        refreshInventoryTable();
+        document.getElementById("addItemsOverlay").style.display ="none";
+        console.log("AXIOS.POST SUCCESSFUL: " + response);
+    })
+    .catch((error) => {
+      console.log("INSIDE ERROR!!!");
+      console.log(error);
+    });
+  } // end of handle submit function
+
+  // IN-ROW buttons
+  // update
+  // generate QR
+
+  // delete
+  function deleteItem() {
+    const item_code = document.getElementById("submitDeleteItem").getAttribute("data-item-code");
+    console.log("http://127.0.0.1:8000/inventory/" + item_code);
+    console.log("Item_Code is: " + item_code);
+    axios.delete("http://127.0.0.1:8000/inventory/" + item_code, {headers:{'sessionid': id}})
+    .then((response) => {
+      refreshInventoryTable();
+      document.getElementById("deleteItemsOverlay").style.display ="none";
+      console.log("AXIOS.DELETE SUCCESSFUL: " + response);
+    })
+    .catch((error) => {
+      console.log("INSIDE ERROR!!!");
+      console.log(error);
+    });
+  }
 
 
 return (
@@ -205,102 +220,37 @@ return (
             </thead>
             <tbody>
 
-              {/* Testing Grounds - kyle - DELETE ALL HARDCODED CODE BELOW LATER*/}
+              {/* Testing Grounds - kyle*/}
+              {
+                items.map(
+                  row => (
+                    <tr key={row.item_code}>
+                      <td>{row.item_code}</td>
+                      <td>{row.item_name}</td>
+                      <td>{row.item_condition}</td>
+                      <td>{row.category.category_name}</td>
+                      <td>
+                        <div className={`${inventory.category}`}>
+                          <button className={`${inventory.update} ${inventory.category}`}
+                            onClick={openFormUpdateItems}>
+                            <i className="bx bxs-pencil action"></i>
+                            Update
+                          </button>
+                          <button className={`${inventory.generate} ${inventory.category}`} 
+                            onClick={openFormGenerateQR}>
+                            <i className="bx bx-qr"></i> Generate QR
+                          </button>
+                          <button className={`${inventory.del} ${inventory.category}`}
+                            onClick={(e) =>openFormDeleteItems(row.item_code)}>
+                            <i className="bx bxs-trash-alt icon"></i> Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                )
+              }
 
-
-              <tr>
-                <td>Item-001</td>
-                <td>Ball</td>
-                <td>Working</td>
-                <td>Sports Athletics</td>
-                <td>
-                  <div className={inventory.category}>
-                    <button
-                      className={`${inventory.update} ${inventory.category}`}
-                      onClick={openFormUpdateItems}
-                    >
-                      <i className="bx bxs-pencil action" />
-                      Update
-                    </button>
-                    <button
-                      className={`${inventory.generate} ${inventory.category}`}
-                      onClick={openFormGenerateQR}
-                    >
-                      <i className="bx bx-qr" />
-                      Generate QR
-                    </button>
-                    <button
-                      className={`${inventory.del} ${inventory.category}`}
-                      onClick={openFormDeleteItems}
-                    >
-                      <i className="bx bxs-trash-alt icon" />
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>Item-001</td>
-                <td>Ball</td>
-                <td>Working</td>
-                <td>Sports Athletics</td>
-                <td>
-                  <div className={inventory.category}>
-                    <button
-                      className={`${inventory.update} ${inventory.category}`}
-                      onClick={openFormUpdateItems}
-                    >
-                      <i className="bx bxs-pencil action" />
-                      Update
-                    </button>
-                    <button
-                      className={`${inventory.generate} ${inventory.category}`}
-                      onClick={openFormGenerateQR}
-                    >
-                      <i className="bx bx-qr" />
-                      Generate QR
-                    </button>
-                    <button
-                      className={`${inventory.del} ${inventory.category}`}
-                      onClick={openFormDeleteItems}
-                    >
-                      <i className="bx bxs-trash-alt icon" />
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>Item-001</td>
-                <td>Ball</td>
-                <td>Working</td>
-                <td>Sports Athletics</td>
-                <td>
-                  <div className={inventory.category}>
-                    <button
-                      className={`${inventory.update} ${inventory.category}`}
-                      onClick={openFormUpdateItems}
-                    >
-                      <i className="bx bxs-pencil action" />
-                      Update
-                    </button>
-                    <button
-                      className={`${inventory.generate} ${inventory.category}`}
-                      onClick={openFormGenerateQR}
-                    >
-                      <i className="bx bx-qr" />
-                      Generate QR
-                    </button>
-                    <button
-                      className={`${inventory.del} ${inventory.category}`}
-                      onClick={openFormDeleteItems}
-                    >
-                      <i className="bx bxs-trash-alt icon" />
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
             </tbody>
           </table>
         </div>
@@ -345,13 +295,17 @@ return (
       <form>
         <div className={inventory.buttons}>
           <input
+            id="submitDeleteItem"
             className={`${inventory.action_btn} ${inventory.confirm}`}
+            onClick={() => deleteItem()}
+            data-item-code=''
             type="submit"
             value="Confirm"
           />
           <input
+            id="cancelDeleteItem"
             className={`${inventory.action_btn} ${inventory.cancel}`}
-            type="submit"
+            type="button"
             value="Cancel"
           />
         </div>
@@ -393,38 +347,43 @@ return (
   <div id="addItemsOverlay" className={inventory.addItemsOverlay}>
     <div className={inventory.addItemsWrap}>
       <h2>Add Item</h2>
-      <form>
+      <form id="addItemsOverlayForm" onSubmit={handleSubmitAddItem}>
         <label htmlFor="username">Item Name:</label>
-        <input type="text" placeholder="Enter item name" id="addItem" />
+        <input type="text" placeholder="Enter item name" 
+        id="addItem" 
+        onChange={handleItemName} 
+        />
         <label htmlFor="username">Condition:</label>
         <div>
-          <select className={inventory.dropdown}>
-            <option value="select">Select Item Condition</option>
-            <option value="cond">Working</option>
-            <option value="cond">Maintenance</option>
-            <option value="cond">Retired</option>
-            <option value="cond">Damaged</option>
-            <option value="cond">Lost</option>
+          <select id="selectItemCondition" onChange={handleItemCondition} className={inventory.dropdown} >
+            <option value="Default">Select Item Condition</option>
+            <option value="Working">Working</option>
+            <option value="Maintenance">Maintenance</option>
+            <option value="Retired">Retired</option>
+            <option value="Damaged">Damaged</option>
+            <option value="Lost">Lost</option>
           </select>
         </div>
         <label htmlFor="username">Category:</label>
         <div>
-          <select className={inventory.dropdown}>
-            <option value="select">Select Item Category</option>
-            <option value="cond">Sports Athletics</option>
-            <option value="cond">Construction</option>
-            <option value="cond">Laboratory</option>
+          <select id="selectItemCategory" onChange={handleItemCategory} className={inventory.dropdown}>
+            <option value="Default">Select Item Category</option>
+            <option value="1">Sports Athletics</option>
+            <option value="2">Construction</option>
+            <option value="3">Laboratory</option>
           </select>
         </div>
         <div className={inventory.buttons}>
           <input
+            id="submitAddItem"
             className={`${inventory.action_btn} ${inventory.confirm}`}
             type="submit"
             value="Add Item"
           />
           <input
+            id="cancelAddItem"
             className={`${inventory.action_btn} ${inventory.cancel}`}
-            type="submit"
+            type="button"
             value="Cancel"
           />
         </div>
@@ -514,9 +473,12 @@ function openForm() {
     document.getElementById("myOverlay").style.display ="block";
 }
 
-function openFormDeleteItems() {
-    document.getElementById("deleteItemsOverlay").style.display ="block";
+function openFormDeleteItems(item_code) {
+  document.getElementById("submitDeleteItem").setAttribute("data-item-code", item_code);
+  console.log("Succesfully set the attribute of data-item-code");
+  document.getElementById("deleteItemsOverlay").style.display = "block";
 }
+
 
 function openFormUpdateItems() {
     document.getElementById("updateItemsOverlay").style.display ="block";
