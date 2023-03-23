@@ -27,6 +27,15 @@ a {
 .loginh1{
   font-size: 63px;
   text-align: center;
+  color: white;
+}
+
+.mb-4{
+  color: white;
+}
+
+label{
+  color: white;
 }
 
 h2 {

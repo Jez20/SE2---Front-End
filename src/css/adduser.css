@@ -28,7 +28,8 @@ a {
   font-weight: 700;
   font-size: 63px;
   text-align: center;
-  font-family: "Poppins" !important
+  font-family: "Poppins" !important;
+  color: white;
 }
 
 h2 {
