@@ -1,8 +1,22 @@
-import React from 'react'
+//import React from 'react'
 import '../css/users.css'
 import '../css/overlay.css'
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-function Users() {
+function Users() { 
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://127.0.0.1:8000/user/')
+      .then(response => {
+        setUsers(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+  
   return (
 <div>
   <nav>
@@ -82,7 +96,7 @@ function Users() {
         </div>
         {/* ROW 1 */}
         <div className="inventory">
-          <p>*NOTE: Ctrl + F to find users, Default Password: fn.ln</p>
+          <p>*NOTE: Ctrl + F to find users</p>
         </div>
         {/* ROW 2 */}
         <div className="row-2">
@@ -112,7 +126,8 @@ function Users() {
               </tr>
             </thead>
             <tbody>
-              <tr>
+              {users.map(user => (
+              <tr key={user.id}>
                 <td>
                   <div className="checkboxes">
                     <label className="checkbox">
@@ -121,22 +136,22 @@ function Users() {
                     </label>
                   </div>
                 </td>
-                <td>John</td>
-                <td>Doe</td>
-                <td>JD@gmail.com</td>
+                <td>{user.first_name}</td>
+                <td>{user.last_name}</td>
+                <td>{user.email}</td>
                 <td>
                   <form action="/action_page.php">
-                    <input
+                    <input 
                       type="text"
                       className="number"
                       name="phone"
-                      placeholder="09750744817"
+                      placeholder={user.phone_number}
                     />
                   </form>
                 </td>
                 <td>
                   <select id="role1">
-                    <option value="select">Select Role</option>
+                    <option value="select">{user.role}</option>
                     <option value="cond">Super Admin</option>
                     <option value="cond">Admin</option>
                     <option value="cond">Student</option>
@@ -161,104 +176,7 @@ function Users() {
                   </div>
                 </td>
               </tr>
-              <tr>
-                <td>
-                  <div className="checkboxes">
-                    <label className="checkbox">
-                      <input type="checkbox" />
-                      <span className="indicator" />
-                    </label>
-                  </div>
-                </td>
-                <td>John</td>
-                <td>Doe</td>
-                <td>JD@gmail.com</td>
-                <td>
-                  <form action="/action_page.php">
-                    <input
-                      type="text"
-                      className="number"
-                      name="phone"
-                      placeholder="09750744817"
-                    />
-                  </form>
-                </td>
-                <td>
-                  <select id="role3">
-                    <option value="select">Select Role</option>
-                    <option value="cond">Super Admin</option>
-                    <option value="cond">Admin</option>
-                    <option value="cond">Student</option>
-                  </select>
-                </td>
-                <td>
-                  <div className="category">
-                    <button
-                      className="update category"
-                      onClick={openFormUpdateUsers}
-                    >
-                      <i className="bx bxs-pencil action" />
-                      Update User
-                    </button>
-                    <button
-                      className="reset category"
-                      onClick={openFormResetPassword}
-                    >
-                      <i className="bx bx-refresh" />
-                      Reset Password
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div className="checkboxes">
-                    <label className="checkbox">
-                      <input type="checkbox" />
-                      <span className="indicator" />
-                    </label>
-                  </div>
-                </td>
-                <td>John</td>
-                <td>Doe</td>
-                <td>JD@gmail.com</td>
-                <td>
-                  <form action="/action_page.php">
-                    <input
-                      type="text"
-                      className="number"
-                      name="phone"
-                      placeholder="09750744817"
-                    />
-                  </form>
-                </td>
-                <td>
-                  <select id="role2">
-                    <option value="select">Select Role</option>
-                    <option value="cond">Super Admin</option>
-                    <option value="cond">Admin</option>
-                    <option value="cond">Student</option>
-                  </select>
-                </td>
-                <td>
-                  <div className="category">
-                    <button
-                      className="update category"
-                      onClick={openFormUpdateUsers}
-                    >
-                      <i className="bx bxs-pencil action" />
-                      Update User
-                    </button>
-                    <button
-                      className="reset category"
-                      onClick={openFormResetPassword}
-                    >
-                      <i className="bx bx-refresh" />
-                      Reset Password
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              ))}
             </tbody>
           </table>
         </div>
