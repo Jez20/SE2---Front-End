@@ -46,7 +46,7 @@ function Adduser() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     toast.success("Successfully added user");
-
+    
     try {
       const response = await axios.post('http://127.0.0.1:8000/user/', [
         {
@@ -88,6 +88,7 @@ function Adduser() {
                   id="email"
                   value={email}
                   onChange={handleEmailChange}
+                  required
                 />
               </div>
               <div className="form-group last mb-3">
@@ -99,6 +100,7 @@ function Adduser() {
                   id="phone"
                   value={phone_number}
                   onChange={handlePhoneNumberChange}
+                  required
                 />
               </div>
               <div className="form-group first">
@@ -110,6 +112,7 @@ function Adduser() {
                   id="firstName"
                   value={first_name}
                   onChange={handleFirstNameChange}
+                  required
                 />
               </div>
               <div className="form-group last mb-3">
@@ -121,6 +124,7 @@ function Adduser() {
                   id="lastName"
                   value={last_name}
                   onChange={handleLastNameChange}
+                  required
                 />
               </div>
               <div className="form-group last mb-3">
@@ -132,6 +136,7 @@ function Adduser() {
                   id="password"
                   value={user_password}
                   onChange={handlePasswordChange}
+                  required
                 />
               </div>
 
@@ -142,7 +147,7 @@ function Adduser() {
                   value={role}
                   onChange={handleRoleChange}
                 >
-                  <option value="">Select Role</option>
+                  <option value="null">Select Role</option>
                   <option value="3">Editor</option>
                   <option value="2">Admin</option>
                   <option value="1">User</option>
@@ -150,9 +155,12 @@ function Adduser() {
               </div>
               <input
                 type="submit"
+                disabled={role === "null"}
                 value="Add User"
                 className="btn btn-block add"
+                title={role === "null" ? "Please fill out the necessary fields" : ""}
               />
+                              
               <input
                 type="button"
                 value="Back to Users"
