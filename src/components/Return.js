@@ -1,8 +1,22 @@
-import React from 'react'
 import returncss from '../css/return.module.css'
 import '../css/overlay.css'
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 function Return() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://127.0.0.1:8000/history/') // replace with your API endpoint
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   return (
 <div>
   <nav>
@@ -106,129 +120,67 @@ function Return() {
             Mark Items as Lost
           </button>
         </div>
-        <div className={returncss.activityData}>
-          <table className={returncss.table}>
-            <thead>
-              <tr>
-                <th>History ID</th>
-                <th>Item Name</th>
-                <th>Borrower Name</th>
-                <th>Date</th>
-                <th>Time-in</th>
-                <th>Notes</th>
-                <th>For Return</th>
-                <th>Lost</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Item-001</td>
-                <td>Ball</td>
-                <td>John Doe</td>
-                <td>2022-12-07</td>
-                <td>12:32:30</td>
-                <td>
-                <div className="form-group">
-                  <label htmlFor="exampleFormControlTextarea1" />
-                  <textarea
-                    className="form-control"
-                    id="textarea1"
-                    rows={3}
-                    style={{ width: "auto", resize: "none", size: "100%" }}
-                    value={""}
-                  ></textarea> {/* added closing tag */}
-                </div>
-                </td>
-                <td>
-                  <div className={returncss.checkboxes}>
-                    <label className={returncss.checkbox}>
-                      <input type="checkbox" />
-                      <span className={returncss.indicator} />
-                    </label>
-                  </div>
-                </td>
-                <td>
-                  <div className={returncss.checkboxes}>
-                    <label className={returncss.checkbox}>
-                      <input type="checkbox" />
-                      <span className={returncss.indicator} />
-                    </label>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>Item-001</td>
-                <td>Ball</td>
-                <td>John Doe</td>
-                <td>2022-12-07</td>
-                <td>12:32:30</td>
-                <td>
-                  <div className="form-group">
-                    <label htmlFor="exampleFormControlTextarea1" />
-                    <textarea
-                      className="form-control"
-                      id="textarea2"
-                      rows={3}
-                      style={{ width: "auto", resize: "none" }}
-                      value={""}
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div className={returncss.checkboxes}>
-                    <label className={returncss.checkbox}>
-                      <input type="checkbox" />
-                      <span className={returncss.indicator} />
-                    </label>
-                  </div>
-                </td>
-                <td>
-                  <div className={returncss.checkboxes}>
-                    <label className={returncss.checkbox}>
-                      <input type="checkbox" />
-                      <span className={returncss.indicator} />
-                    </label>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>Item-001</td>
-                <td>Ball</td>
-                <td>John Doe</td>
-                <td>2022-12-07</td>
-                <td>12:32:30</td>
-                <td>
-                  <div className="form-group">
-                    <label htmlFor="exampleFormControlTextarea1" />
-                    <textarea
-                      className="form-control"
-                      id="textarea3"
-                      rows={3}
-                      style={{ width: "auto", resize: "none" }}
-                      value={""}
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div className={returncss.checkboxes}>
-                    <label className={returncss.checkbox}>
-                      <input type="checkbox" />
-                      <span className={returncss.indicator} />
-                    </label>
-                  </div>
-                </td>
-                <td>
-                  <div className={returncss.checkboxes}>
-                    <label className={returncss.checkbox}>
-                      <input type="checkbox" />
-                      <span className={returncss.indicator} />
-                    </label>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+
+    <div className={returncss.activityData}>
+      <table className={returncss.table}>
+        <thead>
+          <tr>
+            <th>History ID</th>
+            <th>Item Name</th>
+            <th>Borrower Name</th>
+            <th>Date</th>
+            <th>Time-in</th>
+            <th>Notes</th>
+            <th>For Return</th>
+            <th>Lost</th>
+          </tr>
+        </thead>
+        <tbody>
+        {data.map((item) => (
+        <tr key={item.history_id}>
+          <td>{item.history_id}</td>
+          <td>{item.item_code.item_name}</td>
+          <td>{`${item.email.first_name} ${item.email.last_name}`}</td>
+          <td>{new Date(item.date_in).toLocaleDateString()}</td>
+          <td>{new Date(item.date_in).toLocaleTimeString()}</td>
+          <td>
+            <div className="form-group">
+              <label htmlFor={`textarea-${item.history_id}`} />
+              <textarea
+                className="form-control"
+                id={`textarea-${item.history_id}`}
+                rows={3}
+                style={{ width: "auto", resize: "none", size: "100%" }}
+                value={item.notes}
+                onChange={(event) => {
+                  const editedItem = { ...item };
+                  editedItem.notes = event.target.value;
+                  setData(data.map((dataItem) => (dataItem.history_id === item.history_id ? editedItem : dataItem)));
+                }}
+              />
+            </div>
+          </td>
+          <td>
+            <div className={returncss.checkboxes}>
+              <label className={returncss.checkbox}>
+                <input type="checkbox" />
+                <span className={returncss.indicator} />
+              </label>
+            </div>
+          </td>
+          <td>
+            <div className={returncss.checkboxes}>
+              <label className={returncss.checkbox}>
+                <input type="checkbox" />
+                <span className={returncss.indicator} />
+              </label>
+            </div>
+          </td>
+        </tr>
+      ))}
+        </tbody>
+      </table>
+    </div>
       </div>
     </div>
   </section>
