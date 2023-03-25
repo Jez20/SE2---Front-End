@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../css/login.css'
+import loginService from '../services/loginService';
 
 function Login() {
   //React Snackbar code Start
@@ -32,8 +33,9 @@ function Login() {
     console.log(password)
     
     try{
-    const response = await axios.post("http://127.0.0.1:8000/login/", data);
+    const response = await loginService.loginFunction(data);
     sessionStorage.setItem('sessionid', response.data.sessionid)
+    sessionStorage.setItem('role', response.data.role)
     navigate('/Index');
   }
   catch (error){
