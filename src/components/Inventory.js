@@ -37,8 +37,7 @@ function Inventory() {
       console.error(error);
     });
 }
-  
-  // + Add Item using axios.post
+  // info handlers
   function handleItemName(event){
     setItemName(event.target.value);
   }
@@ -51,6 +50,7 @@ function Inventory() {
     setItemCategory(event.target.value);
   }
 
+  // + Add Item using axios.post
   function handleSubmitAddItem(event){
     event.preventDefault();
     const dataPostObj = {
@@ -83,16 +83,45 @@ function Inventory() {
 
   // IN-ROW buttons
   // update
+  function updateItem(event) {
+    event.preventDefault();
+    const item_code = document.getElementById("submitUpdateItem").getAttribute("data-item-code");
+    const returnDomain = require('../common/domainString')
+    const selectedDomain = returnDomain();
+    console.log(selectedDomain + item_code);
+    console.log("Item_Code is: " + item_code);
+    const dataPut = {
+      item_name: itemName,
+      item_condition: itemCondition,
+      category: 1, // changed to hash map number later, for now hardcoded
+      status: "TEST_STATUS"
+    }
+    console.log(dataPut);
+    console.log(itemName);
+    console.log(itemCondition);
+    console.log(itemCategory);
+
+    axios.put(selectedDomain + '/inventory/' + item_code, dataPut, {headers:{'sessionid': id}})
+    .then((response) => {
+      refreshInventoryTable();
+      document.getElementById("updateItemsOverlay").style.display ="none";
+      console.log("AXIOS.PUT SUCCESSFUL: " + response);
+    })
+    .catch((error) => {
+      console.log("INSIDE ERROR!!!");
+      console.log(error);
+    });
+  }
   // generate QR
 
   // delete
- function deleteItem() {
+  function deleteItem() {
     const item_code = document.getElementById("submitDeleteItem").getAttribute("data-item-code");
     const returnDomain = require('../common/domainString')
     const selectedDomain = returnDomain();
     console.log(selectedDomain + item_code);
     console.log("Item_Code is: " + item_code);
-    axios.delete(selectedDomain+ '/inventory/' + item_code, {headers:{'sessionid': id}})
+    axios.delete(selectedDomain + '/inventory/' + item_code, {headers:{'sessionid': id}})
     .then((response) => {
       refreshInventoryTable();
       document.getElementById("deleteItemsOverlay").style.display ="none";
@@ -103,6 +132,7 @@ function Inventory() {
       console.log(error);
     });
   }
+
 const roleCompare = sessionStorage.getItem('role')
 if (roleCompare === "User"){
   navigate('/Login')
@@ -245,7 +275,7 @@ return (
                       <td>
                         <div className={`${inventory.category}`}>
                           <button className={`${inventory.update} ${inventory.category}`}
-                            onClick={openFormUpdateItems}>
+                            onClick={(e) =>openFormUpdateItems(row.item_code)}>
                             <i className="bx bxs-pencil action"></i>
                             Update
                           </button>
@@ -328,29 +358,32 @@ return (
   <div id="updateItemsOverlay" className={inventory.updateItemsOverlay}>
     <div className={inventory.updateItemsWrap}>
       <h2>Update Item</h2>
-      <form>
+      <form id="updateItemsOverlayForm" onSubmit={updateItem}>
         <label htmlFor="username">Item Name:</label>
-        <input type="text" placeholder="Enter item name" id="updateItem" />
+        <input type="text" placeholder="Enter item name" id="updateItem" 
+        onChange={handleItemName}/>
         <label htmlFor="username">Condition:</label>
         <div>
-          <select className={inventory.dropdown}>
+          <select className={inventory.dropdown} onChange={handleItemCondition}>
             <option value="select">Item Condition Filter</option>
-            <option value="cond">Working</option>
-            <option value="cond">Maintenance</option>
-            <option value="cond">Retired</option>
-            <option value="cond">Damaged</option>
-            <option value="cond">Lost</option>
+            <option value="Working">Working</option>
+            <option value="Maintenance">Maintenance</option>
+            <option value="Retired">Retired</option>
+            <option value="Damaged">Damaged</option>
+            <option value="Lost">Lost</option>
           </select>
         </div>
         <div className={inventory.buttons}>
           <input
+            id="submitUpdateItem"
             className={`${inventory.action_btn} ${inventory.edit}`}
+            data-item-code=''
             type="submit"
             value="Update"
           />
           <input
             className={`${inventory.action_btn} ${inventory.cancel}`}
-            type="submit"
+            type="button"
             value="Cancel"
           />
         </div>
@@ -493,8 +526,10 @@ function openFormDeleteItems(item_code) {
 }
 
 
-function openFormUpdateItems() {
-    document.getElementById("updateItemsOverlay").style.display ="block";
+function openFormUpdateItems(item_code) {
+  document.getElementById("submitUpdateItem").setAttribute("data-item-code", item_code);
+  console.log("Succesfully set the attribute of data-item-code");
+  document.getElementById("updateItemsOverlay").style.display ="block";
 }
 
 function openFormAddItems() {
