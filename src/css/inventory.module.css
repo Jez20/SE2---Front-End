@@ -525,6 +525,17 @@ nav.close ~ .dashboard .top{
     color: rgba(0,0,0,.5);
 }
 
+#conditionFilterDropdown{
+    margin-left: 20px;
+    margin-top: 30px;
+    font-size: 12px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 /*.top{
     display: flex;
     flex-direction: row;

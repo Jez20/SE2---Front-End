@@ -129,7 +129,7 @@ function Users() {
         </li>
         <li>
           <a href="/Borrow">
-            <i className="bx bxs-backpack icon" />
+          <i className="bx bxs-shopping-bags" />
             <span className="link-name">Borrow Items</span>
           </a>
         </li>

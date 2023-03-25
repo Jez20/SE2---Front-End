@@ -36,7 +36,7 @@ function Return() {
         </li>
         <li>
           <a href="/Borrow">
-            <i className="bx bxs-backpack icon" />
+          <i className="bx bxs-shopping-bags" />
             <span className={returncss.linkName}>Borrow Items</span>
           </a>
         </li>

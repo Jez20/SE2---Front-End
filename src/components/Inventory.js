@@ -170,7 +170,7 @@ return (
         </li>
         <li>
           <a href="/Borrow">
-            <i className="bx bxs-backpack icon" />
+          <i className="bx bxs-shopping-bags" />
             <span className={inventory.linkName}>Borrow Items</span>
           </a>
         </li>
@@ -245,13 +245,15 @@ return (
                 <option value="Lost">Lost</option>
               </select>
               <button 
+              className={`${inventory.update} ${inventory.category} ${inventory.row2btns}`}
               id="conditionFilterApply"
               type="submit">
+                <i className="bx bxs-filter-alt icon" />
                 Apply Filter
               </button>
             </form>
-            
           </div>
+          
           <div className={inventory.row2btns}>
             <button
               className={`${inventory.delete} ${inventory.category}`}
@@ -368,7 +370,7 @@ return (
           <input
             id="cancelDeleteItem"
             className={`${inventory.action_btn} ${inventory.cancel}`}
-            type="button"
+            type="submit"
             value="Cancel"
           />
         </div>
@@ -403,7 +405,7 @@ return (
           />
           <input
             className={`${inventory.action_btn} ${inventory.cancel}`}
-            type="button"
+            type="submit"
             value="Cancel"
           />
         </div>
@@ -449,7 +451,7 @@ return (
           <input
             id="cancelAddItem"
             className={`${inventory.action_btn} ${inventory.cancel}`}
-            type="button"
+            type="submit"
             value="Cancel"
           />
         </div>
