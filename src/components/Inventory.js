@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import inventory from '../css/inventory.module.css';
 import '../css/overlay.css';
 import axios from "axios";
+import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
   const id = sessionStorage.getItem('sessionid')
   console.log("Session ID: " + id)
@@ -9,6 +11,7 @@ import axios from "axios";
 function Inventory() {
 
   // states:
+  const navigate = useNavigate();
   const[items, setItem] = useState([])
   const[itemCode, setItemCode] = useState("")
   const[itemName, setItemName] = useState("")
@@ -23,7 +26,9 @@ function Inventory() {
 
   // Get The Inventory
   const refreshInventoryTable = () =>{
-    axios.get("http://127.0.0.1:8000/inventory/", {headers:{'sessionid': id}})
+    const returnDomain = require('../common/domainString')
+    const selectedDomain = returnDomain();
+    axios.get(selectedDomain + '/inventory/', {headers:{'sessionid': id}})
     .then(
     response => {
         setItem(response.data);
@@ -62,7 +67,9 @@ function Inventory() {
     console.log(itemCondition);
     console.log(itemCategory);
 
-    axios.post("http://127.0.0.1:8000/inventory/", dataPost, {headers:{'sessionid': id}})
+    const returnDomain = require('../common/domainString')
+    const selectedDomain = returnDomain();
+    axios.post(selectedDomain + '/inventory/', dataPost, {headers:{'sessionid': id}})
     .then((response) => {
         refreshInventoryTable();
         document.getElementById("addItemsOverlay").style.display ="none";
@@ -79,11 +86,13 @@ function Inventory() {
   // generate QR
 
   // delete
-  function deleteItem() {
+ function deleteItem() {
     const item_code = document.getElementById("submitDeleteItem").getAttribute("data-item-code");
-    console.log("http://127.0.0.1:8000/inventory/" + item_code);
+    const returnDomain = require('../common/domainString')
+    const selectedDomain = returnDomain();
+    console.log(selectedDomain + item_code);
     console.log("Item_Code is: " + item_code);
-    axios.delete("http://127.0.0.1:8000/inventory/" + item_code, {headers:{'sessionid': id}})
+    axios.delete(selectedDomain+ '/inventory/' + item_code, {headers:{'sessionid': id}})
     .then((response) => {
       refreshInventoryTable();
       document.getElementById("deleteItemsOverlay").style.display ="none";
@@ -94,7 +103,11 @@ function Inventory() {
       console.log(error);
     });
   }
-
+const roleCompare = sessionStorage.getItem('role')
+if (roleCompare === "User"){
+  navigate('/Login')
+  return
+}
 
 return (
 <>
