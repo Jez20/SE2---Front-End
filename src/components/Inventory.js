@@ -17,6 +17,7 @@ function Inventory() {
   const[itemName, setItemName] = useState("")
   const[itemCondition, setItemCondition] = useState("")
   const[itemCategory, setItemCategory] = useState("")
+  const[conditionFilter, setConditionFilter] = useState('')
   //const[status, setStatus] = useState("")
 
   // hook
@@ -28,7 +29,7 @@ function Inventory() {
   const refreshInventoryTable = () =>{
     const returnDomain = require('../common/domainString')
     const selectedDomain = returnDomain();
-    axios.get(selectedDomain + '/inventory/', {headers:{'sessionid': id}})
+    axios.get(selectedDomain + '/inventory/' + conditionFilter, {headers:{'sessionid': id}})
     .then(
     response => {
         setItem(response.data);
@@ -48,6 +49,15 @@ function Inventory() {
 
   function handleItemCategory(event){
     setItemCategory(event.target.value);
+  }
+
+  function handleConditionFilter(event){
+    setConditionFilter(event.target.value);
+  }
+
+  function handleTableFilter(event){
+    event.preventDefault();
+    refreshInventoryTable();
   }
 
   // + Add Item using axios.post
@@ -112,7 +122,7 @@ function Inventory() {
       console.log(error);
     });
   }
-  // generate QR
+  // generate QR - front-end's job???
 
   // delete
   function deleteItem() {
@@ -138,6 +148,8 @@ if (roleCompare === "User"){
   navigate('/Login')
   return
 }
+
+// cancel Button Handlers:
 
 return (
 <>
@@ -223,14 +235,22 @@ return (
         {/* ROW 2 */}
         <div className={inventory.row2}>
           <div className="row-1-select">
-            <select id={inventory.category}>
-              <option value="select">Item Condition Filter</option>
-              <option value="cond">Working</option>
-              <option value="cond">Maintenance</option>
-              <option value="cond">Retired</option>
-              <option value="cond">Damaged</option>
-              <option value="cond">Lost</option>
-            </select>
+            <form onSubmit={handleTableFilter}>
+              <select id="conditionFilterDropdown" onChange={handleConditionFilter}>
+                <option value="select">Item Condition Filter</option>
+                <option value="Working">Working</option>
+                <option value="Maintenance">Maintenance</option>
+                <option value="Retired">Retired</option>
+                <option value="Damaged">Damaged</option>
+                <option value="Lost">Lost</option>
+              </select>
+              <button 
+              id="conditionFilterApply"
+              type="submit">
+                Apply Filter
+              </button>
+            </form>
+            
           </div>
           <div className={inventory.row2btns}>
             <button
