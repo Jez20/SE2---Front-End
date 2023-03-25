@@ -147,20 +147,19 @@ function Adduser() {
                   id="category"
                   value={role}
                   onChange={handleRoleChange}
-                  
                 >
-                  <option value="null">Select Role</option>
+                  <option value="">Select Role</option>
                   <option value="3">Editor</option>
                   <option value="2">Admin</option>
-                  <option value="1">User</option>
+                  <option value="1">Student</option>
                 </select>
               </div>
               <input
                 type="submit"
-                disabled={role === "null"}
+                disabled={role === ""}
                 value="Add User"
                 className="btn btn-block add"
-                title={role === "null" ? "Please fill out the necessary fields" : ""}
+                title={role === "" ? "Please fill out the necessary fields" : ""}
               />
                               
               <input

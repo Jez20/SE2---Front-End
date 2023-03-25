@@ -13,8 +13,11 @@ function Users() {
   const [userData, setUserData] = useState({});
   const [showToast, setShowToast] = useState(false);
 
+  const returnDomain = require('../common/domainString')
+  const selectedDomain = returnDomain();
+
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/user/')
+    axios.get(selectedDomain + '/user/')
       .then(response => {
         setUsers(response.data);
       })
@@ -26,7 +29,7 @@ function Users() {
   const deleteSelectedUsers = () => {
     const emailObjects = selectedItems.map(email => ({ email }));
     toast.success("Successfully deleted user/s");
-    axios.delete('http://127.0.0.1:8000/user/', { data: emailObjects })
+    axios.delete(selectedDomain+ '/user/', { data: emailObjects })
       .then(response => {
         // remove deleted users from the list
         setUsers(users.filter(user => !selectedItems.includes(user.email)));
@@ -41,7 +44,7 @@ function Users() {
   };
   const handleResetPassword = (email) => {
     console.log(email);
-    axios.put(`http://127.0.0.1:8000/resetPassword/`, {
+    axios.put(selectedDomain + `/resetPassword/`, {
       email: email,
     })
     .then(response => {   
@@ -54,7 +57,7 @@ function Users() {
     });
   };
   const handleUpdatePhoneNumber = (email) => {
-    axios.put(`http://127.0.0.1:8000/user/${email}`, {
+    axios.put(selectedDomain + `/user/${email}`, {
       phone_number: userData[email].newPhoneNumber,
     })
     .then(response => {
@@ -85,11 +88,11 @@ function Users() {
     console.log(email);
     console.log(userData[email].phone_number);
     console.log(userData[email].newRole);
-    axios.put(`http://127.0.0.1:8000/user/${email}`, {
+    axios.put(selectedDomain + `/user/${email}`, {
       role: userData[email].newRole
     })
     .then(response => {
-      // update the phone number for the specific user
+      // update the role for the specific user
       setUserData(prevState => ({
         ...prevState,
         [email]: {
@@ -187,7 +190,7 @@ function Users() {
         {/* ROW 1 */}
         <div className="inventory">
           <p>*NOTE: Ctrl + F to find users</p>
-          <p>*NOTE: resetting password will reset the password to the user's email</p>
+          <p>*NOTE: Resetting password will reset the password to the user's email</p>
         </div>
         {/* ROW 2 */}
         <div className="row-2">
@@ -249,6 +252,7 @@ function Users() {
                       type="text"
                       placeholder={user.phone_number}
                       value={userData[user.email]?.newPhoneNumber}
+                      maxlength="11"
                       onChange={(e) => setUserData(prevState => ({
                         ...prevState,
                         [user.email]: {
