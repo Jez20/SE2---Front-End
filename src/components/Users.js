@@ -3,10 +3,15 @@ import '../css/users.css'
 import '../css/overlay.css'
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
 
-function Users() { 
+function Users() {
   const [users, setUsers] = useState([]);
-  const [phoneNumber, setPhoneNumber] = useState([]);
+  const [newPhoneNumber, setNewPhoneNumber] = useState('');
+  const [newRole, setNewRole] = useState('');
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [userData, setUserData] = useState({});
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/user/')
@@ -17,7 +22,91 @@ function Users() {
         console.log(error);
       });
   }, []);
+
+  const deleteSelectedUsers = () => {
+    const emailObjects = selectedItems.map(email => ({ email }));
+    toast.success("Successfully deleted user/s");
+    axios.delete('http://127.0.0.1:8000/user/', { data: emailObjects })
+      .then(response => {
+        // remove deleted users from the list
+        setUsers(users.filter(user => !selectedItems.includes(user.email)));
+        // clear the selection
+        console.log("delete success");
+        setSelectedItems([]);
+        
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+  const handleResetPassword = (email) => {
+    console.log(email);
+    axios.put(`http://127.0.0.1:8000/resetPassword/`, {
+      email: email,
+    })
+    .then(response => {   
+      setUserData(response.data);
+      toast.success('Successfully reset password');
+    })
+    .catch(error => {
+      console.error(error);
+      toast.error('Something Went Wrong');
+    });
+  };
+  const handleUpdatePhoneNumber = (email) => {
+    axios.put(`http://127.0.0.1:8000/user/${email}`, {
+      phone_number: userData[email].newPhoneNumber,
+    })
+    .then(response => {
+      // update the phone number for the specific user
+      setUserData(prevState => ({
+        ...prevState,
+        [email]: {
+          ...prevState[email],
+          phone_number: prevState[email].newPhoneNumber
+        }
+      }));
+      // show a success toast
+      setShowToast(true);
+      window.location.reload()
+    })
+    .catch(error => {
+      console.error(error);
+      toast.error('You have not changed anything');
+    });
+  };
+  useEffect(() => {
+    if (showToast) {
+      toast.success('Phone number updated successfully');
+      setShowToast(false);
+    }
+  }, [showToast]);
+  const handleUpdateRole = (email) => {
+    console.log(email);
+    console.log(userData[email].phone_number);
+    console.log(userData[email].newRole);
+    axios.put(`http://127.0.0.1:8000/user/${email}`, {
+      role: userData[email].newRole
+    })
+    .then(response => {
+      // update the phone number for the specific user
+      setUserData(prevState => ({
+        ...prevState,
+        [email]: {
+          ...prevState[email],
+          phone_number: prevState[email].newRole
+        }
+      }));
+      // show a success toast
+      toast.success('Role has been updated successfully');
+    })
+    .catch(error => {
+      console.error(error);
+      toast.error('You have not changed anything');
+    });
+  };
   
+
   return (
 <div>
   <nav>
@@ -98,6 +187,7 @@ function Users() {
         {/* ROW 1 */}
         <div className="inventory">
           <p>*NOTE: Ctrl + F to find users</p>
+          <p>*NOTE: resetting password will reset the password to the user's email</p>
         </div>
         {/* ROW 2 */}
         <div className="row-2">
@@ -128,58 +218,94 @@ function Users() {
             </thead>
             <tbody>
               {users.map(user => (
-              <tr key={user.id}>
-                <td>
+                <tr key={user.id}>
+                  <td>
                   <div className="checkboxes">
                     <label className="checkbox">
-                      <input type="checkbox" />
+                      <input
+                        type="checkbox"
+                        value={user.email}
+                        checked={selectedItems.includes(user.email)}
+                        onChange={e => {
+                          if (e.target.checked) {
+                            setSelectedItems([...selectedItems, e.target.value]);
+                          } else {
+                            setSelectedItems(selectedItems.filter(email => email !== e.target.value));
+                          }
+                          
+                        }}
+                        
+                      />
                       <span className="indicator" />
                     </label>
-                  </div>
-                </td>
-                <td>{user.first_name}</td>
-                <td>{user.last_name}</td>
-                <td>{user.email}</td>
-                <td>
+                    </div>
+                  </td>
+                  <td>{user.first_name}</td>
+                  <td>{user.last_name}</td>
+                  <td>{user.email}</td>
+                  <td>
                   <form action="/action_page.php">
-                    <input 
+                    <input
                       type="text"
-                      className="number"
-                      name="phone"
-                      value={user.phone_number}
+                      placeholder={user.phone_number}
+                      value={userData[user.email]?.newPhoneNumber}
+                      onChange={(e) => setUserData(prevState => ({
+                        ...prevState,
+                        [user.email]: {
+                          ...prevState[user.email],
+                          newPhoneNumber: e.target.value
+                        }
+                      }))}
                     />
                   </form>
                 </td>
                 <td>
-                  <select id="role1">
-                    <option value="select">{user.role}</option>
-                    <option value="cond">{user.super_admin}</option>
-                    <option value="cond">{user.admin}</option>
-                    <option value="cond">{user.super_admin}</option>
+                <select
+                      value={userData[user.email]?.newRole || user.role}
+                      onChange={(e) => setUserData(prevState => ({
+                        ...prevState,
+                        [user.email]: {
+                          ...prevState[user.email],
+                          newRole: e.target.value
+                        }
+                      }))}
+                    >
+                    <option value="1">Student</option>
+                    <option value="2">Admin</option>
+                    <option value="3">Editor</option>
                   </select>
                 </td>
                 <td>
                   <div className="category">
                     <button
                       className="update category"
-                      onClick={openFormUpdateUsers}
+                      onClick={() => handleUpdatePhoneNumber(user.email)}
                     >
                       <i className="bx bxs-pencil action" />
-                      Update User
+                      Update Phone Number
+                    </button>
+                    <button
+                      className="update category"
+                      onClick={() => handleUpdateRole(user.email)}
+                    >
+                      <i className="bx bxs-pencil action" />
+                      Update Role
                     </button>
                     <button
                       className="reset category"
-                      onClick={openFormResetPassword}
+                      onClick={() => handleResetPassword(user.email)}
                     >
                       <i className="bx bx-refresh" />
                       Reset Password
                     </button>
+
                   </div>
                 </td>
               </tr>
               ))}
             </tbody>
           </table>
+          <ToastContainer />
         </div>
       </div>
     </div>
@@ -228,6 +354,7 @@ function Users() {
             className="action_btn confirm"
             type="submit"
             value="Confirm"
+            onClick={deleteSelectedUsers}
           />
           <input
             className="action_btn cancel"
@@ -250,6 +377,7 @@ function Users() {
             className="action_btn confirm"
             type="submit"
             value="Confirm"
+            
           />
           <input
             className="action_btn cancel"

@@ -16,6 +16,7 @@ function Adduser() {
   const [user_password, setPassword] = useState('');
   const [role, setRole] = useState('');
   const navigate = useNavigate();
+  
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -146,6 +147,7 @@ function Adduser() {
                   id="category"
                   value={role}
                   onChange={handleRoleChange}
+                  
                 >
                   <option value="null">Select Role</option>
                   <option value="3">Editor</option>
