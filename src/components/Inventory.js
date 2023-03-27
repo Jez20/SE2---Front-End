@@ -12,21 +12,24 @@ function Inventory() {
 
   // states:
   const navigate = useNavigate();
-  const[items, setItem] = useState([]);
-  const[itemCode, setItemCode] = useState("");
-  const[itemName, setItemName] = useState("");
-  const[itemCondition, setItemCondition] = useState("");
-  const[itemCategoryField, setItemCategoryField] = useState("");
-  const[conditionFilter, setConditionFilter] = useState('');
-  const[selectedCategory, setSelectedCategory] = useState('Default');
-  const[dynamicCategory, setDynamicCategory] = useState([]);
-  //const[status, setStatus] = useState("") // what is status and do we need it?
+  const[items, setItem] = useState([])
+  const[itemCode, setItemCode] = useState("")
+  const[itemName, setItemName] = useState("")
+  const[itemCondition, setItemCondition] = useState("")
+  const[itemCategory, setItemCategory] = useState("")
+  const[conditionFilter, setConditionFilter] = useState('')
+  //const[status, setStatus] = useState("")
 
-  // hooks
+  // hook
+  const handleLogout = () => {
+    sessionStorage.removeItem('sessionid');
+    sessionStorage.removeItem('role');
+    navigate('/Login');
+  };
+
   useEffect(() => {
     refreshInventoryTable();
-    refreshCategoryTable();
-  }, []); 
+  }, []);
 
   // Get The Inventory
   const refreshInventoryTable = () =>{
@@ -41,32 +44,7 @@ function Inventory() {
       console.error(error);
     });
 }
-
-  // Get the category table
-  const refreshCategoryTable = () =>{
-    const returnDomain = require('../common/domainString')
-    const selectedDomain = returnDomain();
-    axios.get(selectedDomain + '/category/', {headers:{'sessionid': id}})
-    .then(
-    response => {
-        const data = response.data;
-        const categoryHashMap = {};
-
-        data.forEach(category => {
-          categoryHashMap[category.category_id] = category.category_name;
-        });
-        //console.log(categoryHashMap);
-        const dynamicCategoryOptions = Object.entries(categoryHashMap).map(([id, name]) => (
-          <option key={id} value={id}>{name}</option>
-        ));
-        setDynamicCategory(dynamicCategoryOptions);
-    })
-    .catch(error => {
-      console.error(error);
-    });
-  }
-
-  // Handlers
+  // info handlers
   function handleItemName(event){
     setItemName(event.target.value);
   }
@@ -76,7 +54,7 @@ function Inventory() {
   }
 
   function handleItemCategory(event){
-    setSelectedCategory(event.target.value);
+    setItemCategory(event.target.value);
   }
 
   function handleConditionFilter(event){
@@ -88,61 +66,13 @@ function Inventory() {
     refreshInventoryTable();
   }
 
-  function handleItemCategoryField(event){
-    setItemCategoryField(event.target.value);
-  }
-
-  // Delete category
-  function handleSubmitDeleteCategory (event){
-    event.preventDefault();
-    const categ_code = selectedCategory;
-    const returnDomain = require('../common/domainString')
-    const selectedDomain = returnDomain();
-    console.log(selectedDomain + categ_code);
-    axios.delete(selectedDomain + '/category/' + categ_code, {headers:{'sessionid': id}})
-    .then((response) => {
-      refreshInventoryTable();
-      refreshCategoryTable();
-      document.getElementById("deleteCategoryOverlay").style.display ="none";
-      console.log("AXIOS.DELETE SUCCESSFUL: " + response);
-    })
-    .catch((error) => {
-      console.log("INSIDE ERROR!!!");
-      console.log(error);
-    });
-
-  }
-
-  // Add category
-  function handleSubmitAddCategory (event){
-    event.preventDefault();
-    const categoryPostObj = {
-      category_name: itemCategoryField
-    }
-    console.log(categoryPostObj);
-
-    const returnDomain = require('../common/domainString')
-    const selectedDomain = returnDomain();
-    axios.post(selectedDomain + '/category/', categoryPostObj, {headers:{'sessionid': id}})
-    .then((response) => {
-        refreshInventoryTable();
-        refreshCategoryTable();
-        document.getElementById("addCategoryOverlay").style.display ="none";
-        console.log("AXIOS.POST SUCCESSFUL: " + response);
-    })
-    .catch((error) => {
-      console.log("INSIDE ERROR!!!");
-      console.log(error);
-    });
-  }
-
-  // Add Item
+  // + Add Item using axios.post
   function handleSubmitAddItem(event){
     event.preventDefault();
     const dataPostObj = {
       item_name: itemName,
       item_condition: itemCondition,
-      category: selectedCategory, // num
+      category: itemCategory, // num
       status: "TEST_STATUS"
     }
     const dataPost = [
@@ -151,7 +81,7 @@ function Inventory() {
     console.log(dataPost);
     console.log(itemName);
     console.log(itemCondition);
-    console.log(selectedCategory);
+    console.log(itemCategory);
 
     const returnDomain = require('../common/domainString')
     const selectedDomain = returnDomain();
@@ -160,15 +90,15 @@ function Inventory() {
         refreshInventoryTable();
         document.getElementById("addItemsOverlay").style.display ="none";
         console.log("AXIOS.POST SUCCESSFUL: " + response);
+        window.location.reload()
     })
     .catch((error) => {
       console.log("INSIDE ERROR!!!");
       console.log(error);
     });
-  } 
+  } // end of handle submit function
 
-  // IN-ROW buttons:
-
+  // IN-ROW buttons
   // update
   function updateItem(event) {
     event.preventDefault();
@@ -176,43 +106,28 @@ function Inventory() {
     const returnDomain = require('../common/domainString')
     const selectedDomain = returnDomain();
     console.log(selectedDomain + item_code);
-  
-    
-    //DEBUG THIS!
-    axios.get(selectedDomain + '/inventory/' + item_code, {headers:{'sessionid': id}})
-    .then(
-    response => {
-      let dataGetSpecCateg = 0;
-      console.log(response.data[0].category.category_id)
-      dataGetSpecCateg = response.data[0].category.category_id
-      console.log(dataGetSpecCateg);
-      console.log("above me^");
-      const dataPut = {
-        item_name: itemName,
-        item_condition: itemCondition,
-        category: dataGetSpecCateg,
-        status: "TEST_STATUS"
-      }
-      console.log(dataPut);
-      console.log(itemName);
-      console.log(itemCondition);
-      console.log(dataGetSpecCateg);
+    console.log("Item_Code is: " + item_code);
+    const dataPut = {
+      item_name: itemName,
+      item_condition: itemCondition,
+      category: 1, // changed to hash map number later, for now hardcoded
+      status: "TEST_STATUS"
+    }
+    console.log(dataPut);
+    console.log(itemName);
+    console.log(itemCondition);
+    console.log(itemCategory);
 
-      axios.put(selectedDomain + '/inventory/' + item_code, dataPut, {headers:{'sessionid': id}})
-      .then((response) => {
-        refreshInventoryTable();
-        document.getElementById("updateItemsOverlay").style.display ="none";
-        console.log("AXIOS.PUT SUCCESSFUL: " + response);
-      })
-      .catch((error) => {
-        console.log("INSIDE ERROR!!!");
-        console.log(error);
-      });
+    axios.put(selectedDomain + '/inventory/' + item_code, dataPut, {headers:{'sessionid': id}})
+    .then((response) => {
+      refreshInventoryTable();
+      document.getElementById("updateItemsOverlay").style.display ="none";
+      console.log("AXIOS.PUT SUCCESSFUL: " + response);
     })
-    .catch(error => {
-      console.error(error);
+    .catch((error) => {
+      console.log("INSIDE ERROR!!!");
+      console.log(error);
     });
-
   }
   // generate QR - front-end's job???
 
@@ -242,35 +157,6 @@ if (roleCompare === "User"){
 }
 
 // cancel Button Handlers:
-function cancelDeleteCategoryOverlay (){
-  document.getElementById("deleteCategoryOverlay").style.display ="none";
-  refreshInventoryTable();
-  refreshCategoryTable();
-}
-
-function cancelAddCategoryOverlay (){
-  document.getElementById("addCategoryOverlay").style.display ="none";
-  refreshInventoryTable();
-  refreshCategoryTable();
-}
-
-function cancelAddItemsOverlay (){
-  document.getElementById("addItemsOverlay").style.display ="none";
-  refreshInventoryTable();
-  refreshCategoryTable();
-}
-
-function cancelUpdateItemsOverlay (){
-  document.getElementById("updateItemsOverlay").style.display ="none";
-  refreshInventoryTable();
-  refreshCategoryTable();
-}
-
-function cancelDeleteItemsOverlay (){
-  document.getElementById("deleteItemsOverlay").style.display ="none";
-  refreshInventoryTable();
-  refreshCategoryTable();
-}
 
 return (
 <>
@@ -322,7 +208,7 @@ return (
       </ul>
       <ul className={inventory.logoutMode}>
         <li>
-          <a href="/Login">
+        <a href="#" onClick={handleLogout}>
             <i className="bx bxs-log-out icon" />
             <span className={inventory.linkName}>Logout</span>
           </a>
@@ -358,7 +244,7 @@ return (
           <div className="row-1-select">
             <form onSubmit={handleTableFilter}>
               <select id="conditionFilterDropdown" onChange={handleConditionFilter}>
-                <option value="">Item Condition Filter</option>
+                <option value="select">Item Condition Filter</option>
                 <option value="Working">Working</option>
                 <option value="Maintenance">Maintenance</option>
                 <option value="Retired">Retired</option>
@@ -383,13 +269,11 @@ return (
               <i className="bx bxs-trash-alt icon" />
               Delete Category
             </button>
-            <button className={`${inventory.add} ${inventory.category}`} 
-            onClick={openFormAddCategory}>
+            <button className={`${inventory.add} ${inventory.category}`} onClick={openFormAddCategory}>
               <i className="bx bxs-category icon" />
               Add Category
             </button>
-            <button className={`${inventory.add} ${inventory.item}`} 
-            onClick={openFormAddItems}>
+            <button className={`${inventory.add} ${inventory.item}`} onClick={openFormAddItems}>
               <i className="bx bx-plus icon" />
               Add Item
             </button>
@@ -493,8 +377,7 @@ return (
           <input
             id="cancelDeleteItem"
             className={`${inventory.action_btn} ${inventory.cancel}`}
-            onClick={cancelDeleteItemsOverlay}
-            type="button"
+            type="submit"
             value="Cancel"
           />
         </div>
@@ -529,8 +412,7 @@ return (
           />
           <input
             className={`${inventory.action_btn} ${inventory.cancel}`}
-            onClick={cancelUpdateItemsOverlay}
-            type="button"
+            type="submit"
             value="Cancel"
           />
         </div>
@@ -548,8 +430,7 @@ return (
         />
         <label htmlFor="username">Condition:</label>
         <div>
-          <select id="selectItemCondition" 
-          onChange={handleItemCondition} className={inventory.dropdown} >
+          <select id="selectItemCondition" onChange={handleItemCondition} className={inventory.dropdown} >
             <option value="Default">Select Item Condition</option>
             <option value="Working">Working</option>
             <option value="Maintenance">Maintenance</option>
@@ -560,10 +441,11 @@ return (
         </div>
         <label htmlFor="username">Category:</label>
         <div>
-          <select value={selectedCategory} 
-          onChange={handleItemCategory} className={inventory.dropdown}>
+          <select id="selectItemCategory" onChange={handleItemCategory} className={inventory.dropdown}>
             <option value="Default">Select Item Category</option>
-            {dynamicCategory}
+            <option value="1">Sports Athletics</option>
+            <option value="2">Construction</option>
+            <option value="3">Laboratory</option>
           </select>
         </div>
         <div className={inventory.buttons}>
@@ -576,8 +458,7 @@ return (
           <input
             id="cancelAddItem"
             className={`${inventory.action_btn} ${inventory.cancel}`}
-            onClick={cancelAddItemsOverlay}
-            type="button"
+            type="submit"
             value="Cancel"
           />
         </div>
@@ -587,10 +468,9 @@ return (
   <div id="addCategoryOverlay" className={inventory.addCategoryOverlay}>
     <div className={inventory.addCategoryWrap}>
       <h2>Add Category</h2>
-      <form onSubmit={handleSubmitAddCategory}>
+      <form>
         <label htmlFor="username">Category:</label>
-        <input type="text" placeholder="Enter category name" id="addCategory" 
-        onChange={handleItemCategoryField}/>
+        <input type="text" placeholder="Enter category name" id="addCategory" />
         <div className={inventory.buttons}>
           <input
             className={`${inventory.action_btn} ${inventory.confirm}`}
@@ -599,8 +479,7 @@ return (
           />
           <input
             className={`${inventory.action_btn} ${inventory.cancel}`}
-            onClick={cancelAddCategoryOverlay}
-            type="button"
+            type="submit"
             value="Cancel"
           />
         </div>
@@ -610,13 +489,14 @@ return (
   <div id="deleteCategoryOverlay" className={inventory.deleteCategoryOverlay}>
     <div className={inventory.deleteCategoryWrap}>
       <h2>Delete Category</h2>
-      <form onSubmit={handleSubmitDeleteCategory}>
+      <form>
         <label htmlFor="username">Categories:</label>
         <div>
-          <select value={selectedCategory} 
-          onChange={handleItemCategory} className={inventory.dropdown}>
-            <option value="Default">Select Item Category</option>
-            {dynamicCategory}
+          <select className={inventory.dropdown}>
+            <option value="select">Select Item Category</option>
+            <option value="cond">Sports Athletics</option>
+            <option value="cond">Construction</option>
+            <option value="cond">Laboratory</option>
           </select>
         </div>
         <div className={inventory.buttons}>
@@ -627,8 +507,7 @@ return (
           />
           <input
             className={`${inventory.action_btn} ${inventory.cancel}`}
-            onClick={cancelDeleteCategoryOverlay}
-            type="button"
+            type="submit"
             value="Cancel"
           />
         </div>
