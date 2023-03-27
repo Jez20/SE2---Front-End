@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRequireAuth } from "../services/useRequireAuth";
 
 function Return() {
-  useRequireAuth("Admin" || "Editor");
+  useRequireAuth(["Admin", "Editor"]);
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   

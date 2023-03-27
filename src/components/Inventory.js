@@ -12,7 +12,7 @@ import { useRequireAuth } from "../services/useRequireAuth";
 function Inventory() {
 
   // states:
-  useRequireAuth("Admin" || "Editor");
+  useRequireAuth(["Admin", "Editor"]);
   const navigate = useNavigate();
   const[items, setItem] = useState([]);
   const[itemCode, setItemCode] = useState("");

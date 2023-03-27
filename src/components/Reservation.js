@@ -7,7 +7,7 @@ import { useRequireAuth } from "../services/useRequireAuth";
 
 
 function Reservation() {
-  useRequireAuth("Admin" || "Editor");
+  useRequireAuth(["Admin", "Editor"]);
 
   const navigate = useNavigate();
 

@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRequireAuth } from "../services/useRequireAuth";
 
 function Users() {
-  useRequireAuth("Editor");
+  useRequireAuth(["Admin", "Editor"]);
   const [users, setUsers] = useState([]);
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
   const [newRole, setNewRole] = useState('');
