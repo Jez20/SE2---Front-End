@@ -151,7 +151,7 @@ function Adduser() {
                   <option value="">Select Role</option>
                   <option value="3">Editor</option>
                   <option value="2">Admin</option>
-                  <option value="1">Student</option>
+                  <option value="1">User</option>
                 </select>
               </div>
               <input

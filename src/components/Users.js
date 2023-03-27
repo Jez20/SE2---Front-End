@@ -129,7 +129,7 @@ function Users() {
         </li>
         <li>
           <a href="/Borrow">
-            <i className="bx bxs-backpack icon" />
+          <i className="bx bxs-shopping-bags" />
             <span className="link-name">Borrow Items</span>
           </a>
         </li>
@@ -249,7 +249,7 @@ function Users() {
                   <td>
                   <form action="/action_page.php">
                     <input
-                      type="text"
+                      type="tel"
                       placeholder={user.phone_number}
                       value={userData[user.email]?.newPhoneNumber}
                       maxlength="11"
@@ -274,7 +274,6 @@ function Users() {
                         }
                       }))}
                     >
-                    <option value="1">Student</option>
                     <option value="2">Admin</option>
                     <option value="3">Editor</option>
                   </select>
