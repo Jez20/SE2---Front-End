@@ -18,7 +18,7 @@ function Inventory() {
   const[itemCondition, setItemCondition] = useState("")
   const[itemCategory, setItemCategory] = useState("")
   const[conditionFilter, setConditionFilter] = useState('')
-  //const[status, setStatus] = useState("")
+  var itemStatus = ""
 
   // hook
   const handleLogout = () => {
@@ -69,12 +69,18 @@ function Inventory() {
   // + Add Item using axios.post
   function handleSubmitAddItem(event){
     event.preventDefault();
-    const dataPostObj = {
-      item_name: itemName,
-      item_condition: itemCondition,
-      category: itemCategory, // num
-      status: "TEST_STATUS"
+    if (itemCondition == "Working") {
+      itemStatus = "Available"
     }
+    else {
+      itemStatus = "Unavailable"
+    }
+      const dataPostObj = {
+        item_name: itemName,
+        item_condition: itemCondition,
+        category: itemCategory, // num
+        status: itemStatus
+      }
     const dataPost = [
       dataPostObj
     ]
@@ -107,12 +113,18 @@ function Inventory() {
     const selectedDomain = returnDomain();
     console.log(selectedDomain + item_code);
     console.log("Item_Code is: " + item_code);
-    const dataPut = {
-      item_name: itemName,
-      item_condition: itemCondition,
-      category: 1, // changed to hash map number later, for now hardcoded
-      status: "TEST_STATUS"
+    if (itemCondition == "Working") {
+      itemStatus = "Available"
     }
+    else {
+      itemStatus = "Unavailable"
+    }
+      const dataPut = {
+        item_name: itemName,
+        item_condition: itemCondition,
+        category: 1, // changed to hash map number later, for now hardcoded
+        status: itemStatus
+      }
     console.log(dataPut);
     console.log(itemName);
     console.log(itemCondition);
