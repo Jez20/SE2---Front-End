@@ -1,7 +1,7 @@
 import React from 'react'
 import userreserve from '../css/userreserve.module.css'
 import '../css/overlay.css'
-
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
 // import { createGlobalStyle } from 'styled-components';
@@ -14,6 +14,14 @@ import { Helmet } from 'react-helmet';
 // <GlobalStyle />
 
 function Userreserve() {
+  
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('sessionid');
+    sessionStorage.removeItem('role');
+    navigate('/Login');
+  };
   return (
 <div>
 <Helmet>
@@ -60,7 +68,7 @@ function Userreserve() {
       </ul>
       <ul className={userreserve.logoutMode}>
         <li>
-          <a href="/Login">
+          <a href="#" onClick={handleLogout}>
             <i className="bx bxs-log-out icon" />
             <span className={userreserve.linkName}>Logout</span>
           </a>

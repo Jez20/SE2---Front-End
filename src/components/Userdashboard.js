@@ -1,8 +1,17 @@
 import React from 'react'
 import '../css/userdashboard.css'
 import '../css/overlay.css'
+import { useNavigate } from 'react-router-dom';
 
 function Userdashboard() {
+  
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('sessionid');
+    sessionStorage.removeItem('role');
+    navigate('/Login');
+  };
   return (
 <div>
   <nav>
@@ -35,7 +44,7 @@ function Userdashboard() {
       </ul>
       <ul className="logout-mode">
         <li>
-          <a href="/Login">
+          <a href="#" onClick={handleLogout}>
             <i className="bx bxs-log-out icon" />
             <span className="link-name">Logout</span>
           </a>
