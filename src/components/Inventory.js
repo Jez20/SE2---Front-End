@@ -20,7 +20,7 @@ function Inventory() {
   const[conditionFilter, setConditionFilter] = useState('');
   const[selectedCategory, setSelectedCategory] = useState('Default');
   const[dynamicCategory, setDynamicCategory] = useState([]);
-  //const[status, setStatus] = useState("") // what is status and do we need it?
+  var itemStatus = ""
 
   // hooks
   useEffect(() => {
@@ -139,12 +139,19 @@ function Inventory() {
   // Add Item
   function handleSubmitAddItem(event){
     event.preventDefault();
+    if (itemCondition == "Working") {
+      itemStatus = "Available"
+    }
+    else {
+      itemStatus = "Unavailable"
+    }
     const dataPostObj = {
       item_name: itemName,
       item_condition: itemCondition,
       category: selectedCategory, // num
-      status: "TEST_STATUS"
+      status: itemStatus
     }
+    
     const dataPost = [
       dataPostObj
     ]
@@ -187,12 +194,19 @@ function Inventory() {
       dataGetSpecCateg = response.data[0].category.category_id
       console.log(dataGetSpecCateg);
       console.log("above me^");
+      if (itemCondition == "Working") {
+        itemStatus = "Available"
+      }
+      else {
+        itemStatus = "Unavailable"
+      }
       const dataPut = {
         item_name: itemName,
         item_condition: itemCondition,
-        category: dataGetSpecCateg,
-        status: "TEST_STATUS"
+        category: 1, // changed to hash map number later, for now hardcoded
+        status: itemStatus
       }
+      
       console.log(dataPut);
       console.log(itemName);
       console.log(itemCondition);
