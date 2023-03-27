@@ -4,9 +4,14 @@ import dashboard from "../css/dashboard.module.css";
 import { useNavigate } from 'react-router-dom';
 // import '../dashboard.css'
 import "../css/overlay.css";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 function Index() {
-  const [historyData, setHistoryData] = useState([]);
+  const[history, setHistory] = useState([]);
+  const[inventory, setInventory] = useState([]);
+  const[sortOrder, setSortOrder] = useState("asc");
+  const imgData = 'images/logo.png';
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -19,12 +24,74 @@ function Index() {
     axios
       .get("http://127.0.0.1:8000/history/")
       .then((response) => {
-        setHistoryData(response.data);
+        setHistory(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
+
+  useEffect(() => { //inventory data
+    axios
+      .get('http://127.0.0.1:8000/inventory/') //axios.get to replace fetch
+      .then( res =>{
+         console.log(res.data);
+         setInventory(res.data);
+       }).catch(err =>{
+         console.log(err);
+       })
+       }, []);
+
+  const countObjectsWithKeyValue = (keyToCount, valueToCount) => {
+  // Use the reduce() method to count the occurrences of the key-value pair
+    const count = inventory.reduce((accumulator, currentValue) => {
+       return accumulator + (currentValue[keyToCount] === valueToCount ? 1 : 0);
+          }, 0);
+    // Return the count
+          return count;
+        };   
+
+  const workingCount = countObjectsWithKeyValue("item_condition","Working");  
+  const maintenanceCount = countObjectsWithKeyValue("item_condition","Maintenance"); 
+  const retiredCount = countObjectsWithKeyValue("item_condition","Retired"); 
+  const damagedCount = countObjectsWithKeyValue("item_condition","Damaged"); 
+  const lostCount = countObjectsWithKeyValue("item_condition","Lost");  
+  
+  const generatePDF = () => {
+    const now = new Date();
+    const fileName = `KLIA-Inventory-History-${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.pdf`;
+    const doc = new jsPDF();
+    const tableHeaders = [['History ID', 'First Name', 'Last Name', 'Email', 'Role', 'Item Name', 'Date (Time-in)', 'Date (Time-Out)']];     
+
+    doc.text('Krislizz International Academy Inventory System', 50,20); // Add company name
+    doc.addImage(imgData, 'PNG', 10, 10, 35, 35); // Add company logo
+        
+    doc.autoTable({
+    theme: 'grid',
+      startY: 50, // set the y-coordinate of the starting position
+        head: tableHeaders,
+        body: history.map(row => [row.history_id, row.email.first_name, row.email.last_name, row.email.email, row.email.role.role_name, row.item_code.item_name, row.date_in, row.date_out]),
+        });
+        
+        doc.save(fileName);
+      }
+   
+      const handleSortChange = (event) => {
+        const order = event.target.value;
+         setSortOrder(order);
+          
+        const sortedHistory = history.sort((a, b) => {
+          const dateA = new Date(a.date_in);
+            const dateB = new Date(b.date_in);
+              if (order ==="asc") {
+                return dateA - dateB;
+              } else {
+                return dateB - dateA;
+              }
+            });
+          
+            setHistory(sortedHistory);
+          }    
 
   return (
     <div className={dashboard.App}>
@@ -108,27 +175,27 @@ function Index() {
               <div className={`${dashboard.box} ${dashboard.box1}`}>
                 <i className="bx bx-check icon" />
                 <span className={dashboard.text}>Working</span>
-                <span className={dashboard.number}>12</span>
+                <span className={dashboard.number}>{workingCount}</span>
               </div>
               <div className={`${dashboard.box} ${dashboard.box2}`}>
                 <i className="bx bxs-wrench" />
                 <span className={dashboard.text}>Maintenance</span>
-                <span className={dashboard.number}>4</span>
+                <span className={dashboard.number}>{maintenanceCount}</span>
               </div>
               <div className={`${dashboard.box} ${dashboard.box3}`}>
                 <i className="bx bxs-shapes icon" />
                 <span className={dashboard.text}>Retired</span>
-                <span className={dashboard.number}>2</span>
+                <span className={dashboard.number}>{retiredCount}</span>
               </div>
               <div className={`${dashboard.box} ${dashboard.box4}`}>
                 <i className="bx bx-health icon" />
                 <span className={dashboard.text}>Damaged</span>
-                <span className={dashboard.number}>3</span>
+                <span className={dashboard.number}>{damagedCount}</span>
               </div>
               <div className={`${dashboard.box} ${dashboard.box5}`}>
                 <i className="bx bxs-x-circle icon" />
                 <span className={dashboard.text}>Lost</span>
-                <span className={dashboard.number}>5</span>
+                <span className={dashboard.number}>{lostCount}</span>
               </div>
             </div>
           </div>
@@ -143,11 +210,11 @@ function Index() {
             <i className="bx bxs-download" />
             Generate Report
           </button>
-          <select id="category" className={dashboard.dashboardSelect}>
-            <option value="select">Date Filter</option>
-            <option value="date-1">Default</option>
-            <option value="date-2">Ascending</option>
-            <option value="date-3">Descending</option>
+          <select id="sortOrder" className={dashboard.dashboardSelect} onChange={handleSortChange}>
+            <option value="asc">Date Filter</option>
+            <option value="des">Default</option>
+            <option value="asc">Ascending</option>
+            <option value="des">Descending</option>
           </select>
           <button className={dashboard.clearLogOpenBtn} onClick={openFormClear}>
             <i className="bx bx-menu-alt-right clear" />
@@ -171,7 +238,7 @@ function Index() {
                 </tr>
               </thead>
               <tbody>
-                {historyData.map((item, index) => (
+                {history.map((item, index) => (
                   <tr key={index}>
                     <td>{item.history_id}</td>
                     <td>{item.email.first_name}</td>
@@ -349,6 +416,7 @@ function Index() {
                   className={`${dashboard.action_btn} ${dashboard.genRep}`}
                   type="submit"
                   value="Print Report"
+                  onClick={generatePDF}
                 />
                 <input
                   className={`${dashboard.action_btn} ${dashboard.cancel}`}
