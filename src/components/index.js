@@ -169,7 +169,7 @@ function Index() {
                     <td>{item.email.first_name}</td>
                     <td>{item.email.last_name}</td>
                     <td>{item.email.email}</td>
-                    <td>{item.email.role}</td>
+                    <td>{item.email.role.role_name}</td>
                     <td>{item.item_code.item_name}</td>
                     <td>{item.date_in}</td>
                     <td>{item.date_out}</td>
