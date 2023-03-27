@@ -9,7 +9,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
 function Index() {
-  useRequireAuth("Admin" || "Editor");
+  useRequireAuth(["Admin", "Editor"]);
   const[history, setHistory] = useState([]);
   const[inventory, setInventory] = useState([]);
   const[sortOrder, setSortOrder] = useState("asc");
