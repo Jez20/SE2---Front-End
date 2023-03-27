@@ -2,9 +2,21 @@ import React from 'react'
 import borrow from '../css/borrow.module.css'
 import '../css/reservation.css'
 import '../css/overlay.css'
+import { useNavigate } from 'react-router-dom';
+import { useRequireAuth } from "../services/useRequireAuth";
 
 
 function Reservation() {
+  useRequireAuth("Admin" || "Editor");
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('sessionid');
+    sessionStorage.removeItem('role');
+    navigate('/Login');
+  };
+
   return (
 <div>
   <nav>
@@ -55,7 +67,7 @@ function Reservation() {
       </ul>
       <ul className="logout-mode">
         <li>
-          <a href="/Login">
+        <a href="#" onClick={handleLogout}>
             <i className="bx bxs-log-out icon" />
             <span className="link-name">Logout</span>
           </a>

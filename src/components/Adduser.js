@@ -6,9 +6,11 @@ import '../css/bootstrap.min.css'
 import '../css/bootstrap.min.css.map'
 import '../css/adduser.css'
 import { useNavigate } from 'react-router-dom';
+import { useRequireAuth } from "../services/useRequireAuth";
 
 
 function Adduser() {
+  useRequireAuth("Admin" || "Editor");
   const [email, setEmail] = useState('');
   const [phone_number, setPhoneNumber] = useState('');
   const [first_name, setFirstName] = useState('');

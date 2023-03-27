@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import dashboard from "../css/dashboard.module.css";
 import { useNavigate } from 'react-router-dom';
+import { useRequireAuth } from "../services/useRequireAuth";
 // import '../dashboard.css'
 import "../css/overlay.css";
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
 function Index() {
+  useRequireAuth("Admin" || "Editor");
   const[history, setHistory] = useState([]);
   const[inventory, setInventory] = useState([]);
   const[sortOrder, setSortOrder] = useState("asc");

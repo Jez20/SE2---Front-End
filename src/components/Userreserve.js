@@ -3,6 +3,7 @@ import userreserve from '../css/userreserve.module.css'
 import '../css/overlay.css'
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import { useRequireAuth } from "../services/useRequireAuth";
 
 // import { createGlobalStyle } from 'styled-components';
 
@@ -14,6 +15,7 @@ import { Helmet } from 'react-helmet';
 // <GlobalStyle />
 
 function Userreserve() {
+  useRequireAuth();
   
   const navigate = useNavigate();
 

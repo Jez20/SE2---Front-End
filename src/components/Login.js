@@ -7,13 +7,10 @@ import '../css/login.css'
 import loginService from '../services/loginService';
 
 function Login() {
-  //React Snackbar code Start
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   const[email, setEmail] = useState("")
   const[password, setPass] = useState("")
-  //const history = useHistory()
-  
 
   function handleEmailChange(event){
     setEmail(event.target.value);
@@ -42,7 +39,7 @@ function Login() {
     } else if (role === 'User') {
       navigate('/Userdashboard');
     } else {
-      // Handle unexpected role value
+      
     }
   }
   catch (error){

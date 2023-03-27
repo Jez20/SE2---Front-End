@@ -5,8 +5,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { useRequireAuth } from "../services/useRequireAuth";
 
 function Users() {
+  useRequireAuth("Editor");
   const [users, setUsers] = useState([]);
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
   const [newRole, setNewRole] = useState('');

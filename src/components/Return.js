@@ -3,8 +3,10 @@ import '../css/overlay.css'
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import { useRequireAuth } from "../services/useRequireAuth";
 
 function Return() {
+  useRequireAuth("Admin" || "Editor");
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   
@@ -13,7 +15,7 @@ function Return() {
     sessionStorage.removeItem('role');
     navigate('/Login');
   };
-  
+
   useEffect(() => {
     axios
       .get('http://127.0.0.1:8000/history/') // replace with your API endpoint
