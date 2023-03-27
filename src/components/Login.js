@@ -34,9 +34,16 @@ function Login() {
     
     try{
     const response = await loginService.loginFunction(data);
+    const { role } = response.data;
     sessionStorage.setItem('sessionid', response.data.sessionid)
     sessionStorage.setItem('role', response.data.role)
-    navigate('/Index');
+    if (role === 'Editor' || role === 'Admin') {
+      navigate('/Index');
+    } else if (role === 'User') {
+      navigate('/Userdashboard');
+    } else {
+      // Handle unexpected role value
+    }
   }
   catch (error){
     console.error(error)

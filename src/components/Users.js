@@ -4,6 +4,7 @@ import '../css/overlay.css'
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function Users() {
   const [users, setUsers] = useState([]);
@@ -12,9 +13,15 @@ function Users() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [userData, setUserData] = useState({});
   const [showToast, setShowToast] = useState(false);
-
+  const navigate = useNavigate();
   const returnDomain = require('../common/domainString')
   const selectedDomain = returnDomain();
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('sessionid');
+    sessionStorage.removeItem('role');
+    navigate('/Login');
+  };
 
   useEffect(() => {
     axios.get(selectedDomain + '/user/')
@@ -160,7 +167,7 @@ function Users() {
       </ul>
       <ul className="logout-mode">
         <li>
-          <a href="/Login">
+          <a href="#" onClick={handleLogout}>
             <i className="bx bxs-log-out icon" />
             <span className="link-name">Logout</span>
           </a>
@@ -274,6 +281,7 @@ function Users() {
                         }
                       }))}
                     >
+                    <option value="1">User</option>
                     <option value="2">Admin</option>
                     <option value="3">Editor</option>
                   </select>

@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import dashboard from "../css/dashboard.module.css";
+import { useNavigate } from 'react-router-dom';
 // import '../dashboard.css'
 import "../css/overlay.css";
 
 function Index() {
   const [historyData, setHistoryData] = useState([]);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('sessionid');
+    sessionStorage.removeItem('role');
+    navigate('/Login');
+  };
 
   useEffect(() => {
     axios
@@ -68,7 +76,7 @@ function Index() {
           </ul>
           <ul className={dashboard.logOutMode}>
             <li>
-              <a href="/Login">
+              <a href="#" onClick={handleLogout}>
                 <i className="bx bxs-log-out icon" />
                 <span className={dashboard.linkName}>Logout</span>
               </a>

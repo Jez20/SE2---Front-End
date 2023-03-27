@@ -2,10 +2,18 @@ import returncss from '../css/return.module.css'
 import '../css/overlay.css'
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 function Return() {
   const [data, setData] = useState([]);
-
+  const navigate = useNavigate();
+  
+  const handleLogout = () => {
+    sessionStorage.removeItem('sessionid');
+    sessionStorage.removeItem('role');
+    navigate('/Login');
+  };
+  
   useEffect(() => {
     axios
       .get('http://127.0.0.1:8000/history/') // replace with your API endpoint
@@ -67,7 +75,7 @@ function Return() {
       </ul>
       <ul className={returncss.logoutMode}>
         <li>
-          <a href="/Login">
+        <a href="#" onClick={handleLogout}>
             <i className="bx bxs-log-out icon" />
             <span className={returncss.linkName}>Logout</span>
           </a>
