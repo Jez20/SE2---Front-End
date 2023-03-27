@@ -4,6 +4,7 @@ import '../css/overlay.css';
 import axios from "axios";
 import { Navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { useRequireAuth } from "../services/useRequireAuth";
 
   const id = sessionStorage.getItem('sessionid')
   console.log("Session ID: " + id)
@@ -11,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 function Inventory() {
 
   // states:
+  useRequireAuth("Admin" || "Editor");
   const navigate = useNavigate();
   const[items, setItem] = useState([]);
   const[itemCode, setItemCode] = useState("");
@@ -22,6 +24,11 @@ function Inventory() {
   const[dynamicCategory, setDynamicCategory] = useState([]);
   var itemStatus = ""
 
+  const handleLogout = () => {
+    sessionStorage.removeItem('sessionid');
+    sessionStorage.removeItem('role');
+    navigate('/Login');
+  };
   // hooks
   useEffect(() => {
     refreshInventoryTable();
@@ -336,7 +343,7 @@ return (
       </ul>
       <ul className={inventory.logoutMode}>
         <li>
-          <a href="/Login">
+        <a href="#" onClick={handleLogout}>
             <i className="bx bxs-log-out icon" />
             <span className={inventory.linkName}>Logout</span>
           </a>
