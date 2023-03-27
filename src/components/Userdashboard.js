@@ -1,10 +1,12 @@
-import React from 'react'
+
 import '../css/userdashboard.css'
 import '../css/overlay.css'
 import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import axios from "axios";
 
 function Userdashboard() {
-  
+  const [userHistory, setUserHistory] = useState([]);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -12,6 +14,18 @@ function Userdashboard() {
     sessionStorage.removeItem('role');
     navigate('/Login');
   };
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/userHistory/")
+      .then((response) => {
+        setUserHistory(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+
   return (
 <div>
   <nav>
@@ -77,29 +91,19 @@ function Userdashboard() {
               <tr>
                 <th>Item Code</th>
                 <th>Item Name</th>
-                <th>Time - In</th>
-                <th>Time - Out</th>
+                <th>Date - In</th>
+                <th>Date - Out</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Item-001</td>
-                <td>Ball</td>
-                <td>10:00 AM</td>
-                <td>12:00 PM</td>
-              </tr>
-              <tr>
-                <td>Item-001</td>
-                <td>Ball</td>
-                <td>10:00 AM</td>
-                <td>12:00 PM</td>
-              </tr>
-              <tr>
-                <td>Item-001</td>
-                <td>Ball</td>
-                <td>10:00 AM</td>
-                <td>12:00 PM</td>
-              </tr>
+              {userHistory.map((history) => (
+                <tr key={history.id}>
+                  <td>{history.item_code}</td>
+                  <td>{history.item_name}</td>
+                  <td>{history.date_in}</td>
+                  <td>{history.date_out}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
