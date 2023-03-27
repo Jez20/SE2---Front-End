@@ -13,6 +13,11 @@ console.log("Session ID: " + id)
 function Borrow() {
   // states:
   const [items, setItem] = useState([])
+  const [itemCode, setItemCode] = useState("")
+  const [itemName, setItemName] = useState("")
+  const [itemCondition, setItemCondition] = useState("")
+  const [itemCategory, setItemCategory] = useState("")
+  //const[status, setStatus] = useState("")
 
   // hook
   useEffect(() => {
@@ -21,10 +26,7 @@ function Borrow() {
 
   // Get The Inventory
   const refreshInventoryTable = () => {
-    
-    const returnDomain = require('../common/domainString')
-    const selectedDomain = returnDomain();
-    axios.get(selectedDomain + "/itemsView/", { headers: { 'sessionid': id } })
+    axios.get("http://127.0.0.1:8000/inventory/", { headers: { 'sessionid': id } })
       .then(
         response => {
           setItem(response.data);
@@ -35,6 +37,45 @@ function Borrow() {
   }
 
   // + Add Item using axios.post
+  function handleItemName(event) {
+    setItemName(event.target.value);
+  }
+
+  function handleItemCondition(event) {
+    setItemCondition(event.target.value);
+  }
+
+  function handleItemCategory(event) {
+    setItemCategory(event.target.value);
+  }
+
+  function handleSubmitAddItem(event) {
+    event.preventDefault();
+    const dataPostObj = {
+      item_name: itemName,
+      item_condition: itemCondition,
+      category: itemCategory, // num
+      status: "TEST_STATUS"
+    }
+    const dataPost = [
+      dataPostObj
+    ]
+    console.log(dataPost);
+    console.log(itemName);
+    console.log(itemCondition);
+    console.log(itemCategory);
+
+    axios.post("http://127.0.0.1:8000/inventory/", dataPost, { headers: { 'sessionid': id } })
+      .then((response) => {
+        refreshInventoryTable();
+        document.getElementById("addItemsOverlay").style.display = "none";
+        console.log("AXIOS.POST SUCCESSFUL: " + response);
+      })
+      .catch((error) => {
+        console.log("INSIDE ERROR!!!");
+        console.log(error);
+      });
+  } // end of handle submit function
 
   // IN-ROW buttons
   // update
@@ -349,6 +390,19 @@ function Borrow() {
 
     )
   }
+
+  // Select All
+
+  // function checkall(formname, checkname, thestate) {
+  //     var el_collection = eval(
+  //       "document.forms." + formname + "." + checkname
+  //     );
+  //     for (c = 0; c < el_collection.length; c++)
+  //       el_collection[c].checked = thestate;
+  //   }
+
+
+  //overlays
 
   function openForm() {
     document.getElementById("myOverlay").style.display = "block";
