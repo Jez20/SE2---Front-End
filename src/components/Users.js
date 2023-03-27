@@ -257,8 +257,8 @@ function Users() {
                   <form action="/action_page.php">
                     <input
                       type="tel"
-                      // placeholder={user.phone_number}
-                      value={userData[user.email]?.newPhoneNumber || user.phone_number}
+                      placeholder={user.phone_number}
+                      value={userData[user.email]?.newPhoneNumber}
                       maxlength="11"
                       onChange={(e) => setUserData(prevState => ({
                         ...prevState,
