@@ -1241,3 +1241,13 @@ div.activityData .box{
     margin-left: 80px;
     /* display: flex; */
 }
+
+input[type="button"] {
+    font-size: 16px;
+    margin-top: 10px;
+    color: #fff;
+    font-weight: bold;
+    /* background: #cc0033; */
+    /* border: 1px solid #fff; */
+    cursor: pointer;
+}
