@@ -8,13 +8,11 @@ import { useRequireAuth } from "../services/useRequireAuth";
 import {Container, Card, CardContent, makeStyles, Grid, TextField, Button} from '@material-ui/core';
 import QRCode from 'qrcode';
 import QrReader from "react-qr-scanner";
-// import { QrReader } from "react-qr-reader";
-// import QrScanner from 'react-qr-scanner';
-
 
 function Return() {
   useRequireAuth(["Admin", "Editor"]);
   const [data, setData] = useState([]);
+  const [storeResult, setstoreResult] = useState("");
   const navigate = useNavigate();
   
   const handleLogout = () => {
@@ -25,7 +23,7 @@ function Return() {
 
   useEffect(() => {
     axios
-      .get('http://127.0.0.1:8000/history/') // replace with your API endpoint
+      .get('http://127.0.0.1:8000/history/returnItems/returnGet') // replace with your API endpoint
       .then((response) => {
         setData(response.data);
       })
@@ -41,6 +39,15 @@ function Return() {
   const classes = useStyles();
   const qrRef = useRef(null);
 
+  const [checkedHistoryIds, setcheckedHistoryIds] = useState([]);
+
+  const handleCheck = (history_id) => {
+    if (checkedHistoryIds.includes(history_id)){
+      setcheckedHistoryIds(checkedHistoryIds.filter((history_id) => history_id !== history_id));
+    } else {
+      checkedHistoryIds([...checkedHistoryIds, history_id]);
+    }
+  }; 
 
   const generateQrCode = async () => {
     try {
@@ -245,7 +252,7 @@ function Return() {
           <td>
             <div className={returncss.checkboxes}>
               <label className={returncss.checkbox}>
-                <input type="checkbox" />
+                <input type="checkbox" checked={checkedHistoryIds.includes(item.history_id)}/>
                 <span className={returncss.indicator} />
               </label>
             </div>
@@ -340,13 +347,15 @@ function Return() {
         <div className={returncss.card} style={{ width: "18rem" }}>
         <div>
     <QrReader
-      delay={300}
+      delay={100}
       onError={handleError}
       onScan={handleScan}
       style={{width: '300px', height: '300px'}}
     />
     <p style={{textAlign: 'center'}}>
-  {result && result.text}
+  {(result && result.text)
+  }
+  
 </p>
   </div>
         </div>

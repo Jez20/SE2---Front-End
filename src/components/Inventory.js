@@ -690,10 +690,6 @@ return (
           <CardContent>
               <Grid container spacing={2}>
                   <Grid item xl={4} lg={4} md={6} sm={12} xs={12} >
-                      <TextField label="Enter Text Here" onChange={(e) => setText(e.target.value)} style={{width: '200px'}}/>
-                        <br/>
-                        <br/>
-                        <br/>
                         {imageUrl ? (
                           <a href={imageUrl} download>
                               <img src={imageUrl} alt="img" style={{width: '200px'}}/>
@@ -713,8 +709,6 @@ return (
         value="Proceed"
       />
     </div>
-            <Button className={classes.btn} variant="contained" 
-    color="primary" onClick={() => generateQrCode()}>Generate</Button> 
     </div>
   </form>
 </div>
