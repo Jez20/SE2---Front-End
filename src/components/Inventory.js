@@ -191,16 +191,11 @@ function Inventory() {
     const selectedDomain = returnDomain();
     console.log(selectedDomain + item_code);
   
-    
-    //DEBUG THIS!
     axios.get(selectedDomain + '/inventory/' + item_code, {headers:{'sessionid': id}})
     .then(
     response => {
       let dataGetSpecCateg = 0;
-      console.log(response.data[0].category.category_id)
       dataGetSpecCateg = response.data[0].category.category_id
-      console.log(dataGetSpecCateg);
-      console.log("above me^");
       if (itemCondition == "Working") {
         itemStatus = "Available"
       }
@@ -210,7 +205,7 @@ function Inventory() {
       const dataPut = {
         item_name: itemName,
         item_condition: itemCondition,
-        category: 1, // changed to hash map number later, for now hardcoded
+        category: dataGetSpecCateg,
         status: itemStatus
       }
       
@@ -428,8 +423,6 @@ return (
               </tr>
             </thead>
             <tbody>
-
-              {/* Testing Grounds - kyle*/}
               {
                 items.map(
                   row => (
@@ -459,7 +452,6 @@ return (
                   )
                 )
               }
-
             </tbody>
           </table>
         </div>
@@ -685,7 +677,6 @@ return (
 }
 
 //overlays
-
 function openForm() {
     document.getElementById("myOverlay").style.display ="block";
 }
