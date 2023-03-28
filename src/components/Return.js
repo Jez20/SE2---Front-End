@@ -3,6 +3,7 @@ import '../css/overlay.css'
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 import { useRequireAuth } from "../services/useRequireAuth";
 
 import {Container, Card, CardContent, makeStyles, Grid, TextField, Button} from '@material-ui/core';
@@ -97,6 +98,56 @@ function Return() {
       width: 320,
     };
 
+    //Change Password
+
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    const data = {
+      email: "Editor@gmail.com", // change your email address here for test purposes, erase this during deployment
+      old_password: currentPassword,
+      new_password: newPassword,
+      user_password: confirmPassword,
+    };
+    console.log(currentPassword);
+    console.log(newPassword);
+    console.log(confirmPassword);
+    axios.put('http://127.0.0.1:8000/userChangePassword/', data)
+      .then(response => {
+        console.log(response.data);
+        // add a success message to your UI if needed
+        // hide the overlay
+        toast.success("Password updated successfully");
+        handleCancel();
+      })
+      .catch(error => {
+        console.error(error);
+        if (error.response.status === 400) {
+          // handle a 400 conflict error
+          toast.error("Old password matches the new password");
+        }
+        if (error.response.status === 409) {
+          // handle a 409 conflict error
+          toast.error("Password update failed - password mismatched");
+        }
+        if (error.response.status === 404) {
+          // handle a 404 conflict error
+          toast.error("Current password is incorrect");
+        } 
+        if (error.response.status === 401) {
+          // handle any other error
+          toast.error("Password update failed");
+        }
+      });
+  }
+  
+  function handleCancel() {
+    // hide the overlay
+    document.getElementById("myOverlay").style.display ="none";
+  }
 
   return (
 <div>
@@ -268,32 +319,48 @@ function Return() {
   <div id="myOverlay" className={returncss.overlay}>
     <div className={returncss.wrap}>
       <h2>Change Password</h2>
-      <form>
-        <label htmlFor="username">Current Password:</label>
-        <input
-          type="text"
-          placeholder="Enter your current password"
-          id="currentPass"
-        />
-        <label htmlFor="username">New Password:</label>
-        <input type="text" placeholder="Enter your new password" id="newPass" />
-        <label htmlFor="username">Confirm Password:</label>
-        <input type="text" placeholder="Confirm password" id="conPass" />
-        <div className={returncss.buttons}>
-          <input
-            className={`${returncss.action_btn} ${returncss.confirm}`}
-            type="submit"
-            value="Confirm"
-          />
-          <input
-            className={`${returncss.action_btn} ${returncss.cancel}`}
-            type="submit"
-            value="Cancel"
-          />
-        </div>
-      </form>
-    </div>
-  </div>
+      <form onSubmit={handleSubmit}>
+              <label htmlFor="currentPass">Current Password:</label>
+              <input
+                type="password"
+                placeholder="Enter your current password" required
+                id="currentPass"
+                value={currentPassword}
+                onChange={(event) => setCurrentPassword(event.target.value)}
+              />
+              <label htmlFor="newPass">New Password:</label>
+              <input
+                type="password"
+                placeholder="Enter your new password" required
+                id="newPass"
+                value={newPassword}
+                onChange={(event) => setNewPassword(event.target.value)}
+              />
+              <label htmlFor="conPass">Confirm Password:</label>
+              <input
+                type="password"
+                placeholder="Confirm password" required
+                id="conPass"
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+              />
+              <div className="buttons">
+                <input
+                  className="action_btn confirm"
+                  type="submit"
+                  value="Confirm"
+                />
+                <input 
+                  className="action_btn cancel"
+                  type="button"
+                  value="Cancel"
+                  onClick={handleCancel}
+                />
+              </div>
+            </form>
+         </div>
+      </div>
+  <ToastContainer/>
   <div id="markItemsOverlay" className={returncss.markItemsOverlay}>
     <div className={returncss.markItemsWrap}>
       <h1 id="markh1">
@@ -353,9 +420,31 @@ function Return() {
       style={{width: '300px', height: '300px'}}
     />
     <p style={{textAlign: 'center'}}>
-  {(result && result.text)
+  {(result && result.text) &&
+    <div className="card-body">
+      <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+        <TextField
+          id="qr-code-text"
+          label="QR Code Text"
+          value={`Item Code: ${result.text}`}
+          onChange={(e) => handleScan(e.target.value)}
+          variant="outlined"
+          fullWidth
+          InputProps={{
+            readOnly: true,
+          }}
+          InputLabelProps={{
+            style: {
+              color: 'white',
+            },
+          }}
+          classes={{
+            root: classes.textField,
+          }}
+        />
+      </Grid>
+    </div>
   }
-  
 </p>
   </div>
         </div>
@@ -389,7 +478,34 @@ const useStyles = makeStyles((theme) => ({
   btn : {
     marginTop: 10,
     marginBottom: 20
-  }
+  },
+
+  textField: {
+    backgroundColor: 'transparent',
+    '& .MuiInputBase-input': {
+      color: 'white',
+      textAlign: 'center',
+    },
+    '& .MuiInput-underline:before': {
+      borderBottomColor: 'white',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: 'white',
+    },
+    '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+      borderBottomColor: 'white',
+    },
+    '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+      borderColor: 'white',
+    },
+    '& .MuiOutlinedInput-input': {
+      color: 'white',
+      textAlign: 'center',
+    },
+    '& .MuiInputLabel-outlined': {
+      color: 'white',
+    },
+  },
 }));
 
 //overlays

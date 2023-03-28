@@ -121,6 +121,57 @@ function Users() {
       toast.error('You have not changed anything');
     });
   };
+
+  //Change Password
+
+const [currentPassword, setCurrentPassword] = useState('');
+const [newPassword, setNewPassword] = useState('');
+const [confirmPassword, setConfirmPassword] = useState('');
+
+function handleSubmit(event) {
+  event.preventDefault();
+  const data = {
+    email: "Editor@gmail.com", // change your email address here for test purposes, erase this during deployment
+    old_password: currentPassword,
+    new_password: newPassword,
+    user_password: confirmPassword,
+  };
+  console.log(currentPassword);
+  console.log(newPassword);
+  console.log(confirmPassword);
+  axios.put('http://127.0.0.1:8000/userChangePassword/', data)
+    .then(response => {
+      console.log(response.data);
+      // add a success message to your UI if needed
+      // hide the overlay
+      toast.success("Password updated successfully");
+      handleCancel();
+    })
+    .catch(error => {
+      console.error(error);
+      if (error.response.status === 400) {
+        // handle a 400 conflict error
+        toast.error("Old password matches the new password");
+      }
+      if (error.response.status === 409) {
+        // handle a 409 conflict error
+        toast.error("Password update failed - password mismatched");
+      }
+      if (error.response.status === 404) {
+        // handle a 404 conflict error
+        toast.error("Current password is incorrect");
+      } 
+      if (error.response.status === 401) {
+        // handle any other error
+        toast.error("Password update failed");
+      }
+    });
+}
+
+function handleCancel() {
+  // hide the overlay
+  document.getElementById("myOverlay").style.display ="none";
+}
   
 
   return (
@@ -337,32 +388,48 @@ function Users() {
   <div id="myOverlay" className="overlay">
     <div className="wrap">
       <h2>Change Password</h2>
-      <form>
-        <label htmlFor="username">Current Password:</label>
-        <input
-          type="text"
-          placeholder="Enter your current password"
-          id="currentPass"
-        />
-        <label htmlFor="username">New Password:</label>
-        <input type="text" placeholder="Enter your new password" id="newPass" />
-        <label htmlFor="username">Confirm Password:</label>
-        <input type="text" placeholder="Confirm password" id="conPass" />
-        <div className="buttons">
-          <input
-            className="action_btn confirm"
-            type="submit"
-            value="Confirm"
-          />
-          <input
-            className="action_btn cancel"
-            type="submit"
-            value="Cancel"
-          />
-        </div>
-      </form>
-    </div>
-  </div>
+      <form onSubmit={handleSubmit}>
+              <label htmlFor="currentPass">Current Password:</label>
+              <input
+                type="password"
+                placeholder="Enter your current password" required
+                id="currentPass"
+                value={currentPassword}
+                onChange={(event) => setCurrentPassword(event.target.value)}
+              />
+              <label htmlFor="newPass">New Password:</label>
+              <input
+                type="password"
+                placeholder="Enter your new password" required
+                id="newPass"
+                value={newPassword}
+                onChange={(event) => setNewPassword(event.target.value)}
+              />
+              <label htmlFor="conPass">Confirm Password:</label>
+              <input
+                type="password"
+                placeholder="Confirm password" required
+                id="conPass"
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+              />
+              <div className="buttons">
+                <input
+                  className="action_btn confirm"
+                  type="submit"
+                  value="Confirm"
+                />
+                <input 
+                  className="action_btn cancel"
+                  type="button"
+                  value="Cancel"
+                  onClick={handleCancel}
+                />
+              </div>
+            </form>
+         </div>
+      </div>
+  <ToastContainer/>
   <div id="deleteUsersOverlay" className="delete-users-overlay">
     <div className="delete-users-wrap">
       <h1 id="usersh1">
