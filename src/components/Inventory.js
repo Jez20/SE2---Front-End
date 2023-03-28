@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import inventory from '../css/inventory.module.css';
 import '../css/overlay.css';
 import axios from "axios";
@@ -6,10 +6,60 @@ import { Navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useRequireAuth } from "../services/useRequireAuth";
 
+import {Container, Card, CardContent, makeStyles, Grid, TextField, Button} from '@material-ui/core';
+import QRCode from 'qrcode';
+import QrReader from "react-qr-scanner";
+
   const id = sessionStorage.getItem('sessionid')
   console.log("Session ID: " + id)
 
 function Inventory() {
+
+  //QR Code
+
+const handleQRCodeClick = (code) => {
+  setShowOverlay(true);
+  setItemCode(code);
+};
+
+const [qrItemCode, setqrItemCode] = useState(null);
+const [showOverlay, setShowOverlay] = useState(false);
+
+const [text, setText] = useState('');
+const [imageUrl, setImageUrl] = useState('');
+const [scanResultFile, setScanResultFile] = useState('');
+const [scanResultWebCam, setScanResultWebCam] =  useState('');
+const classes = useStyles();
+const qrRef = useRef(null);
+
+
+const generateQrCode = async () => {
+try {
+      const response = await QRCode.toDataURL(text);
+      setImageUrl(response);
+}catch (error) {
+  console.log(error);
+}
+}
+const handleErrorFile = (error) => {
+console.log(error);
+}
+const handleScanFile = (result) => {
+  if (result) {
+      setScanResultFile(result);
+  }
+}
+const onScanFile = () => {
+qrRef.current.openImageDialog();
+}
+const handleErrorWebCam = (error) => {
+console.log(error);
+}
+const handleScanWebCam = (result) => {
+if (result){
+    setScanResultWebCam(result);
+}
+}
 
   // states:
   useRequireAuth(["Admin", "Editor"]);
@@ -289,6 +339,10 @@ function cancelDeleteItemsOverlay (){
 }
 
 return (
+  <div>
+  {showOverlay && (
+document.getElementById("generateQROverlay").style.display ="block"
+    )}
 <>
   <nav>
     <div className={inventory.logoName}>
@@ -423,7 +477,7 @@ return (
               </tr>
             </thead>
             <tbody>
-              {
+            {
                 items.map(
                   row => (
                     <tr key={row.item_code}>
@@ -438,10 +492,17 @@ return (
                             <i className="bx bxs-pencil action"></i>
                             Update
                           </button>
-                          <button className={`${inventory.generate} ${inventory.category}`} 
+                          {/* <button className={`${inventory.generate} ${inventory.category}`} 
                             onClick={openFormGenerateQR}>
                             <i className="bx bx-qr"></i> Generate QR
-                          </button>
+                          </button> */}
+                                    <input
+            className={`${inventory.action_btn} ${inventory.generate}`}
+            type="button"
+            value="Generate"
+            onClick={() => handleQRCodeClick(row.item_code)}
+          />
+          
                           <button className={`${inventory.del} ${inventory.category}`}
                             onClick={(e) =>openFormDeleteItems(row.item_code)}>
                             <i className="bx bxs-trash-alt icon"></i> Delete
@@ -650,31 +711,94 @@ return (
   </div>
   <div id="generateQROverlay" className={inventory.generateQROverlay}>
     <div className={inventory.generateQRWrap}>
-      <h2>QR Generated</h2>
+      <h2>QR Generate</h2>
       <form>
         <div className={inventory.card} style={{ width: "18rem" }}>
-          <img
-            className="card-img-top"
-            src="https://qrcg-free-editor.qr-code-generator.com/main/assets/images/websiteQRCode_noFrame.png"
-            alt="Card image cap"
-            style={{ height: 300, width: 300 }}
-          />
+        <Container className={classes.conatiner}>
+          <Card>
+              {/* <h2 className={classes.title}>Generate Download & Scan QR Code with React js</h2> */}
+              <CardContent>
+                  <Grid container spacing={2}>
+                      <Grid item xl={4} lg={4} md={6} sm={12} xs={12} >
+                          <TextField label="Enter Text Here" onChange={(e) => setText(e.target.value)} style={{width: '200px'}}/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            {imageUrl ? (
+                              <a href={imageUrl} download>
+                                  <img src={imageUrl} alt="img" style={{width: '200px'}}/>
+                              </a>) : null}
+                      </Grid>
+                      {/* <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
+                        <Button className={classes.btn} variant="contained" color="secondary" onClick={onScanFile}>Scan Qr Code</Button>
+                        <QrReader
+                          ref={qrRef}
+                          delay={300}
+                          style={{width: '100%'}}
+                          onError={handleErrorFile}
+                          onScan={handleScanFile}
+                          legacyMode
+                        />
+                        <h3>Scanned Code: {scanResultFile}</h3>
+                      </Grid>
+                      <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
+                         <h3>Qr Code Scan by Web Cam</h3>
+                         <QrReader
+                         delay={300}
+                         style={{width: '100%'}}
+                         onError={handleErrorWebCam}
+                         onScan={handleScanWebCam}
+                         />
+                         <h3>Scanned By WebCam Code: {scanResultWebCam}</h3>
+                      </Grid> */}
+                  </Grid>
+              </CardContent>
+          </Card>
+    </Container>
           <div className="card-body"></div>
         </div>
         <div className={inventory.qr}>
+        <div className={inventory.buttons}>
+          {/* <input
+            className={`${inventory.action_btn} ${inventory.generate}`}
+            type="button"
+            value="Generate"
+            onClick={() => generateQrCode()}
+          /> */}
           <input
-            className={`${inventory.buttonQR} ${inventory.confirm}`}
+            className={`${inventory.action_btn} ${inventory.confirm}`}
             type="submit"
             value="Proceed"
           />
+        </div>
+                {/* <Button className={classes.btn} variant="contained" 
+        color="primary" onClick={() => generateQrCode()}>Generate</Button> */}
         </div>
       </form>
     </div>
   </div>
 </>
-
+</div>
   )
 }
+
+const useStyles = makeStyles((theme) => ({
+  conatiner: {
+    marginTop: 10
+  },
+  title: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems:  'center',
+    background: '#3f51b5',
+    color: '#fff',
+    padding: 20
+  },
+  btn : {
+    marginTop: 10,
+    marginBottom: 20
+  }
+}));
 
 //overlays
 function openForm() {

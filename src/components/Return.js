@@ -1,9 +1,16 @@
 import returncss from '../css/return.module.css'
 import '../css/overlay.css'
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import { useRequireAuth } from "../services/useRequireAuth";
+
+import {Container, Card, CardContent, makeStyles, Grid, TextField, Button} from '@material-ui/core';
+import QRCode from 'qrcode';
+import QrReader from "react-qr-scanner";
+// import { QrReader } from "react-qr-reader";
+// import QrScanner from 'react-qr-scanner';
+
 
 function Return() {
   useRequireAuth(["Admin", "Editor"]);
@@ -26,6 +33,63 @@ function Return() {
         console.log(error);
       });
   }, []);
+
+  const [text, setText] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [scanResultFile, setScanResultFile] = useState('');
+  const [scanResultWebCam, setScanResultWebCam] =  useState('');
+  const classes = useStyles();
+  const qrRef = useRef(null);
+
+
+  const generateQrCode = async () => {
+    try {
+          const response = await QRCode.toDataURL(text);
+          setImageUrl(response);
+    }catch (error) {
+      console.log(error);
+    }
+  }
+  const handleErrorFile = (error) => {
+    console.log(error);
+  }
+  const handleScanFile = (result) => {
+      if (result) {
+          setScanResultFile(result);
+      }
+  }
+  const onScanFile = () => {
+    qrRef.current.openImageDialog();
+  }
+  const handleErrorWebCam = (error) => {
+    console.log(error);
+  }
+  const handleScanWebCam = (result) => {
+    if (result){
+        setScanResultWebCam(result);
+    }
+   }
+
+
+    const [delay, setDelay] = useState(100);
+    const [result, setResult] = useState('No result');
+  
+    
+    const handleScan = (result) => {
+      if (result) {
+        setResult(result);
+      }
+    }
+  
+    const handleError = (err) => {
+      console.error(err);
+    };
+  
+    const previewStyle = {
+      height: 240,
+      width: 320,
+    };
+
 
   return (
 <div>
@@ -274,13 +338,17 @@ function Return() {
       <h2>Scan QR</h2>
       <form>
         <div className={returncss.card} style={{ width: "18rem" }}>
-          <img
-            className="card-img-top"
-            src="https://qrcg-free-editor.qr-code-generator.com/main/assets/images/websiteQRCode_noFrame.png"
-            alt="Card image cap"
-            style={{ height: 300, width: 300 }}
-          />
-          <div className="card-body"></div>
+        <div>
+    <QrReader
+      delay={300}
+      onError={handleError}
+      onScan={handleScan}
+      style={{width: '300px', height: '300px'}}
+    />
+    <p style={{textAlign: 'center'}}>
+  {result && result.text}
+</p>
+  </div>
         </div>
         <div className={returncss.qr}>
           <input
@@ -295,7 +363,25 @@ function Return() {
 </div>
 
   )
-}
+              }
+
+const useStyles = makeStyles((theme) => ({
+  conatiner: {
+    marginTop: 10
+  },
+  title: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems:  'center',
+    background: '#3f51b5',
+    color: '#fff',
+    padding: 20
+  },
+  btn : {
+    marginTop: 10,
+    marginBottom: 20
+  }
+}));
 
 //overlays
 
