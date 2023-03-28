@@ -53,6 +53,33 @@ function Borrow() {
     });
   }
 
+  function handleSubmitReservation(){
+    
+    for (let x of selectedItems) {
+    const dataPostObj = {
+      email: document.getElementById("number").value,
+      item_code: x,
+      claim: 0 // num
+    }
+    
+    const dataPost = [
+     dataPostObj
+    ]
+    const returnDomain = require('../common/domainString')
+    const selectedDomain = returnDomain();
+    axios.post(selectedDomain + '/reservation/', dataPost, {headers:{'sessionid': id}})
+    .then((response) => {
+        refreshInventoryTable();
+        document.getElementById("addItemsOverlay").style.display ="none";
+        console.log("AXIOS.POST SUCCESSFUL: " + response);
+    })
+    .catch((error) => {
+      console.log("INSIDE ERROR!!!");
+      console.log(error);
+    });
+  }
+  } 
+
   return (
 
     <div>
@@ -159,7 +186,7 @@ function Borrow() {
                 className="email"
                 type="text"
                 id="number"
-                name="phone"
+                name="email"
                 placeholder="Email"
               />
             </form>
@@ -181,12 +208,13 @@ function Borrow() {
             <button
               className={`${borrow.update} ${borrow.category}`}
               onClick={(event) => {
-                const queryParams = new URLSearchParams();
-                selectedItems.forEach((itemCode) => {
-                  queryParams.append("item", itemCode);
-                });
-                const url = `/Reservation?${queryParams.toString()}`;
-                window.location.href = url;
+                // const queryParams = new URLSearchParams();
+                handleSubmitReservation()
+                // selectedItems.forEach((itemCode) => {
+                //   queryParams.append("item", itemCode);
+                // });
+                // const url = `/Reservation?${queryParams.toString()}`;
+                // window.location.href = url;
               }}
             >
               <i className="bx bxs-check-circle" />
@@ -225,7 +253,21 @@ function Borrow() {
                       <div className={borrow.cardDivider}>
                         <h2>{listeditem.item_name}</h2>
                         <h3>ITEM-{listeditem.item_code}</h3>
-                        <input id={`${listeditem.item_code}`} input name="reservableItems" className={borrow.radio} type="checkbox" />
+                        <input id={`${listeditem.item_code}`} 
+                        input name="reservableItems" 
+                        className={borrow.radio} 
+                        type="checkbox" 
+                        onClick={() => {
+                          const selectedIndex = selectedItems.indexOf(listeditem.item_code);
+                          if (selectedIndex === -1) {
+                            setSelectedItems([...selectedItems, listeditem.item_code]);
+                          } else {
+                            const newSelectedItems = [...selectedItems];
+                            newSelectedItems.splice(selectedIndex, 1);
+                            setSelectedItems(newSelectedItems);
+                          }
+                        }}
+                        />
                       </div>
                       <div className="card-section">
                         <div className={borrow.category}>

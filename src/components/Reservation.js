@@ -1,21 +1,54 @@
-import React from 'react'
 import borrow from '../css/borrow.module.css'
+import axios from "axios";
 import '../css/reservation.css'
 import '../css/overlay.css'
 import { useNavigate } from 'react-router-dom';
 import { useRequireAuth } from "../services/useRequireAuth";
+import React, { useEffect, useState } from 'react';
+import { useLocation } from "react-router-dom";
 
+const id = sessionStorage.getItem('sessionid')
+console.log("Session ID: " + id)
 
 function Reservation() {
   useRequireAuth(["Admin", "Editor"]);
 
+  const location = useLocation();
+
   const navigate = useNavigate();
+
+  const [items, setItem] = useState([])
 
   const handleLogout = () => {
     sessionStorage.removeItem('sessionid');
     sessionStorage.removeItem('role');
     navigate('/Login');
   };
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const selectedItems = queryParams.getAll("item");
+    console.log(selectedItems);
+    refreshInventoryTable(selectedItems);
+  }, [location.search]);
+
+  const refreshInventoryTable = (selectedItems) => {
+
+    const returnDomain = require('../common/domainString')
+    const selectedDomain = returnDomain();
+    var i = 0
+    while (i < selectedItems.length) {
+      i++;
+    axios.get(selectedDomain + "/inventory/" + selectedItems, { headers: { 'sessionid': id } })
+      .then(
+        response => {
+          setItem(response.data);
+        })
+      .catch(error => {
+        console.error(error);
+      });
+    }
+  }
 
   return (
 <div>
