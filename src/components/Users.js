@@ -28,9 +28,9 @@ function Users() {
   const handleLogout = () => {
     sessionStorage.removeItem('sessionid');
     sessionStorage.removeItem('role');
+    navigate('/Login');
     axios.delete(selectedDomain+ 'logout/')
-      .then(response => {
-        console.log("delete success");  
+      .then(response => { 
       })
       .catch(error => {
         console.error(error);
@@ -52,10 +52,7 @@ function Users() {
     toast.success("Successfully deleted user/s");
     axios.delete(selectedDomain+ '/user/', { data: emailObjects })
       .then(response => {
-        // remove deleted users from the list
-        setUsers(users.filter(user => !selectedItems.includes(user.email)));
-        // clear the selection
-        console.log("delete success");
+        setUsers(users.filter(user => !selectedItems.includes(user.email)));    
         setSelectedItems([]);
         
       })
@@ -82,7 +79,7 @@ function Users() {
       phone_number: userData[email].newPhoneNumber,
     })
     .then(response => {
-      // update the phone number for the specific user
+      
       setUserData(prevState => ({
         ...prevState,
         [email]: {
@@ -90,7 +87,7 @@ function Users() {
           phone_number: prevState[email].newPhoneNumber
         }
       }));
-      // show a success toast
+      
       setShowToast(true);
       window.location.reload()
     })
@@ -106,14 +103,10 @@ function Users() {
     }
   }, [showToast]);
   const handleUpdateRole = (email) => {
-    console.log(email);
-    console.log(userData[email].phone_number);
-    console.log(userData[email].newRole);
     axios.put(selectedDomain + `/user/${email}`, {
       role: userData[email].newRole
     })
     .then(response => {
-      // update the role for the specific user
       setUserData(prevState => ({
         ...prevState,
         [email]: {
@@ -121,7 +114,6 @@ function Users() {
           phone_number: prevState[email].newRole
         }
       }));
-      // show a success toast
       toast.success('Role has been updated successfully');
     })
     .catch(error => {
@@ -211,7 +203,9 @@ function Users() {
         {/* ROW 1 */}
         <div className="inventory">
           <p>*NOTE: Ctrl + F to find users</p>
-          <p>*NOTE: Resetting password will reset the password to the user's email</p>
+          <p>*****: Only Editors can edit user credentials. Admins and Editors can add users.</p>
+          <p>*****: Only Editors can promote Admins to Editors</p>
+          <p>*****: Resetting password will reset the password to the user's email</p>
         </div>
         {/* ROW 2 */}
         <div className="row-2">
@@ -453,14 +447,6 @@ function openForm() {
 
 function openFormDeleteUsers() {
     document.getElementById("deleteUsersOverlay").style.display ="block";
-}
-
-function openFormUpdateUsers() {
-    document.getElementById("updateUsersOverlay").style.display ="block";
-}
-
-function openFormResetPassword() {
-    document.getElementById("resetPasswordOverlay").style.display ="block";
 }
 
 function burger() {

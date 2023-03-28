@@ -25,6 +25,7 @@ function Userreserve() {
   const handleLogout = () => {
     sessionStorage.removeItem('sessionid');
     sessionStorage.removeItem('role');
+    navigate('/Login');
     axios.delete(selectedDomain+ 'logout/')
       .then(response => {
         console.log("delete success");  
