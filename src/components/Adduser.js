@@ -10,7 +10,7 @@ import { useRequireAuth } from "../services/useRequireAuth";
 
 
 function Adduser() {
-  useRequireAuth("Admin" || "Editor");
+  useRequireAuth(["Admin", "Editor"]);
   const [email, setEmail] = useState('');
   const [phone_number, setPhoneNumber] = useState('');
   const [first_name, setFirstName] = useState('');
@@ -151,7 +151,6 @@ function Adduser() {
                   onChange={handleRoleChange}
                 >
                   <option value="">Select Role</option>
-                  <option value="3">Editor</option>
                   <option value="2">Admin</option>
                   <option value="1">User</option>
                 </select>

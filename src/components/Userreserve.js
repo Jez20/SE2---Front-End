@@ -4,6 +4,7 @@ import '../css/overlay.css'
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { useRequireAuth } from "../services/useRequireAuth";
+import axios from "axios";
 
 // import { createGlobalStyle } from 'styled-components';
 
@@ -18,11 +19,19 @@ function Userreserve() {
   useRequireAuth();
   
   const navigate = useNavigate();
+  const returnDomain = require('../common/domainString')
+  const selectedDomain = returnDomain();
 
   const handleLogout = () => {
     sessionStorage.removeItem('sessionid');
     sessionStorage.removeItem('role');
-    navigate('/Login');
+    axios.delete(selectedDomain+ 'logout/')
+      .then(response => {
+        console.log("delete success");  
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
   return (
 <div>

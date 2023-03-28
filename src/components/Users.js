@@ -7,11 +7,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useRequireAuth } from "../services/useRequireAuth";
 
+
+
 function Users() {
   useRequireAuth(["Admin", "Editor"]);
   const [users, setUsers] = useState([]);
-  const [newPhoneNumber, setNewPhoneNumber] = useState('');
-  const [newRole, setNewRole] = useState('');
+  const [userRole, setUserRole] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
   const [userData, setUserData] = useState({});
   const [showToast, setShowToast] = useState(false);
@@ -19,10 +20,21 @@ function Users() {
   const returnDomain = require('../common/domainString')
   const selectedDomain = returnDomain();
 
+  useEffect(() => {
+    const role = sessionStorage.getItem("role");
+    setUserRole(role);
+  }, []);
+
   const handleLogout = () => {
     sessionStorage.removeItem('sessionid');
     sessionStorage.removeItem('role');
-    navigate('/Login');
+    axios.delete(selectedDomain+ 'logout/')
+      .then(response => {
+        console.log("delete success");  
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 
   useEffect(() => {
@@ -53,7 +65,7 @@ function Users() {
   };
   const handleResetPassword = (email) => {
     console.log(email);
-    axios.put(selectedDomain + `/resetPassword/`, {
+    axios.put(selectedDomain + `/editorResetPassword/`, {
       email: email,
     })
     .then(response => {   
@@ -203,7 +215,7 @@ function Users() {
         </div>
         {/* ROW 2 */}
         <div className="row-2">
-          <button className="delete category" onClick={openFormDeleteUsers}>
+          <button className="delete category" onClick={openFormDeleteUsers} title={userRole !== "Editor" ? "You need to be an Editor to perform this action." : ""} disabled={userRole !== "Editor"} >
             <i className="bx bxs-trash-alt icon" />
             Delete Selected Users
           </button>
@@ -259,6 +271,7 @@ function Users() {
                   <form action="/action_page.php">
                     <input
                       type="tel"
+                      disabled={userRole !== "Editor"}
                       placeholder={user.phone_number}
                       value={userData[user.email]?.newPhoneNumber}
                       maxlength="11"
@@ -275,6 +288,7 @@ function Users() {
                 <td>
                 <select
                       value={userData[user.email]?.newRole || user.role}
+                      disabled={userRole !== "Editor"}
                       onChange={(e) => setUserData(prevState => ({
                         ...prevState,
                         [user.email]: {
@@ -293,12 +307,14 @@ function Users() {
                     <button
                       className="update category"
                       onClick={() => handleUpdatePhoneNumber(user.email)}
+                      title={userRole !== "Editor" ? "You need to be an Editor to perform this action." : ""} disabled={userRole !== "Editor"}
                     >
                       <i className="bx bxs-pencil action" />
                       Update Phone Number
                     </button>
                     <button
                       className="update category"
+                      title={userRole !== "Editor" ? "You need to be an Editor to perform this action." : ""} disabled={userRole !== "Editor"}
                       onClick={() => handleUpdateRole(user.email)}
                     >
                       <i className="bx bxs-pencil action" />
@@ -306,6 +322,7 @@ function Users() {
                     </button>
                     <button
                       className="reset category"
+                      title={userRole !== "Editor" ? "You need to be an Editor to perform this action." : ""} disabled={userRole !== "Editor"}
                       onClick={() => handleResetPassword(user.email)}
                     >
                       <i className="bx bx-refresh" />

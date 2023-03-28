@@ -9,11 +9,19 @@ function Userdashboard() {
   useRequireAuth();
   const [userHistory, setUserHistory] = useState([]);
   const navigate = useNavigate();
+  const returnDomain = require('../common/domainString')
+  const selectedDomain = returnDomain();
 
   const handleLogout = () => {
     sessionStorage.removeItem('sessionid');
     sessionStorage.removeItem('role');
-    navigate('/Login');
+    axios.delete(selectedDomain+ 'logout/')
+      .then(response => {
+        console.log("delete success");  
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
   useEffect(() => {
     axios

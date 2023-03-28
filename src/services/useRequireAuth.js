@@ -7,14 +7,12 @@ export const useRequireAuth = (allowedRoles) => {
   
     useEffect(() => {
       const role = sessionStorage.getItem("role");
-      console.log("Role:", role); // Add this line to check the value of `role`
-    
       if (!role) {
         navigate("/login");
         toast.error("Unauthorized Access. Please login again to view.");
       } else if (allowedRoles && !allowedRoles.includes(role)) {
         navigate("/");
-        toast.error(`Access denied. You need to have a ${allowedRoles.join(" or ")} role to access this page.`);
+        toast.error(`Access denied. You need to be an ${allowedRoles.join(" or ")} to access this page.`);
       }
     }, [navigate, allowedRoles]);
   };
