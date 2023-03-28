@@ -113,7 +113,7 @@ function Index() {
     theme: 'grid',
       startY: 50, // set the y-coordinate of the starting position
         head: tableHeaders,
-        body: data.map(row => [row.history_id, row.email.first_name, row.email.last_name, row.email.email, row.email.role.role_name, row.item_code.item_name, row.date_in, row.date_out]),
+        body: history.map(row => [row.history_id, row.email.first_name, row.email.last_name, row.email.email, row.email.role.role_name, row.item_code.item_name, row.date_in, row.date_out]),
         });
         
         doc.save(fileName);
