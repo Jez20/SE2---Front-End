@@ -22,6 +22,18 @@ function Index() {
     navigate('/Login');
   };
 
+  const refreshInventoryTable = () => {
+      axios
+        .get("http://127.0.0.1:8000/history/")
+        .then((response) => {
+          setHistory(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    
+  }
+
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/history/")
@@ -32,6 +44,7 @@ function Index() {
         console.log(error);
       });
   }, []);
+
 
   useEffect(() => { //inventory data
     axios
@@ -78,22 +91,37 @@ function Index() {
         doc.save(fileName);
       }
    
-      const handleSortChange = (event) => {
-        const order = event.target.value;
-         setSortOrder(order);
+  const handleSortChange = (event) => {
+    const order = event.target.value;
+      setSortOrder(order);
           
-        const sortedHistory = history.sort((a, b) => {
-          const dateA = new Date(a.date_in);
-            const dateB = new Date(b.date_in);
-              if (order ==="asc") {
-                return dateA - dateB;
-              } else {
-                return dateB - dateA;
-              }
-            });
-          
-            setHistory(sortedHistory);
-          }    
+      const sortedHistory = history.sort((a, b) => {
+        const dateA = new Date(a.date_in);
+          const dateB = new Date(b.date_in);
+            if (order ==="asc") {
+              return dateA - dateB;
+            } else {
+              return dateB - dateA;
+            }
+          });
+          setHistory(sortedHistory);
+        }
+  
+  function deleteItem(){
+    const history_id = document.getElementById("submitDeleteItem").getAttribute("data-history-id");
+    axios.delete('http://127.0.0.1:8000/history/'+history_id)
+      .then((response) => {
+        refreshInventoryTable();
+        document.getElementById("deleteHistoryOverlay").style.display ="none";
+
+      })
+      .catch((error) => {
+        console.log(error);
+        
+      });
+  } 
+  
+  
 
   return (
     <div className={dashboard.App}>
@@ -240,8 +268,8 @@ function Index() {
                 </tr>
               </thead>
               <tbody>
-                {history.map((item, index) => (
-                  <tr key={index}>
+                {history.map((item) => (
+                  <tr key={item.history_id}>
                     <td>{item.history_id}</td>
                     <td>{item.email.first_name}</td>
                     <td>{item.email.last_name}</td>
@@ -253,12 +281,13 @@ function Index() {
                     <td>{item.texts}</td>
                     <td>
                     <div className={dashboard.actions}>
-                    <div className={`${dashboard.box} ${dashboard.edit}`} onClick={openFormUpdateHistory}>
+                    <div className={`${dashboard.box} ${dashboard.edit}`} 
+                      onClick={openFormUpdateHistory}>
                       <i className="bx bxs-pencil action" />
                     </div>
                     <div
                       className={`${dashboard.box} ${dashboard.delete}`}
-                      onClick={openFormDeleteHistory}
+                      onClick={(e) => openFormDeleteHistory(item.history_id)}
                     >
                       <i className="bx bxs-trash action" />
                     </div>
@@ -327,11 +356,14 @@ function Index() {
                   className={`${dashboard.action_btn} ${dashboard.confirm}`}
                   type="submit"
                   value="Confirm"
+                  
+                  
                 />
                 <input
                   className={`${dashboard.action_btn} ${dashboard.cancel}`}
                   type="submit"
                   value="Cancel"
+                  onClick={closeFormClear}
                 />
               </div>
             </form>
@@ -377,7 +409,10 @@ function Index() {
             <form>
               <div className={dashboard.buttons}>
                 <input
+                  id = "submitDeleteItem"
                   className={`${dashboard.action_btn} ${dashboard.confirm}`}
+                  onClick ={() => deleteItem()}
+                  data-history-id=''
                   type="submit"
                   value="Confirm"
                 />
@@ -463,17 +498,25 @@ function openFormClear() {
   document.getElementById("clearOverlay").style.display = "block";
 }
 
+function closeFormClear() {
+  // Hide the confirmation form
+  document.getElementById('clearOverlay').style.display = 'none';
+}
+
 function openFormUpdateHistory() {
   document.getElementById("updateHistoryOverlay").style.display = "block";
 }
 
-function openFormDeleteHistory() {
+function openFormDeleteHistory(history_id) {
+  document.getElementById("submitDeleteItem").setAttribute("data-history-id", history_id);
   document.getElementById("deleteHistoryOverlay").style.display = "block";
 }
 
 function openFormGenerateReport() {
   document.getElementById("generateReportOverlay").style.display = "block";
 }
+
+ 
 
 function burger() {
   const body = document.querySelector("body"),

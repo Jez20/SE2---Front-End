@@ -34,6 +34,18 @@ function Userdashboard() {
       });
   }, []);
 
+  const [reservations, setReservations] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://127.0.0.1:8000/specificReservations/')
+      .then(response => {
+        setReservations(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+
 
   return (
 <div>
@@ -130,90 +142,46 @@ function Userdashboard() {
             Generate Invoice
           </button>
         </div>
+
         <div className="activity-data">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Reservation ID</th>
-                <th>Item Name</th>
-                <th>Date of Expiration</th>
-                <th>Invoice</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Item-001</td>
-                <td>Ball</td>
-                <td>2022-12-07</td>
-                <td>
-                  <div className="checkboxes">
-                    <label className="checkbox">
-                      <input type="checkbox" />
-                      <span className="indicator" />
-                    </label>
-                  </div>
-                </td>
-                <td>
-                  <div className="category" onClick={openFormCancel}>
-                    <button className="delete category">
-                      <i className="bx bx-x" />
-                      Cancel
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>Item-001</td>
-                <td>Ball</td>
-                <td>2022-12-07</td>
-                <td>
-                  <div className="checkboxes">
-                    <label className="checkbox">
-                      <input type="checkbox" />
-                      <span className="indicator" />
-                    </label>
-                  </div>
-                </td>
-                <td>
-                  <div className="category">
-                    <button
-                      className="delete category"
-                      onClick={openFormCancel}
-                    >
-                      <i className="bx bx-x" />
-                      Cancel
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>Item-001</td>
-                <td>Ball</td>
-                <td>2022-12-07</td>
-                <td>
-                  <div className="checkboxes">
-                    <label className="checkbox">
-                      <input type="checkbox" />
-                      <span className="indicator" />
-                    </label>
-                  </div>
-                </td>
-                <td>
-                  <div className="category">
-                    <button
-                      className="delete category"
-                      onClick={openFormCancel}
-                    >
-                      <i className="bx bx-x" />
-                      Cancel
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Reservation ID</th>
+            <th>Item Name</th>
+            <th>Date of Expiration</th>
+            <th>Invoice</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {reservations.map((reservation, index) => (
+            <tr key={index}>
+              <td>{reservation.reservation_id}</td>
+              <td>{reservation.item_code.item_name}</td>
+              <td>{reservation.date_of_expiration}</td>
+              <td>
+                <div className="checkboxes">
+                  <label className="checkbox">
+                    <input type="checkbox" />
+                    <span className="indicator" />
+                  </label>
+                </div>
+              </td>
+              <td>
+                <div className="category" onClick={openFormCancel}>
+                  <button className="delete category">
+                    <i className="bx bx-x" />
+                    Cancel
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
       </div>
     </div>
   </section>
