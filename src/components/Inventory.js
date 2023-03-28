@@ -16,16 +16,9 @@ import QrReader from "react-qr-scanner";
 function Inventory() {
 
   //QR Code
-
-const handleQRCodeClick = (code) => {
-  setShowOverlay(true);
-  setItemCode(code);
-};
-
-const [qrItemCode, setqrItemCode] = useState(null);
 const [showOverlay, setShowOverlay] = useState(false);
 
-const [text, setText] = useState('');
+const [text, setText] = useState("");
 const [imageUrl, setImageUrl] = useState('');
 const [scanResultFile, setScanResultFile] = useState('');
 const [scanResultWebCam, setScanResultWebCam] =  useState('');
@@ -33,9 +26,14 @@ const classes = useStyles();
 const qrRef = useRef(null);
 
 
-const generateQrCode = async () => {
+const handleQRCodeClick = (code) => {
+  generateQrCode(code)
+  setShowOverlay(true);
+};
+
+const generateQrCode = async (code) => {
 try {
-      const response = await QRCode.toDataURL(text);
+      const response = await QRCode.toDataURL(code.toString());
       setImageUrl(response);
 }catch (error) {
   console.log(error);
@@ -89,7 +87,7 @@ if (result){
   const refreshInventoryTable = () =>{
     const returnDomain = require('../common/domainString')
     const selectedDomain = returnDomain();
-    axios.get(selectedDomain + '/inventory/' + conditionFilter, {headers:{'sessionid': id}})
+    axios.get(selectedDomain + 'inventory/' + conditionFilter)
     .then(
     response => {
         setItem(response.data);
@@ -103,7 +101,7 @@ if (result){
   const refreshCategoryTable = () =>{
     const returnDomain = require('../common/domainString')
     const selectedDomain = returnDomain();
-    axios.get(selectedDomain + '/category/', {headers:{'sessionid': id}})
+    axios.get(selectedDomain + 'category/')
     .then(
     response => {
         const data = response.data;
@@ -156,7 +154,7 @@ if (result){
     const returnDomain = require('../common/domainString')
     const selectedDomain = returnDomain();
     console.log(selectedDomain + categ_code);
-    axios.delete(selectedDomain + '/category/' + categ_code, {headers:{'sessionid': id}})
+    axios.delete(selectedDomain + 'category/' + categ_code)
     .then((response) => {
       refreshInventoryTable();
       refreshCategoryTable();
@@ -180,7 +178,7 @@ if (result){
 
     const returnDomain = require('../common/domainString')
     const selectedDomain = returnDomain();
-    axios.post(selectedDomain + '/category/', categoryPostObj, {headers:{'sessionid': id}})
+    axios.post(selectedDomain + 'category/', categoryPostObj)
     .then((response) => {
         refreshInventoryTable();
         refreshCategoryTable();
@@ -219,7 +217,7 @@ if (result){
 
     const returnDomain = require('../common/domainString')
     const selectedDomain = returnDomain();
-    axios.post(selectedDomain + '/inventory/', dataPost, {headers:{'sessionid': id}})
+    axios.post(selectedDomain + 'inventory/', dataPost)
     .then((response) => {
         refreshInventoryTable();
         document.getElementById("addItemsOverlay").style.display ="none";
@@ -241,7 +239,7 @@ if (result){
     const selectedDomain = returnDomain();
     console.log(selectedDomain + item_code);
   
-    axios.get(selectedDomain + '/inventory/' + item_code, {headers:{'sessionid': id}})
+    axios.get(selectedDomain + 'inventory/' + item_code)
     .then(
     response => {
       let dataGetSpecCateg = 0;
@@ -264,7 +262,7 @@ if (result){
       console.log(itemCondition);
       console.log(dataGetSpecCateg);
 
-      axios.put(selectedDomain + '/inventory/' + item_code, dataPut, {headers:{'sessionid': id}})
+      axios.put(selectedDomain + 'inventory/' + item_code, dataPut)
       .then((response) => {
         refreshInventoryTable();
         document.getElementById("updateItemsOverlay").style.display ="none";
@@ -289,7 +287,7 @@ if (result){
     const selectedDomain = returnDomain();
     console.log(selectedDomain + item_code);
     console.log("Item_Code is: " + item_code);
-    axios.delete(selectedDomain + '/inventory/' + item_code, {headers:{'sessionid': id}})
+    axios.delete(selectedDomain + 'inventory/' + item_code)
     .then((response) => {
       refreshInventoryTable();
       document.getElementById("deleteItemsOverlay").style.display ="none";
@@ -341,8 +339,9 @@ function cancelDeleteItemsOverlay (){
 return (
   <div>
   {showOverlay && (
-document.getElementById("generateQROverlay").style.display ="block"
-    )}
+  document.getElementById("generateQROverlay").style.display ="block"
+    )
+    }
 <>
   <nav>
     <div className={inventory.logoName}>
@@ -681,6 +680,45 @@ document.getElementById("generateQROverlay").style.display ="block"
       </form>
     </div>
   </div>
+  <div id="generateQROverlay" className={inventory.generateQROverlay}>
+<div className={inventory.generateQRWrap}>
+  <h2>QR Generate</h2>
+  <form>
+    <div className={inventory.card} style={{ width: "18rem" }}>
+    <Container className={classes.conatiner}>
+      <Card>
+          <CardContent>
+              <Grid container spacing={2}>
+                  <Grid item xl={4} lg={4} md={6} sm={12} xs={12} >
+                      <TextField label="Enter Text Here" onChange={(e) => setText(e.target.value)} style={{width: '200px'}}/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        {imageUrl ? (
+                          <a href={imageUrl} download>
+                              <img src={imageUrl} alt="img" style={{width: '200px'}}/>
+                          </a>) : null}
+                  </Grid>
+              </Grid>
+          </CardContent>
+      </Card>
+</Container>
+      <div className="card-body"></div>
+    </div>
+    <div className={inventory.qr}>
+    <div className={inventory.buttons}>
+      <input
+        className={`${inventory.action_btn} ${inventory.confirm}`}
+        type="submit"
+        value="Proceed"
+      />
+    </div>
+            <Button className={classes.btn} variant="contained" 
+    color="primary" onClick={() => generateQrCode()}>Generate</Button> 
+    </div>
+  </form>
+</div>
+</div>
   <div id="deleteCategoryOverlay" className={inventory.deleteCategoryOverlay}>
     <div className={inventory.deleteCategoryWrap}>
       <h2>Delete Category</h2>
@@ -705,74 +743,6 @@ document.getElementById("generateQROverlay").style.display ="block"
             type="button"
             value="Cancel"
           />
-        </div>
-      </form>
-    </div>
-  </div>
-  <div id="generateQROverlay" className={inventory.generateQROverlay}>
-    <div className={inventory.generateQRWrap}>
-      <h2>QR Generate</h2>
-      <form>
-        <div className={inventory.card} style={{ width: "18rem" }}>
-        <Container className={classes.conatiner}>
-          <Card>
-              {/* <h2 className={classes.title}>Generate Download & Scan QR Code with React js</h2> */}
-              <CardContent>
-                  <Grid container spacing={2}>
-                      <Grid item xl={4} lg={4} md={6} sm={12} xs={12} >
-                          <TextField label="Enter Text Here" onChange={(e) => setText(e.target.value)} style={{width: '200px'}}/>
-                            <br/>
-                            <br/>
-                            <br/>
-                            {imageUrl ? (
-                              <a href={imageUrl} download>
-                                  <img src={imageUrl} alt="img" style={{width: '200px'}}/>
-                              </a>) : null}
-                      </Grid>
-                      {/* <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                        <Button className={classes.btn} variant="contained" color="secondary" onClick={onScanFile}>Scan Qr Code</Button>
-                        <QrReader
-                          ref={qrRef}
-                          delay={300}
-                          style={{width: '100%'}}
-                          onError={handleErrorFile}
-                          onScan={handleScanFile}
-                          legacyMode
-                        />
-                        <h3>Scanned Code: {scanResultFile}</h3>
-                      </Grid>
-                      <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                         <h3>Qr Code Scan by Web Cam</h3>
-                         <QrReader
-                         delay={300}
-                         style={{width: '100%'}}
-                         onError={handleErrorWebCam}
-                         onScan={handleScanWebCam}
-                         />
-                         <h3>Scanned By WebCam Code: {scanResultWebCam}</h3>
-                      </Grid> */}
-                  </Grid>
-              </CardContent>
-          </Card>
-    </Container>
-          <div className="card-body"></div>
-        </div>
-        <div className={inventory.qr}>
-        <div className={inventory.buttons}>
-          {/* <input
-            className={`${inventory.action_btn} ${inventory.generate}`}
-            type="button"
-            value="Generate"
-            onClick={() => generateQrCode()}
-          /> */}
-          <input
-            className={`${inventory.action_btn} ${inventory.confirm}`}
-            type="submit"
-            value="Proceed"
-          />
-        </div>
-                {/* <Button className={classes.btn} variant="contained" 
-        color="primary" onClick={() => generateQrCode()}>Generate</Button> */}
         </div>
       </form>
     </div>
@@ -828,10 +798,6 @@ function openFormAddCategory() {
 
 function openFormDeleteCategory() {
     document.getElementById("deleteCategoryOverlay").style.display ="block";
-}
-
-function openFormGenerateQR() {
-    document.getElementById("generateQROverlay").style.display ="block";
 }
 
 export default Inventory
