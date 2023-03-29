@@ -8,6 +8,8 @@ import { Helmet } from 'react-helmet';
 
 const id = sessionStorage.getItem('sessionid')
 console.log("Session ID: " + id)
+const returnDomain = require('../common/domainString')
+const selectedDomain = returnDomain();
 
 
 function Borrow() {

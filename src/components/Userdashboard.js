@@ -113,7 +113,7 @@ function Userdashboard() {
     console.log(currentPassword);
     console.log(newPassword);
     console.log(confirmPassword);
-    axios.put(selectedDomain+ 'userChangePassword/', data)
+    axios.put(selectedDomain + 'userChangePassword/', data)
       .then(response => {
         console.log(response.data);
         // add a success message to your UI if needed

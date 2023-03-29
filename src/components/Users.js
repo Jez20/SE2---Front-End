@@ -119,7 +119,6 @@ function Users() {
     });
   };
 
-
 const [currentPassword, setCurrentPassword] = useState('');
 const [newPassword, setNewPassword] = useState('');
 const [confirmPassword, setConfirmPassword] = useState('');
@@ -169,7 +168,6 @@ function handleCancel() {
   document.getElementById("myOverlay").style.display ="none";
 }
   
-
   return (
 <div>
   <nav>

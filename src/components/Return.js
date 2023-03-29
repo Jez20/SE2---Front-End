@@ -39,11 +39,6 @@ function Return() {
       });
   }
 
-  
-
-
-  
-
   const [text, setText] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [scanResultFile, setScanResultFile] = useState('');
