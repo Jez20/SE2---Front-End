@@ -227,7 +227,7 @@ function Return() {
           <span className={returncss.text}>Return Items</span>
         </div>
         {/* ROW 1 */}
-        <div className={returncss.inventory}>
+        {/* <div className={returncss.inventory}>
           <p>Step 1. Scan QR</p>
         </div>
         <div>
@@ -235,7 +235,35 @@ function Return() {
             <i className="bx bx-qr-scan" />
             Scan QR
           </button>
-        </div>
+        </div> */}
+                    <div className={returncss.inventory}>
+              <p>Step 1. Scan QR or Manual Input Code</p>
+            </div>
+            <div>
+              <button
+                className="generate category"
+                onClick={openFormScanQR}
+              >
+                <i className="bx bx-qr-scan" />
+                Scan QR
+              </button>
+            </div>
+            <div>
+              <form>
+                <input
+                  type="text"
+                  className="number"
+                  name="phone"
+                  placeholder="Enter Reservation ID"
+                />
+                <div>
+                  <button className={`${returncss.update} ${returncss.category}`}>
+                    <i className="bx bxs-id-card" />
+                    Add Reservation ID
+                  </button>
+                </div>
+              </form>
+            </div>
         <div className={returncss.inventory}>
           <p>Step 2. Return Items</p>
         </div>
@@ -296,8 +324,8 @@ function Return() {
           <td>
           <div className="category">
                       <button className={`${returncss.update} ${returncss.category}`} onClick={openFormReservation}>
-                          <i className="bx bx-plus icon" />
-                          Add to Record
+                          <i className="bx bxs-book-content icon" />
+                          Return Items
                         </button>
                         <button
                           className="delete category"
