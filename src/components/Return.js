@@ -263,8 +263,9 @@ function Return() {
             <th>Date</th>
             <th>Time-in</th>
             <th>Notes</th>
-            <th>For Return</th>
-            <th>Lost</th>
+            <th>Action</th>
+            {/* <th>For Return</th>
+            <th>Lost</th> */}
           </tr>
         </thead>
         <tbody>
@@ -293,21 +294,34 @@ function Return() {
             </div>
           </td>
           <td>
-            <div className={returncss.checkboxes}>
+          <div className="category">
+                      <button className={`${returncss.update} ${returncss.category}`} onClick={openFormReservation}>
+                          <i className="bx bx-plus icon" />
+                          Add to Record
+                        </button>
+                        <button
+                          className="delete category"
+                          onClick={openFormRemove}
+                        >
+                          <i className="bx bxs-trash icon" />
+                          Remove
+                        </button>
+                      </div>
+            {/* <div className={returncss.checkboxes}>
               <label className={returncss.checkbox}>
                 <input type="checkbox" />
                 <span className={returncss.indicator} />
               </label>
-            </div>
+            </div> */}
           </td>
-          <td>
+          {/* <td>
             <div className={returncss.checkboxes}>
               <label className={returncss.checkbox}>
                 <input type="checkbox" checked={checkedHistoryIds.includes(item.history_id)}/>
                 <span className={returncss.indicator} />
               </label>
             </div>
-          </td>
+          </td> */}
         </tr>
       ))}
         </tbody>
@@ -384,6 +398,55 @@ function Return() {
       </form>
     </div>
   </div>
+  <div id="reservationOverlay" className="reservation-overlay">
+        <div className="reservation-wrap">
+          <h1 id="reservationh1">
+            <i className="bx bxs-info-circle" />
+            Action
+          </h1>
+          <h2 id="reservationh2">
+            Would you like to add this item?
+          </h2>
+          <form>
+            <div className="buttons">
+              <input
+                className="action_btn confirm"
+                type="submit"
+                value="Confirm"
+              />
+              <input
+                className="action_btn cancel"
+                type="submit"
+                value="Cancel"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+      <div id="removeOverlay" className="remove-overlay">
+        <div className="remove-wrap">
+          <h1 id="removeh1">
+            <i className="bx bxs-info-circle" />
+            Action
+          </h1>
+          <h2 id="removeh2">Would you like to remove this item?</h2>
+          <form>
+            <div className="buttons">
+              <input
+                className="action_btn confirm"
+                type="submit"
+                value="Confirm"
+              />
+              <input
+                className="action_btn cancel"
+                type="submit"
+                value="Cancel"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+
   <div id="returnItemsOverlay" className={returncss.returnItemsOverlay}>
     <div className={returncss.returnItemsWrap}>
       <h1 id="returnh1">
@@ -524,6 +587,15 @@ function openFormReturnItems() {
 
 function openFormScanQR() {
     document.getElementById("scanQROverlay").style.display ="block";
+}
+
+
+function openFormReservation() {
+  document.getElementById("reservationOverlay").style.display = "block";
+}
+
+function openFormRemove() {
+  document.getElementById("removeOverlay").style.display = "block";
 }
 
 export default Return
