@@ -235,17 +235,17 @@ function Reservation() {
         <div className="top">
           <i className="uil uil-bars sidebar-toggle" onClick={burger} />
           <div className="search-box">
-            <h1>Confirm Reservation</h1>
+            <h1>Borrow Reservation</h1>
           </div>
         </div>
         <div className="dash-content">
           <div className="activity">
             <div className="title">
               <i className="bx bxs-book-content icon" />
-              <span className="text">Confirm Reservation</span>
+              <span className="text">Borrow Reservation</span>
             </div>
             {/* ROW 1 */}
-            <div className={borrow.inventory}>
+            {/* <div className={borrow.inventory}>
               <p>Step 1. Scan QR or Manual Input Code</p>
             </div>
             <div>
@@ -272,9 +272,9 @@ function Reservation() {
                   </button>
                 </div>
               </form>
-            </div>
+            </div> */}
             <div className={borrow.inventory}>
-              <p>Step 2. Add to Record</p>
+              <p>Step 1. Input email of reservee</p>
             </div>
             <div>
               <input
@@ -285,8 +285,8 @@ function Reservation() {
               />
               <div>
                 <button className={`${borrow.update} ${borrow.category}`} onClick={openFormReservation}>
-                  <i className="bx bx-plus icon" />
-                  Add to Record
+                  <i className="bx bx-search icon" />
+                  Find User
                 </button>
               </div>
             </div>
@@ -304,6 +304,7 @@ function Reservation() {
                   <tr>
                     <th>Reservation ID</th>
                     <th>Item Name</th>
+                    <th>Email</th>
                     <th>Date of Expiration</th>
                     <th>Action</th>
                   </tr>
@@ -312,9 +313,14 @@ function Reservation() {
                   <tr>
                     <td>Item-001</td>
                     <td>Ball</td>
+                    <td>User@gmail.com</td>
                     <td>2022-12-07</td>
                     <td>
                       <div className="category">
+                        <button className={`${borrow.update} ${borrow.category}`} onClick={openFormReservation}>
+                          <i className="bx bx-plus icon" />
+                          Add to Record
+                        </button>
                         <button
                           className="delete category"
                           onClick={openFormRemove}
@@ -328,9 +334,14 @@ function Reservation() {
                   <tr>
                     <td>Item-001</td>
                     <td>Ball</td>
+                    <td>User@gmail.com</td>
                     <td>2022-12-07</td>
                     <td>
                       <div className="category">
+                      <button className={`${borrow.update} ${borrow.category}`} onClick={openFormReservation}>
+                          <i className="bx bx-plus icon" />
+                          Add to Record
+                        </button>
                         <button
                           className="delete category"
                           onClick={openFormRemove}
@@ -344,9 +355,14 @@ function Reservation() {
                   <tr>
                     <td>Item-001</td>
                     <td>Ball</td>
+                    <td>User@gmail.com</td>
                     <td>2022-12-07</td>
                     <td>
                       <div className="category">
+                      <button className={`${borrow.update} ${borrow.category}`} onClick={openFormReservation}>
+                          <i className="bx bx-plus icon" />
+                          Add to Record
+                        </button>
                         <button
                           className="delete category"
                           onClick={openFormRemove}

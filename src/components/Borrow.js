@@ -172,7 +172,7 @@ function Borrow() {
                 <i className="bx bx-box icon" />
                 <span className={borrow.linkName}>Inventory</span>
               </a>
-            </li>.
+            </li>
             <li>
               <a href="/Users">
                 <i className="bx bxs-user icon" />
