@@ -17,6 +17,8 @@ function Index() {
   const[sortOrder, setSortOrder] = useState("asc");
   const imgData = 'images/logo.png';
   const navigate = useNavigate();
+  const returnDomain = require('../common/domainString')
+  const selectedDomain = returnDomain();
 
 
   const[fromDate, setFromDate] = useState("");
@@ -28,7 +30,7 @@ function Index() {
     const now = new Date();
     const fileName = `KLIA-Inventory-History-${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.pdf`;
 
-    const url = `http://127.0.0.1:8000/history/withRange/${fromDate}/${toDate}`;
+    const url = `${selectedDomain}history/withRange/${fromDate}/${toDate}`;
     const response = await axios.get(url);
     const data = response.data;
 
@@ -57,23 +59,20 @@ function Index() {
     navigate('/Login');
   };
 
-  const refreshInventoryTable = () => {
+  const refreshHistoryTable = () => {
       axios
-        .get("http://127.0.0.1:8000/history/")
+        .get(`${selectedDomain}history/`)
         .then((response) => {
           setHistory(response.data);
         })
         .catch((error) => {
           console.log(error);
-        });
-    
+        }); 
   }
-
-  
 
   useEffect(() => {
     axios
-      .get('http://127.0.0.1:8000/history')
+      .get(`${selectedDomain}history`)
       .then((response) => {
         setHistory(response.data);
       })
@@ -82,11 +81,9 @@ function Index() {
       });
   }, []);
 
-  
-
   useEffect(() => { //inventory data
     axios
-      .get('http://127.0.0.1:8000/inventory/') //axios.get to replace fetch
+      .get(`${selectedDomain}inventory/`) //axios.get to replace fetch
       .then( res =>{
          console.log(res.data);
          setInventory(res.data);
@@ -128,9 +125,9 @@ function Index() {
   
   function deleteItem(){
     const history_id = document.getElementById("submitDeleteItem").getAttribute("data-history-id");
-    axios.delete('http://127.0.0.1:8000/history/'+history_id)
+    axios.delete(`${selectedDomain}history/${history_id}`)
       .then((response) => {
-        refreshInventoryTable();
+        refreshHistoryTable();
         document.getElementById("deleteHistoryOverlay").style.display ="none";
 
       })
@@ -143,26 +140,13 @@ function Index() {
   
   async function deleteData(history_id) {
     try {
-      const response = await axios.delete(`http://127.0.0.1:8000/history/${history_id}`);
+      const response = await axios.delete(`${selectedDomain}history/${history_id}`);
       console.log(response);
     } catch (error) {
       console.log(error);
     }
   }
-  
-  async function deleteAllData() {
-    try {
-      const response = await axios.get('http://127.0.0.1:8000/history/');
-      const history_ids = response.data.map(history => history.id);
-      for (const history_id of history_ids) {
-        await deleteData(history_id);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  
+   
   //Change Password
 
   const [currentPassword, setCurrentPassword] = useState('');
@@ -213,8 +197,19 @@ function Index() {
     // hide the overlay
     document.getElementById("myOverlay").style.display ="none";
   }
-  
-  
+
+  const deleteAllRecords = async () => {
+    try {
+      const response = await axios.get(`{selectedDomain}history/`);
+      const history_ids = response.data.map(history => history.id);
+      for (const history_id of history_ids) {
+        await deleteData(history_id);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  } //broken pipe error in deleting all the data
+
 
   return (
     <div className={dashboard.App}>
@@ -461,7 +456,7 @@ function Index() {
                   className={`${dashboard.action_btn} ${dashboard.confirm}`}
                   type="submit"
                   value="Confirm"
-                  onClick={deleteAllData}
+                  onClick={deleteAllRecords}
                 />
                 <input
                   className={`${dashboard.action_btn} ${dashboard.cancel}`}
