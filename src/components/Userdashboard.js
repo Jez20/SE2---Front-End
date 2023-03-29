@@ -8,10 +8,42 @@ import { useRequireAuth } from "../services/useRequireAuth";
 
 function Userdashboard() {
   useRequireAuth();
-  const [userHistory, setUserHistory] = useState([]);
   const navigate = useNavigate();
   const returnDomain = require('../common/domainString')
   const selectedDomain = returnDomain();
+
+  const[userData, setUserData] = useState([]);
+  const[userReservation, setUserReservation] = useState([]);
+  const dataa = {
+    email: 'ayt@email.com' // HARDCODED USER EMAIL FOR TESTING PURPOSES!!!! DELETE AND UPDATE WHEN B.END IS FIXED!
+  };                       //PLEASE USE AN EMAIL OF A "USER" ROLE TO TEST THIS PAGE.
+                            //THIS TO ENSURE THAT THE DATA THAT WILL BE GATHERED WILL BE BASED ON THE EMAIL OF THAT SPECIFIC USER
+  useEffect(() => {
+    axios
+      .post(`${selectedDomain}userHistory/`, dataa)
+      .then((response) => {
+        console.log(response.data);
+        setUserData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .post(`${selectedDomain}specificReservations/`, dataa)
+      .then((response) => {
+        setUserReservation(response.data);
+        console.log(response.data);
+
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+
 
   const handleLogout = () => {
     sessionStorage.removeItem('sessionid');
@@ -25,28 +57,6 @@ function Userdashboard() {
         console.error(error);
       });
   };
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/userHistory/")
-      .then((response) => {
-        setUserHistory(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
-  const [reservations, setReservations] = useState([]);
-
-  useEffect(() => {
-    axios.get('http://127.0.0.1:8000/specificReservations/')
-      .then(response => {
-        setReservations(response.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }, []);
 
   //Change Password
 
@@ -170,12 +180,12 @@ function Userdashboard() {
               </tr>
             </thead>
             <tbody>
-              {userHistory.map((history) => (
-                <tr key={history.id}>
-                  <td>{history.item_code}</td>
-                  <td>{history.item_name}</td>
-                  <td>{history.date_in}</td>
-                  <td>{history.date_out}</td>
+              {userData.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.item_code.item_code}</td>
+                  <td>{item.item_code.item_name}</td>
+                  <td>{item.date_in}</td>
+                  <td>{item.date_out}</td>
                 </tr>
               ))}
             </tbody>
@@ -208,7 +218,7 @@ function Userdashboard() {
           </tr>
         </thead>
         <tbody>
-          {reservations.map((reservation, index) => (
+          {userReservation.map((reservation, index) => (
             <tr key={index}>
               <td>{reservation.reservation_id}</td>
               <td>{reservation.item_code.item_name}</td>
