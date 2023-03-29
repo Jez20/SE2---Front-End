@@ -22,7 +22,6 @@ function Reservation() {
 
   const navigate = useNavigate();
 
-  const [items, setItem] = useState([])
 
   const handleLogout = () => {
     sessionStorage.removeItem('sessionid');
@@ -30,27 +29,13 @@ function Reservation() {
     navigate('/Login');
   };
 
+  const [items, setItem] = useState([])
+  const [borrowitem, setBorrowItem] = useState("")
+  const [borrowEmail, setBorrowEmail] = useState("")
+  
   useEffect(() => {
-  }, [location.search]);
-
-  const refreshInventoryTable = (selectedItems) => {
-
-    const returnDomain = require('../common/domainString')
-    const selectedDomain = returnDomain();
-    var i = 0
-    while (i < selectedItems.length) {
-      i++;
-      axios.get(selectedDomain + "/inventory/" + selectedItems, { headers: { 'sessionid': id } })
-        .then(
-          response => {
-            setItem(response.data);
-          })
-        .catch(error => {
-          console.error(error);
-        });
-    }
-  }
-
+    refreshInventoryTable()
+  });
   //Change Password
 
   const [currentPassword, setCurrentPassword] = useState('');
@@ -102,70 +87,33 @@ function Reservation() {
     document.getElementById("myOverlay").style.display = "none";
   }
 
-  const [text, setText] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [scanResultFile, setScanResultFile] = useState('');
-  const [scanResultWebCam, setScanResultWebCam] = useState('');
   const classes = useStyles();
-  const qrRef = useRef(null);
-
-  const [checkedHistoryIds, setcheckedHistoryIds] = useState([]);
-
-  const handleCheck = (history_id) => {
-    if (checkedHistoryIds.includes(history_id)) {
-      setcheckedHistoryIds(checkedHistoryIds.filter((history_id) => history_id !== history_id));
-    } else {
-      checkedHistoryIds([...checkedHistoryIds, history_id]);
-    }
-  };
-
-  const generateQrCode = async () => {
-    try {
-      const response = await QRCode.toDataURL(text);
-      setImageUrl(response);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  const handleErrorFile = (error) => {
-    console.log(error);
-  }
-  const handleScanFile = (result) => {
-    if (result) {
-      setScanResultFile(result);
-    }
-  }
-  const onScanFile = () => {
-    qrRef.current.openImageDialog();
-  }
-  const handleErrorWebCam = (error) => {
-    console.log(error);
-  }
-  const handleScanWebCam = (result) => {
-    if (result) {
-      setScanResultWebCam(result);
-    }
-  }
 
 
   const [delay, setDelay] = useState(100);
   const [result, setResult] = useState('No result');
 
 
-  const handleScan = (result) => {
-    if (result) {
-      setResult(result);
-    }
-  }
 
   const handleError = (err) => {
     console.error(err);
   };
 
-  const previewStyle = {
-    height: 240,
-    width: 320,
-  };
+
+  const [emailFilter, setEmailFilter]  = useState('')
+
+  const refreshInventoryTable = () => {
+    const returnDomain = require('../common/domainString')
+    const selectedDomain = returnDomain();
+    axios.get(selectedDomain + '/reservation/' + emailFilter)
+      .then(
+        response => {
+          setItem(response.data);
+        })
+      .catch(error => {
+        console.error(error);
+      });
+  }
 
   return (
     <div>
@@ -244,47 +192,31 @@ function Reservation() {
               <i className="bx bxs-book-content icon" />
               <span className="text">Borrow Reservation</span>
             </div>
-            {/* ROW 1 */}
-            {/* <div className={borrow.inventory}>
-              <p>Step 1. Scan QR or Manual Input Code</p>
-            </div>
-            <div>
-              <button
-                className="generate category"
-                onClick={openFormReservationScanQR}
-              >
-                <i className="bx bx-qr-scan" />
-                Scan QR
-              </button>
-            </div>
-            <div>
-              <form>
-                <input
-                  type="text"
-                  className="number"
-                  name="phone"
-                  placeholder="Enter Reservation ID"
-                />
-                <div>
-                  <button className={`${borrow.update} ${borrow.category}`}>
-                    <i className="bx bxs-id-card" />
-                    Add Reservation ID
-                  </button>
-                </div>
-              </form>
-            </div> */}
+            
             <div className={borrow.inventory}>
               <p>Step 1. Input email of reservee</p>
             </div>
             <div>
+              
+
+
+
+
+
+
+
+              
               <input
+                id ="emailsearch"
                 type="text"
                 className="number"
                 name="phone"
                 placeholder="Enter Email"
               />
               <div>
-                <button className={`${borrow.update} ${borrow.category}`} onClick={openFormReservation}>
+                <button className={`${borrow.update} ${borrow.category}`} onClick={() =>{
+                  setEmailFilter(document.getElementById("emailsearch").value)
+                  refreshInventoryTable()}}>
                   <i className="bx bx-search icon" />
                   Find User
                 </button>
@@ -310,14 +242,46 @@ function Reservation() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Item-001</td>
-                    <td>Ball</td>
-                    <td>User@gmail.com</td>
-                    <td>2022-12-07</td>
+                {
+                items.map(
+                  listeditem => (
+
+                    <tr>
+                    <td>{listeditem.item_code.item_code}</td>
+                    <td>{listeditem.item_code.item_name}</td>
+                    <td>{listeditem.email}</td>
+                    <td>{listeditem.date_of_expiration}</td>
                     <td>
                       <div className="category">
-                        <button className={`${borrow.update} ${borrow.category}`} onClick={openFormReservation}>
+                        
+                        <button className={`${borrow.update} ${borrow.category}`} onClick={()=>{
+                          
+                          const dataPostObj = {
+                            reservation_id: listeditem.reservation_id,
+                            email: listeditem.email,
+                            item_code: listeditem.item_code.item_code,
+                            notes: " "
+                          }
+                          
+                          const dataPost = [
+                           dataPostObj
+                          ]
+                          const returnDomain = require('../common/domainString')
+                          const selectedDomain = returnDomain();
+                          axios.post(selectedDomain + 'confirmReservation/', dataPost)
+                          .then((response) => {
+                              refreshInventoryTable();
+                              document.getElementById("addItemsOverlay").style.display ="none";
+                              console.log("AXIOS.POST SUCCESSFUL: " + response);
+                          })
+                          .catch((error) => {
+                            console.log("INSIDE ERROR!!!");
+                            console.log(error);
+                          });
+                          refreshInventoryTable()
+
+
+                        }}>
                           <i className="bx bx-plus icon" />
                           Add to Record
                         </button>
@@ -331,48 +295,11 @@ function Reservation() {
                       </div>
                     </td>
                   </tr>
-                  <tr>
-                    <td>Item-001</td>
-                    <td>Ball</td>
-                    <td>User@gmail.com</td>
-                    <td>2022-12-07</td>
-                    <td>
-                      <div className="category">
-                      <button className={`${borrow.update} ${borrow.category}`} onClick={openFormReservation}>
-                          <i className="bx bx-plus icon" />
-                          Add to Record
-                        </button>
-                        <button
-                          className="delete category"
-                          onClick={openFormRemove}
-                        >
-                          <i className="bx bxs-trash icon" />
-                          Remove
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Item-001</td>
-                    <td>Ball</td>
-                    <td>User@gmail.com</td>
-                    <td>2022-12-07</td>
-                    <td>
-                      <div className="category">
-                      <button className={`${borrow.update} ${borrow.category}`} onClick={openFormReservation}>
-                          <i className="bx bx-plus icon" />
-                          Add to Record
-                        </button>
-                        <button
-                          className="delete category"
-                          onClick={openFormRemove}
-                        >
-                          <i className="bx bxs-trash icon" />
-                          Remove
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+                    
+                  )
+
+                )
+                } 
                 </tbody>
               </table>
             </div>
@@ -479,12 +406,6 @@ function Reservation() {
             {/* <div className={borrow.card}  style={{ width: "18rem" }}> */}
             <div>
               <div>
-                <QrReader
-                  delay={100}
-                  onError={handleError}
-                  onScan={handleScan}
-                  style={{ width: '300px', height: '300px' }}
-                />
                 <p style={{ textAlign: 'center' }}>
                   {(result && result.text) &&
                     <div className="card-body">
@@ -493,7 +414,6 @@ function Reservation() {
                           id="qr-code-text"
                           label="QR Code Text"
                           value={`Item Code: ${result.text}`}
-                          onChange={(e) => handleScan(e.target.value)}
                           variant="outlined"
                           fullWidth
                           InputProps={{
