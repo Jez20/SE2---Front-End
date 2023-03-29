@@ -19,7 +19,7 @@ function Userdashboard() {
   const[userData, setUserData] = useState([]);
   const[userReservation, setUserReservation] = useState([]);
   const dataa = {
-    email: 'ayt@email.com' // HARDCODED USER EMAIL FOR TESTING PURPOSES!!!! DELETE AND UPDATE WHEN B.END IS FIXED!
+    email: 'User' // HARDCODED USER EMAIL FOR TESTING PURPOSES!!!! DELETE AND UPDATE WHEN B.END IS FIXED!
   };                       //PLEASE USE AN EMAIL OF A "USER" ROLE TO TEST THIS PAGE.
                             //THIS TO ENSURE THAT THE DATA THAT WILL BE GATHERED WILL BE BASED ON THE EMAIL OF THAT SPECIFIC USER
   useEffect(() => {
@@ -113,7 +113,7 @@ function Userdashboard() {
     console.log(currentPassword);
     console.log(newPassword);
     console.log(confirmPassword);
-    axios.put('http://127.0.0.1:8000/userChangePassword/', data)
+    axios.put(selectedDomain+ 'userChangePassword/', data)
       .then(response => {
         console.log(response.data);
         // add a success message to your UI if needed

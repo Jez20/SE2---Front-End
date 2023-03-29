@@ -21,6 +21,8 @@ function Inventory() {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const returnDomain = require('../common/domainString')
+  const selectedDomain = returnDomain();
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -33,7 +35,7 @@ function Inventory() {
     console.log(currentPassword);
     console.log(newPassword);
     console.log(confirmPassword);
-    axios.put('http://127.0.0.1:8000/userChangePassword/', data)
+    axios.put(selectedDomain +'/userChangePassword/', data)
       .then(response => {
         console.log(response.data);
         // add a success message to your UI if needed

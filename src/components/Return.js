@@ -15,6 +15,8 @@ function Return() {
   const [data, setData] = useState([]);
   const [storeResult, setstoreResult] = useState("");
   const navigate = useNavigate();
+  const returnDomain = require('../common/domainString')
+  const selectedDomain = returnDomain();
   
   const handleLogout = () => {
     sessionStorage.removeItem('sessionid');
@@ -27,8 +29,7 @@ function Return() {
   }, []);
 
   const refreshReturnTable = () => {
-    const returnDomain = require('../common/domainString')
-    const selectedDomain = returnDomain();
+    
     axios.get(selectedDomain + 'history/returnItems/randomString') // replace with your API endpoint
       .then((response) => {
         setData(response.data);
@@ -125,7 +126,7 @@ function Return() {
     console.log(currentPassword);
     console.log(newPassword);
     console.log(confirmPassword);
-    axios.put('http://127.0.0.1:8000/userChangePassword/', data)
+    axios.put(selectedDomain + 'userChangePassword/', data)
       .then(response => {
         console.log(response.data);
         // add a success message to your UI if needed

@@ -1,4 +1,3 @@
-//import React from 'react'
 import '../css/users.css'
 import '../css/overlay.css'
 import React, { useState, useEffect } from "react";
@@ -6,8 +5,6 @@ import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useRequireAuth } from "../services/useRequireAuth";
-
-
 
 function Users() {
   useRequireAuth(["Admin", "Editor"]);
@@ -122,7 +119,6 @@ function Users() {
     });
   };
 
-  //Change Password
 
 const [currentPassword, setCurrentPassword] = useState('');
 const [newPassword, setNewPassword] = useState('');
