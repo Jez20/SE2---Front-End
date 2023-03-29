@@ -32,6 +32,7 @@ function Return() {
         console.log(error);
       });
   }, []);
+  
 
   const [text, setText] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -264,7 +265,7 @@ function Return() {
                 </div>
               </form>
             </div>
-        <div className={returncss.inventory}>
+        {/* <div className={returncss.inventory}>
           <p>Step 2. Return Items</p>
         </div>
         <div>
@@ -272,14 +273,14 @@ function Return() {
             <i className="bx bxs-book-content icon" />
             Return Items
           </button>
-        </div>
+        </div> */}
         {/* ROW 2 */}
-        <div className={returncss.row2}>
+        {/* <div className={returncss.row2}>
           <button className={`${returncss.delete} ${returncss.category}`} onClick={openFormMarkItems}>
             <i className="bx bxs-book-bookmark" />
             Mark Items as Lost
           </button>
-        </div>
+        </div> */}
 
     <div className={returncss.activityData}>
       <table className={returncss.table}>
