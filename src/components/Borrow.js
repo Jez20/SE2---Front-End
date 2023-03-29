@@ -25,7 +25,7 @@ function Borrow() {
 
     const returnDomain = require('../common/domainString')
     const selectedDomain = returnDomain();
-    axios.get(selectedDomain + "/itemsView/", { headers: { 'sessionid': id } })
+    axios.get(selectedDomain + "itemsView/")
       .then(
         response => {
           setItem(response.data);
@@ -56,8 +56,15 @@ function Borrow() {
 
   function handleReservation(){
     for (let x of selectedItems) {
+      var email
+      if (document.getElementById("number").value == null) {
+        email = ""
+      }
+      else {
+        email = document.getElementById("number").value
+      }
     const dataPostObj = {
-      email: document.getElementById("number").value,
+      email: email,
       item_code: x,
       claim: 0 // num
     }
@@ -67,7 +74,7 @@ function Borrow() {
     ]
     const returnDomain = require('../common/domainString')
     const selectedDomain = returnDomain();
-    axios.post(selectedDomain + 'reservation/', dataPost, {headers:{'sessionid': id}})
+    axios.post(selectedDomain + 'reservation/', dataPost)
     .then((response) => {
         refreshInventoryTable();
         document.getElementById("addItemsOverlay").style.display ="none";
@@ -78,6 +85,42 @@ function Borrow() {
       console.log(error);
     });
   }
+  
+  checkAll(false)
+  } 
+  
+  function handleBorrow(){
+    for (let x of selectedItems) {
+      var email
+      if (document.getElementById("number").value == null) {
+        email = ""
+      }
+      else {
+        email = document.getElementById("number").value
+      }
+    const dataPostObj = {
+      email: email,
+      item_code: x
+    }
+    
+    const dataPost = [
+     dataPostObj
+    ]
+    const returnDomain = require('../common/domainString')
+    const selectedDomain = returnDomain();
+    axios.post(selectedDomain + 'history/', dataPost)
+    .then((response) => {
+        refreshInventoryTable();
+        document.getElementById("addItemsOverlay").style.display ="none";
+        console.log("AXIOS.POST SUCCESSFUL: " + response);
+    })
+    .catch((error) => {
+      console.log("INSIDE ERROR!!!");
+      console.log(error);
+    });
+  }
+  
+  checkAll(false)
   } 
 
   return (
@@ -218,7 +261,32 @@ function Borrow() {
               }}
             >
               <i className="bx bxs-check-circle" />
-              Confirm Reservation
+              Reserve Selected Items
+            </button>
+            <button
+              className={`${borrow.update} ${borrow.category}`}
+              onClick={(event) => {
+                // const queryParams = new URLSearchParams();
+                handleBorrow()
+                // selectedItems.forEach((itemCode) => {
+                //   queryParams.append("item", itemCode);
+                // });
+                // const url = `/Reservation?${queryParams.toString()}`;
+                // window.location.href = url;
+              }}
+            >
+              <i className="bx bxs-check-circle" />
+              Borrow Selected Items
+            </button>
+            <button
+              className={`${borrow.update} ${borrow.category}`}
+              onClick={(event) => {
+                 const url = `/Reservation`;
+                 window.location.href = url;
+              }}
+            >
+              <i className="bx bxs-check-circle" />
+              Borrow Through Reservation ID
             </button>
           </div>
           <hr />
