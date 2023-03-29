@@ -361,7 +361,7 @@ function Index() {
                   <th>Item Name</th>
                   <th>Date (Time-in)</th>
                   <th>Date (Time-out)</th>
-                  <th>Text Sent</th>
+                  {/* <th>Text Sent</th> */}
                   <th>Action</th>
                 </tr>
               </thead>
@@ -376,13 +376,13 @@ function Index() {
                     <td>{item.item_code.item_name}</td>
                     <td>{item.date_in}</td>
                     <td>{item.date_out}</td>
-                    <td>{item.texts}</td>
+                    {/* <td>{item.texts}</td> */}
                     <td>
                     <div className={dashboard.actions}>
-                    <div className={`${dashboard.box} ${dashboard.edit}`} 
+                    {/* <div className={`${dashboard.box} ${dashboard.edit}`} 
                       onClick={openFormUpdateHistory}>
                       <i className="bx bxs-pencil action" />
-                    </div>
+                    </div> */}
                     <div
                       className={`${dashboard.box} ${dashboard.delete}`}
                       onClick={(e) => openFormDeleteHistory(item.history_id)}
