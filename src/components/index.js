@@ -200,24 +200,12 @@ function Index() {
     document.getElementById("myOverlay").style.display ="none";
   }
 
-  /*const deleteAllRecords = async () => {
-    try {
-      const response = await axios.get(`{selectedDomain}history/`);
-      const history_ids = response.data.map(history => history.id);
-      for (const history_id of history_ids) {
-        await deleteData(history_id);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  } //broken pipe error in deleting all the data
-  */
   const deleteAllRecords = async () => {
     try {
-      await axios.delete(`${selectedDomain}history/`);
-      console.log('All records deleted successfully');
+      await axios.delete(`${selectedDomain}history/clearLogs/clear`);
+      toast.success("All records have been cleared");
     } catch (error) {
-      console.log(error);
+      toast.error("An error occured");
     }
   }
 
@@ -565,7 +553,7 @@ function Index() {
                 onChange={(event)=> setGeneratedBy(event.target.value)}
                 
                 />
-              <label htmlFor="username">
+              {/* <label htmlFor="username">
                 <div className={dashboard.checkboxes}>
                   Print report within the last 2 weeks
                   <label className={dashboard.checkbox}>
@@ -573,7 +561,7 @@ function Index() {
                     <span className={dashboard.indicator} />
                   </label>
                 </div>
-              </label>
+              </label> */}
               <div className={dashboard.buttons}>
                 <input
                   className={`${dashboard.action_btn} ${dashboard.genRep}`}
