@@ -23,15 +23,20 @@ function Return() {
   };
 
   useEffect(() => {
-    axios
-      .get('http://127.0.0.1:8000/history') // replace with your API endpoint
+    refreshReturnTable();
+  }, []);
+
+  const refreshReturnTable = () => {
+    const returnDomain = require('../common/domainString')
+    const selectedDomain = returnDomain();
+    axios.get(selectedDomain + 'history/returnItems/randomString') // replace with your API endpoint
       .then((response) => {
         setData(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }
   
 
   const [text, setText] = useState('');
@@ -142,6 +147,30 @@ function Return() {
           // handle any other error
           toast.error("Password update failed");
         }
+      });
+  }
+
+  function handleMarkItemsLost (event) {
+    event.preventDefault();
+    const hist_id = document.getElementById("submitMarkItemsLost").getAttribute("data-item-code");
+    const returnDomain = require('../common/domainString')
+    const selectedDomain = returnDomain();
+    console.log(selectedDomain + hist_id);
+    const returnPut = {
+      history_id: hist_id
+    }
+    const returnPutArr = [
+      returnPut
+    ]
+    axios.put(selectedDomain + 'history/lost/lost', returnPutArr)
+      .then((response) => {
+        window.location.reload()
+        document.getElementById("markItemsOverlay").style.display = "none";
+        console.log("AXIOS.PUT SUCCESSFUL: " + response);
+      })
+      .catch((error) => {
+        console.log("INSIDE ERROR!!!");
+        console.log(error);
       });
   }
   
@@ -330,7 +359,7 @@ function Return() {
                         </button>
                         <button
                           className="delete category"
-                          onClick={openFormRemove}
+                          onClick={(e) => openFormMarkItems(item.history_id)}
                         >
                           <i className="bx bxs-trash icon" />
                           Mark Item as Lost
@@ -415,6 +444,9 @@ function Return() {
         <div className={returncss.buttons}>
           <input
             className={`${returncss.action_btn} ${returncss.confirm}`}
+            id="submitMarkItemsLost"
+            onClick={handleMarkItemsLost}
+            data-item-code=''
             type="submit"
             value="Confirm"
           />
@@ -452,7 +484,7 @@ function Return() {
           </form>
         </div>
       </div>
-      <div id="removeOverlay" className="remove-overlay">
+      {/* <div id="removeOverlay" className="remove-overlay">
         <div className="remove-wrap">
           <h1 id="removeh1">
             <i className="bx bxs-info-circle" />
@@ -474,7 +506,7 @@ function Return() {
             </div>
           </form>
         </div>
-      </div>
+      </div> */}
 
   <div id="returnItemsOverlay" className={returncss.returnItemsOverlay}>
     <div className={returncss.returnItemsWrap}>
@@ -606,10 +638,6 @@ function openForm() {
     document.getElementById("myOverlay").style.display ="block";
 }
 
-function openFormMarkItems() {
-    document.getElementById("markItemsOverlay").style.display ="block";
-}
-
 function openFormReturnItems() {
     document.getElementById("returnItemsOverlay").style.display ="block";
 }
@@ -623,8 +651,11 @@ function openFormReservation() {
   document.getElementById("reservationOverlay").style.display = "block";
 }
 
-function openFormRemove() {
-  document.getElementById("removeOverlay").style.display = "block";
+function openFormMarkItems(hist_id) {
+  console.log(hist_id);
+  document.getElementById("submitMarkItemsLost").setAttribute("data-item-code", hist_id);
+  console.log("Succesfully set the attribute of data-item-code");
+  document.getElementById("markItemsOverlay").style.display = "block";
 }
 
 export default Return
