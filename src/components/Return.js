@@ -37,6 +37,10 @@ function Return() {
         console.log(error);
       });
   }
+
+  
+
+
   
 
   const [text, setText] = useState('');
@@ -173,6 +177,30 @@ function Return() {
         console.log(error);
       });
   }
+  
+  function handleReturnItem (event) {
+    event.preventDefault();
+    const hist_id = document.getElementById("returnItem").getAttribute("data-item-code");
+    const returnDomain = require('../common/domainString')
+    const selectedDomain = returnDomain();
+    console.log(selectedDomain + hist_id);
+    const returnPut = {
+      history_id: hist_id
+    }
+    const returnPutArr = [
+      returnPut
+    ]
+    axios.put(selectedDomain + 'history/returnItems/return', returnPutArr)
+      .then((response) => {
+        window.location.reload()
+        document.getElementById("markItemsOverlay").style.display = "none";
+        console.log("AXIOS.PUT SUCCESSFUL: " + response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  
   
   function handleCancel() {
     // hide the overlay
@@ -353,7 +381,7 @@ function Return() {
           </td>
           <td>
           <div className="category">
-                      <button className={`${returncss.update} ${returncss.category}`} onClick={openFormReservation}>
+                      <button className={`${returncss.update} ${returncss.category}`}  onClick={(e) => openFormReservation(item.history_id)}>
                           <i className="bx bxs-book-content icon" />
                           Return Items
                         </button>
@@ -466,14 +494,17 @@ function Return() {
             Action
           </h1>
           <h2 id="reservationh2">
-            Would you like to add this item?
+            Would you like to return this item?
           </h2>
           <form>
             <div className="buttons">
               <input
                 className="action_btn confirm"
+                id="returnItem"
                 type="submit"
+                data-item-code=''
                 value="Confirm"
+                onClick ={handleReturnItem}
               />
               <input
                 className="action_btn cancel"
@@ -647,7 +678,10 @@ function openFormScanQR() {
 }
 
 
-function openFormReservation() {
+function openFormReservation(hist_id) {
+  console.log(hist_id);
+  document.getElementById("returnItem").setAttribute("data-item-code", hist_id);
+  console.log("Succesfully set the attribute of data-item-code");
   document.getElementById("reservationOverlay").style.display = "block";
 }
 
