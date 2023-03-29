@@ -47,18 +47,17 @@ function Borrow() {
       : [];
 
     setSelectedItems(newSelectedItems);
+    console.log(selectedItems)
     const checkboxes = document.querySelectorAll('input[name="reservableItems"]');
     checkboxes.forEach(checkbox => {
       checkbox.checked = checked;
     });
   }
 
-  function handleSubmitReservation(){
-    
-    for (let x of selectedItems) {
+  function handleReservation(){
     const dataPostObj = {
       email: document.getElementById("number").value,
-      item_code: x,
+      item_code: selectedItems,
       claim: 0 // num
     }
     
@@ -67,7 +66,7 @@ function Borrow() {
     ]
     const returnDomain = require('../common/domainString')
     const selectedDomain = returnDomain();
-    axios.post(selectedDomain + '/reservation/', dataPost, {headers:{'sessionid': id}})
+    axios.post(selectedDomain + 'reservation/', dataPost, {headers:{'sessionid': id}})
     .then((response) => {
         refreshInventoryTable();
         document.getElementById("addItemsOverlay").style.display ="none";
@@ -77,7 +76,7 @@ function Borrow() {
       console.log("INSIDE ERROR!!!");
       console.log(error);
     });
-  }
+  
   } 
 
   return (
@@ -209,7 +208,7 @@ function Borrow() {
               className={`${borrow.update} ${borrow.category}`}
               onClick={(event) => {
                 // const queryParams = new URLSearchParams();
-                handleSubmitReservation()
+                handleReservation()
                 // selectedItems.forEach((itemCode) => {
                 //   queryParams.append("item", itemCode);
                 // });
