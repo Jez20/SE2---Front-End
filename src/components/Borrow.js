@@ -47,17 +47,18 @@ function Borrow() {
       : [];
 
     setSelectedItems(newSelectedItems);
-    console.log(selectedItems)
     const checkboxes = document.querySelectorAll('input[name="reservableItems"]');
     checkboxes.forEach(checkbox => {
       checkbox.checked = checked;
     });
+    console.log(selectedItems)
   }
 
   function handleReservation(){
+    for (let x of selectedItems) {
     const dataPostObj = {
       email: document.getElementById("number").value,
-      item_code: selectedItems,
+      item_code: x,
       claim: 0 // num
     }
     
@@ -76,7 +77,7 @@ function Borrow() {
       console.log("INSIDE ERROR!!!");
       console.log(error);
     });
-  
+  }
   } 
 
   return (
@@ -260,11 +261,14 @@ function Borrow() {
                           const selectedIndex = selectedItems.indexOf(listeditem.item_code);
                           if (selectedIndex === -1) {
                             setSelectedItems([...selectedItems, listeditem.item_code]);
+                            
                           } else {
                             const newSelectedItems = [...selectedItems];
                             newSelectedItems.splice(selectedIndex, 1);
                             setSelectedItems(newSelectedItems);
                           }
+                          
+                console.log(selectedItems)
                         }}
                         />
                       </div>
