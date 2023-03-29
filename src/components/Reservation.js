@@ -36,7 +36,7 @@ function Reservation() {
   
   useEffect(() => {
     refreshInventoryTable()
-  });
+  }, []);
   //Change Password
 
   const [currentPassword, setCurrentPassword] = useState('');
@@ -267,7 +267,8 @@ function Reservation() {
                           const selectedDomain = returnDomain();
                           axios.post(selectedDomain + 'confirmReservation/', dataPost)
                           .then((response) => {
-                              refreshInventoryTable();
+                            
+                          refreshInventoryTable()
                               document.getElementById("addItemsOverlay").style.display ="none";
                               console.log("AXIOS.POST SUCCESSFUL: " + response);
                           })
@@ -275,7 +276,6 @@ function Reservation() {
                             console.log("INSIDE ERROR!!!");
                             console.log(error);
                           });
-                          refreshInventoryTable()
 
 
                         }}>
@@ -291,7 +291,8 @@ function Reservation() {
                       const selectedDomain = returnDomain();
                             axios.delete(selectedDomain + 'reservation/' + listeditem.reservation_id)
                               .then((response) => {
-                                refreshInventoryTable();
+                                
+                          refreshInventoryTable()
                                 document.getElementById("deleteItemsOverlay").style.display = "none";
                                 console.log("AXIOS.DELETE SUCCESSFUL: " + response);
                               })
