@@ -200,7 +200,7 @@ function Index() {
     document.getElementById("myOverlay").style.display ="none";
   }
 
-  const deleteAllRecords = async () => {
+  /*const deleteAllRecords = async () => {
     try {
       const response = await axios.get(`{selectedDomain}history/`);
       const history_ids = response.data.map(history => history.id);
@@ -211,7 +211,15 @@ function Index() {
       console.log(error);
     }
   } //broken pipe error in deleting all the data
-
+  */
+  const deleteAllRecords = async () => {
+    try {
+      await axios.delete(`${selectedDomain}history/`);
+      console.log('All records deleted successfully');
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className={dashboard.App}>
