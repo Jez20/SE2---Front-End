@@ -32,6 +32,7 @@ function Reservation() {
   const [items, setItem] = useState([])
   const [borrowitem, setBorrowItem] = useState("")
   const [borrowEmail, setBorrowEmail] = useState("")
+
   
   useEffect(() => {
     refreshInventoryTable()
@@ -94,10 +95,6 @@ function Reservation() {
   const [result, setResult] = useState('No result');
 
 
-
-  const handleError = (err) => {
-    console.error(err);
-  };
 
 
   const [emailFilter, setEmailFilter]  = useState('')
@@ -287,7 +284,25 @@ function Reservation() {
                         </button>
                         <button
                           className="delete category"
-                          onClick={openFormRemove}
+                          onClick={() => {
+
+                            
+                      const returnDomain = require('../common/domainString')
+                      const selectedDomain = returnDomain();
+                            axios.delete(selectedDomain + 'reservation/' + listeditem.reservation_id)
+                              .then((response) => {
+                                refreshInventoryTable();
+                                document.getElementById("deleteItemsOverlay").style.display = "none";
+                                console.log("AXIOS.DELETE SUCCESSFUL: " + response);
+                              })
+                              .catch((error) => {
+                                console.log("INSIDE ERROR!!!");
+                                console.log(error);
+                              });
+                          }
+
+
+                          }
                         >
                           <i className="bx bxs-trash icon" />
                           Remove
