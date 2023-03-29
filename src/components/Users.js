@@ -59,7 +59,7 @@ function Users() {
   };
   const handleResetPassword = (email) => {
     console.log(email);
-    axios.put(selectedDomain + `/editorResetPassword/`, {
+    axios.put(selectedDomain + `editorResetPassword/`, {
       email: email,
     })
     .then(response => {   
