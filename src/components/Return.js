@@ -333,7 +333,7 @@ function Return() {
                           onClick={openFormRemove}
                         >
                           <i className="bx bxs-trash icon" />
-                          Remove
+                          Mark Item as Lost
                         </button>
                       </div>
             {/* <div className={returncss.checkboxes}>
