@@ -35,7 +35,7 @@ function Users() {
   };
 
   useEffect(() => {
-    axios.get(selectedDomain + '/user/')
+    axios.get(selectedDomain + 'user/')
       .then(response => {
         setUsers(response.data);
       })
@@ -47,7 +47,7 @@ function Users() {
   const deleteSelectedUsers = () => {
     const emailObjects = selectedItems.map(email => ({ email }));
     toast.success("Successfully deleted user/s");
-    axios.delete(selectedDomain+ '/user/', { data: emailObjects })
+    axios.delete(selectedDomain+ 'user/', { data: emailObjects })
       .then(response => {
         setUsers(users.filter(user => !selectedItems.includes(user.email)));    
         setSelectedItems([]);
@@ -72,7 +72,7 @@ function Users() {
     });
   };
   const handleUpdatePhoneNumber = (email) => {
-    axios.put(selectedDomain + `/user/${email}`, {
+    axios.put(selectedDomain + `user/${email}`, {
       phone_number: userData[email].newPhoneNumber,
     })
     .then(response => {
@@ -100,7 +100,7 @@ function Users() {
     }
   }, [showToast]);
   const handleUpdateRole = (email) => {
-    axios.put(selectedDomain + `/user/${email}`, {
+    axios.put(selectedDomain + `user/${email}`, {
       role: userData[email].newRole
     })
     .then(response => {
@@ -134,7 +134,7 @@ function handleSubmit(event) {
   console.log(currentPassword);
   console.log(newPassword);
   console.log(confirmPassword);
-  axios.put(selectedDomain +'/userChangePassword/', data)
+  axios.put(selectedDomain +'userChangePassword/', data)
     .then(response => {
       console.log(response.data);
       // add a success message to your UI if needed
