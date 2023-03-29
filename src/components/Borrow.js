@@ -172,7 +172,7 @@ function Borrow() {
                 <i className="bx bx-box icon" />
                 <span className={borrow.linkName}>Inventory</span>
               </a>
-            </li>
+            </li>.
             <li>
               <a href="/Users">
                 <i className="bx bxs-user icon" />
@@ -219,8 +219,7 @@ function Borrow() {
           {/* ROW 1 */}
           <div className={borrow.inventory}>
             <p>
-              Step 1. Leave it blank if you are going to borrow, Otherwise input the
-              borrower's email
+              Step 1. Input the borrower/Reservee's email
             </p>
           </div>
           <div>
@@ -231,6 +230,7 @@ function Borrow() {
                 id="number"
                 name="email"
                 placeholder="Email"
+                required
               />
             </form>
           </div>
@@ -253,6 +253,7 @@ function Borrow() {
               onClick={(event) => {
                 // const queryParams = new URLSearchParams();
                 handleReservation()
+                openFormReserve()
                 // selectedItems.forEach((itemCode) => {
                 //   queryParams.append("item", itemCode);
                 // });
@@ -268,6 +269,7 @@ function Borrow() {
               onClick={(event) => {
                 // const queryParams = new URLSearchParams();
                 handleBorrow()
+                openFormBorrow()
                 // selectedItems.forEach((itemCode) => {
                 //   queryParams.append("item", itemCode);
                 // });
