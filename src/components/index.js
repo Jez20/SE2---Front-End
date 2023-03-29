@@ -202,16 +202,12 @@ function Index() {
 
   const deleteAllRecords = async () => {
     try {
-      const response = await axios.get(`{selectedDomain}history/`);
-      const history_ids = response.data.map(history => history.id);
-      for (const history_id of history_ids) {
-        await deleteData(history_id);
-      }
+      await axios.delete(`${selectedDomain}history/clearLogs/clear`);
+      toast.success("All records have been cleared");
     } catch (error) {
-      console.log(error);
+      toast.error("An error occured");
     }
-  } //broken pipe error in deleting all the data
-
+  }
 
   return (
     <div className={dashboard.App}>
@@ -353,7 +349,7 @@ function Index() {
                   <th>Item Name</th>
                   <th>Date (Time-in)</th>
                   <th>Date (Time-out)</th>
-                  <th>Text Sent</th>
+                  {/* <th>Text Sent</th> */}
                   <th>Action</th>
                 </tr>
               </thead>
@@ -368,13 +364,13 @@ function Index() {
                     <td>{item.item_code.item_name}</td>
                     <td>{item.date_in}</td>
                     <td>{item.date_out}</td>
-                    <td>{item.texts}</td>
+                    {/* <td>{item.texts}</td> */}
                     <td>
                     <div className={dashboard.actions}>
-                    <div className={`${dashboard.box} ${dashboard.edit}`} 
+                    {/* <div className={`${dashboard.box} ${dashboard.edit}`} 
                       onClick={openFormUpdateHistory}>
                       <i className="bx bxs-pencil action" />
-                    </div>
+                    </div> */}
                     <div
                       className={`${dashboard.box} ${dashboard.delete}`}
                       onClick={(e) => openFormDeleteHistory(item.history_id)}
@@ -557,7 +553,7 @@ function Index() {
                 onChange={(event)=> setGeneratedBy(event.target.value)}
                 
                 />
-              <label htmlFor="username">
+              {/* <label htmlFor="username">
                 <div className={dashboard.checkboxes}>
                   Print report within the last 2 weeks
                   <label className={dashboard.checkbox}>
@@ -565,7 +561,7 @@ function Index() {
                     <span className={dashboard.indicator} />
                   </label>
                 </div>
-              </label>
+              </label> */}
               <div className={dashboard.buttons}>
                 <input
                   className={`${dashboard.action_btn} ${dashboard.genRep}`}

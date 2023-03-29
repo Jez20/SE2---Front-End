@@ -29,7 +29,6 @@ function Userreserve() {
     navigate('/Login');
     axios.delete(selectedDomain+ 'logout/')
       .then(response => {
-        console.log("delete success");  
       })
       .catch(error => {
         console.error(error);
