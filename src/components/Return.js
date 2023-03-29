@@ -24,7 +24,7 @@ function Return() {
 
   useEffect(() => {
     axios
-      .get('http://127.0.0.1:8000/history/returnItems/returnGet') // replace with your API endpoint
+      .get('http://127.0.0.1:8000/history') // replace with your API endpoint
       .then((response) => {
         setData(response.data);
       })
