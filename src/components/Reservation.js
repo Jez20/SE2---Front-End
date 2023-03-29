@@ -31,10 +31,6 @@ function Reservation() {
   };
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const selectedItems = queryParams.getAll("item");
-    console.log(selectedItems);
-    refreshInventoryTable(selectedItems);
   }, [location.search]);
 
   const refreshInventoryTable = (selectedItems) => {
