@@ -24,7 +24,7 @@ function Return() {
 
   useEffect(() => {
     axios
-      .get('http://127.0.0.1:8000/history/returnItems/returnGet') // replace with your API endpoint
+      .get('http://127.0.0.1:8000/history') // replace with your API endpoint
       .then((response) => {
         setData(response.data);
       })
@@ -32,6 +32,7 @@ function Return() {
         console.log(error);
       });
   }, []);
+  
 
   const [text, setText] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -227,7 +228,7 @@ function Return() {
           <span className={returncss.text}>Return Items</span>
         </div>
         {/* ROW 1 */}
-        <div className={returncss.inventory}>
+        {/* <div className={returncss.inventory}>
           <p>Step 1. Scan QR</p>
         </div>
         <div>
@@ -235,8 +236,36 @@ function Return() {
             <i className="bx bx-qr-scan" />
             Scan QR
           </button>
-        </div>
-        <div className={returncss.inventory}>
+        </div> */}
+                    <div className={returncss.inventory}>
+              <p>Step 1. Scan QR or Manual Input Code</p>
+            </div>
+            <div>
+              <button
+                className="generate category"
+                onClick={openFormScanQR}
+              >
+                <i className="bx bx-qr-scan" />
+                Scan QR
+              </button>
+            </div>
+            <div>
+              <form>
+                <input
+                  type="text"
+                  className="number"
+                  name="phone"
+                  placeholder="Enter Reservation ID"
+                />
+                <div>
+                  <button className={`${returncss.update} ${returncss.category}`}>
+                    <i className="bx bxs-id-card" />
+                    Add Reservation ID
+                  </button>
+                </div>
+              </form>
+            </div>
+        {/* <div className={returncss.inventory}>
           <p>Step 2. Return Items</p>
         </div>
         <div>
@@ -244,14 +273,14 @@ function Return() {
             <i className="bx bxs-book-content icon" />
             Return Items
           </button>
-        </div>
+        </div> */}
         {/* ROW 2 */}
-        <div className={returncss.row2}>
+        {/* <div className={returncss.row2}>
           <button className={`${returncss.delete} ${returncss.category}`} onClick={openFormMarkItems}>
             <i className="bx bxs-book-bookmark" />
             Mark Items as Lost
           </button>
-        </div>
+        </div> */}
 
     <div className={returncss.activityData}>
       <table className={returncss.table}>
@@ -263,8 +292,9 @@ function Return() {
             <th>Date</th>
             <th>Time-in</th>
             <th>Notes</th>
-            <th>For Return</th>
-            <th>Lost</th>
+            <th>Action</th>
+            {/* <th>For Return</th>
+            <th>Lost</th> */}
           </tr>
         </thead>
         <tbody>
@@ -293,21 +323,34 @@ function Return() {
             </div>
           </td>
           <td>
-            <div className={returncss.checkboxes}>
+          <div className="category">
+                      <button className={`${returncss.update} ${returncss.category}`} onClick={openFormReservation}>
+                          <i className="bx bxs-book-content icon" />
+                          Return Items
+                        </button>
+                        <button
+                          className="delete category"
+                          onClick={openFormRemove}
+                        >
+                          <i className="bx bxs-trash icon" />
+                          Mark Item as Lost
+                        </button>
+                      </div>
+            {/* <div className={returncss.checkboxes}>
               <label className={returncss.checkbox}>
                 <input type="checkbox" />
                 <span className={returncss.indicator} />
               </label>
-            </div>
+            </div> */}
           </td>
-          <td>
+          {/* <td>
             <div className={returncss.checkboxes}>
               <label className={returncss.checkbox}>
                 <input type="checkbox" checked={checkedHistoryIds.includes(item.history_id)}/>
                 <span className={returncss.indicator} />
               </label>
             </div>
-          </td>
+          </td> */}
         </tr>
       ))}
         </tbody>
@@ -384,6 +427,55 @@ function Return() {
       </form>
     </div>
   </div>
+  <div id="reservationOverlay" className="reservation-overlay">
+        <div className="reservation-wrap">
+          <h1 id="reservationh1">
+            <i className="bx bxs-info-circle" />
+            Action
+          </h1>
+          <h2 id="reservationh2">
+            Would you like to add this item?
+          </h2>
+          <form>
+            <div className="buttons">
+              <input
+                className="action_btn confirm"
+                type="submit"
+                value="Confirm"
+              />
+              <input
+                className="action_btn cancel"
+                type="submit"
+                value="Cancel"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+      <div id="removeOverlay" className="remove-overlay">
+        <div className="remove-wrap">
+          <h1 id="removeh1">
+            <i className="bx bxs-info-circle" />
+            Action
+          </h1>
+          <h2 id="removeh2">Would you like to remove this item?</h2>
+          <form>
+            <div className="buttons">
+              <input
+                className="action_btn confirm"
+                type="submit"
+                value="Confirm"
+              />
+              <input
+                className="action_btn cancel"
+                type="submit"
+                value="Cancel"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+
   <div id="returnItemsOverlay" className={returncss.returnItemsOverlay}>
     <div className={returncss.returnItemsWrap}>
       <h1 id="returnh1">
@@ -524,6 +616,15 @@ function openFormReturnItems() {
 
 function openFormScanQR() {
     document.getElementById("scanQROverlay").style.display ="block";
+}
+
+
+function openFormReservation() {
+  document.getElementById("reservationOverlay").style.display = "block";
+}
+
+function openFormRemove() {
+  document.getElementById("removeOverlay").style.display = "block";
 }
 
 export default Return

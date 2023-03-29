@@ -5,12 +5,16 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import { useRequireAuth } from "../services/useRequireAuth";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 function Userdashboard() {
   useRequireAuth();
   const navigate = useNavigate();
   const returnDomain = require('../common/domainString')
   const selectedDomain = returnDomain();
+  const[checkedRows, setCheckedRows] = useState([]);
+  const imgData = 'images/logo.png';
 
   const[userData, setUserData] = useState([]);
   const[userReservation, setUserReservation] = useState([]);
@@ -42,6 +46,40 @@ function Userdashboard() {
         console.log(error);
       });
   }, []);
+
+  const handleCheckboxChange = (id) => {
+    if(checkedRows.includes(id)){
+      setCheckedRows(checkedRows.filter((rowId) => rowId !== id));
+    } else {
+      setCheckedRows([...checkedRows, id]);
+    }
+  }
+
+  const generatePdf = () => {
+    const checkedReservations = userReservation.filter((reservation) =>
+      checkedRows.includes(reservation.reservation_id)
+    );
+    const now = new Date();
+    const fileName = `KLIA-Reservation-${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.pdf`;
+    const dateGenerated = `${now.getMonth() + 1}-${now.getDate()}-${now.getFullYear()} at ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
+    const doc = new jsPDF();
+    doc.text('Krislizz International Academy Inventory System', 50,20); // Add company name
+    doc.addImage(imgData, 'PNG', 10, 10, 35, 35); // Add company logo
+    doc.text("Student's Reservation List", 50, 27);
+    doc.text(`Date Generated: ${dateGenerated}`, 50, 32);
+    const tableHeaders = ["Reservation ID", "Item Name", "Date of Expiration"];
+    const tableData = checkedReservations.map((reservation) => [
+      reservation.reservation_id,
+      reservation.item_code.item_name,
+      reservation.date_of_expiration,
+    ]);
+    doc.autoTable({
+      head: [tableHeaders],
+      body: tableData,
+      startY: 50,
+    });
+    doc.save(fileName);
+  };
 
 
 
@@ -199,14 +237,14 @@ function Userdashboard() {
         <div className="row-2">
           <button
             className="generate category"
-            onClick={openFormGenerateInvoice}
+            onClick={generatePdf}
           >
             <i className="bx bxs-download" />
             Generate Invoice
           </button>
         </div>
 
-        <div className="activity-data">
+    <div className="activity-data">
       <table className="table">
         <thead>
           <tr>
@@ -214,7 +252,6 @@ function Userdashboard() {
             <th>Item Name</th>
             <th>Date of Expiration</th>
             <th>Invoice</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -226,17 +263,12 @@ function Userdashboard() {
               <td>
                 <div className="checkboxes">
                   <label className="checkbox">
-                    <input type="checkbox" />
+                    <input 
+                      type="checkbox" 
+                      onChange={()=> handleCheckboxChange(reservation.reservation_id)}
+                      />
                     <span className="indicator" />
                   </label>
-                </div>
-              </td>
-              <td>
-                <div className="category" onClick={openFormCancel}>
-                  <button className="delete category">
-                    <i className="bx bx-x" />
-                    Cancel
-                  </button>
                 </div>
               </td>
             </tr>
