@@ -18,6 +18,8 @@ function Adduser() {
   const [user_password, setPassword] = useState('');
   const [role, setRole] = useState('');
   const navigate = useNavigate();
+  const returnDomain = require('../common/domainString')
+  const selectedDomain = returnDomain();
   
 
   const handleEmailChange = (event) => {
@@ -51,7 +53,7 @@ function Adduser() {
     toast.success("Successfully added user");
     
     try {
-      const response = await axios.post('http://127.0.0.1:8000/user/', [
+      const response = await axios.post(selectedDomain + 'user/', [
         {
           "email": email,
           "phone_number": phone_number,
