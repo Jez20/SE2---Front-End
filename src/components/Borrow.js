@@ -4,6 +4,7 @@ import '../css/overlay.css';
 import axios from "axios";
 import borrow from '../css/borrow.module.css'
 import '../css/overlay.css'
+import { ToastContainer, toast } from 'react-toastify';
 import { Helmet } from 'react-helmet';
 
 const id = sessionStorage.getItem('sessionid')
@@ -56,7 +57,7 @@ function Borrow() {
     console.log(selectedItems)
   }
 
-  function handleReservation(){
+  function handleReservation() {
     for (let x of selectedItems) {
       var email
       if (document.getElementById("number").value == null) {
@@ -65,33 +66,33 @@ function Borrow() {
       else {
         email = document.getElementById("number").value
       }
-    const dataPostObj = {
-      email: email,
-      item_code: x,
-      claim: 0 // num
+      const dataPostObj = {
+        email: email,
+        item_code: x,
+        claim: 0 // num
+      }
+
+      const dataPost = [
+        dataPostObj
+      ]
+      const returnDomain = require('../common/domainString')
+      const selectedDomain = returnDomain();
+      axios.post(selectedDomain + 'reservation/', dataPost)
+        .then((response) => {
+          refreshInventoryTable();
+          document.getElementById("addItemsOverlay").style.display = "none";
+          console.log("AXIOS.POST SUCCESSFUL: " + response);
+        })
+        .catch((error) => {
+          console.log("INSIDE ERROR!!!");
+          console.log(error);
+        });
     }
-    
-    const dataPost = [
-     dataPostObj
-    ]
-    const returnDomain = require('../common/domainString')
-    const selectedDomain = returnDomain();
-    axios.post(selectedDomain + 'reservation/', dataPost)
-    .then((response) => {
-        refreshInventoryTable();
-        document.getElementById("addItemsOverlay").style.display ="none";
-        console.log("AXIOS.POST SUCCESSFUL: " + response);
-    })
-    .catch((error) => {
-      console.log("INSIDE ERROR!!!");
-      console.log(error);
-    });
+
+    checkAll(false)
   }
-  
-  checkAll(false)
-  } 
-  
-  function handleBorrow(){
+
+  function handleBorrow() {
     for (let x of selectedItems) {
       var email
       if (document.getElementById("number").value == null) {
@@ -100,30 +101,177 @@ function Borrow() {
       else {
         email = document.getElementById("number").value
       }
-    const dataPostObj = {
-      email: email,
-      item_code: x
+      const dataPostObj = {
+        email: email,
+        item_code: x
+      }
+
+      const dataPost = [
+        dataPostObj
+      ]
+      const returnDomain = require('../common/domainString')
+      const selectedDomain = returnDomain();
+      axios.post(selectedDomain + 'history/', dataPost)
+        .then((response) => {
+          refreshInventoryTable();
+          document.getElementById("addItemsOverlay").style.display = "none";
+          console.log("AXIOS.POST SUCCESSFUL: " + response);
+        })
+        .catch((error) => {
+          console.log("INSIDE ERROR!!!");
+          console.log(error);
+        });
+    }
+
+    checkAll(false)
+  }
+
+  // function openFormBackpack() {
+  //   const checkboxes = document.querySelectorAll('input[name="reservableItems"]:checked');
+  //   const backpackList = document.getElementById('backpackList');
+  //   backpackList.innerHTML = '';
+  //   if (checkboxes.length === 0) {
+  //     backpackList.innerHTML = '<li>No items selected</li>';
+  //   } else {
+  //     checkboxes.forEach(checkbox => {
+  //       const itemName = checkbox.parentNode.parentNode.querySelector('h2').textContent;
+  //       const itemCode = checkbox.parentNode.parentNode.querySelector('h3').textContent;
+  //       const listItem = document.createElement('li');
+  //       listItem.textContent = `${itemName} (${itemCode})`;
+  //       backpackList.appendChild(listItem);
+  //     });
+  //   }
+  //   document.getElementById("backpackOverlay").style.display = "block";
+  // }
+
+  function openFormBorrowSelectedItems() {
+    const checkboxes = document.querySelectorAll('input[name="reservableItems"]:checked');
+    const backpackList = document.getElementById('backpackList2');
+    backpackList.innerHTML = '';
+    if (checkboxes.length === 0) {
+      backpackList.innerHTML = '<li>No items selected</li>';
+    } else {
+      checkboxes.forEach(checkbox => {
+        const itemName = checkbox.parentNode.parentNode.querySelector('h2').textContent;
+        const itemCode = checkbox.parentNode.parentNode.querySelector('h3').textContent;
+        const listItem = document.createElement('li');
+        listItem.textContent = `${itemName} (${itemCode})`;
+        backpackList.appendChild(listItem);
+      });
+      // const borrowButtons = document.createElement('div');
+      // borrowButtons.className = borrow.buttons;
+      // const confirmBtn = document.createElement('input');
+      // confirmBtn.className = `${borrow.action_btn} ${borrow.confirm}`;
+      // confirmBtn.type = 'submit';
+      // confirmBtn.value = 'Confirm';
+      // confirmBtn.addEventListener('click', (event) => {
+      //   event.preventDefault();
+      //   handleBorrow();
+      //   document.getElementById("borrowOverlay").style.display = "none";
+      // });
+      // const cancelBtn = document.createElement('input');
+      // cancelBtn.className = `${borrow.action_btn} ${borrow.cancel}`;
+      // cancelBtn.type = 'submit';
+      // cancelBtn.value = 'Cancel';
+      // cancelBtn.addEventListener('click', () => {
+      //   document.getElementById("borrowOverlay").style.display = "none";
+      // });
+      // borrowButtons.appendChild(confirmBtn);
+      // borrowButtons.appendChild(cancelBtn);
+      // backpackList.appendChild(borrowButtons);
+    }
+    document.getElementById("borrowOverlay").style.display = "block";
+  }
+
+  function openFormReserveSelectedItems() {
+    const checkboxes = document.querySelectorAll('input[name="reservableItems"]:checked');
+    const backpackList = document.getElementById('backpackList');
+    backpackList.innerHTML = '';
+    if (checkboxes.length === 0) {
+      backpackList.innerHTML = '<li>No items selected</li>';
+    } else {
+      checkboxes.forEach(checkbox => {
+        const itemName = checkbox.parentNode.parentNode.querySelector('h2').textContent;
+        const itemCode = checkbox.parentNode.parentNode.querySelector('h3').textContent;
+        const listItem = document.createElement('li');
+        listItem.textContent = `${itemName} (${itemCode})`;
+        backpackList.appendChild(listItem);
+      });
+      // const borrowButtons = document.createElement('div');
+      // borrowButtons.className = borrow.buttons;
+      // const confirmBtn = document.createElement('input');
+      // confirmBtn.className = `${borrow.action_btn} ${borrow.confirm}`;
+      // confirmBtn.type = 'submit';
+      // confirmBtn.value = 'Confirm';
+      // confirmBtn.addEventListener('click', (event) => {
+      //   event.preventDefault();
+      //   handleReservation();
+      //   document.getElementById("reserveOverlay").style.display = "none";
+      // });
+      // const cancelBtn = document.createElement('input');
+      // cancelBtn.className = `${borrow.action_btn} ${borrow.cancel}`;
+      // cancelBtn.type = 'submit';
+      // cancelBtn.value = 'Cancel';
+      // cancelBtn.addEventListener('click', () => {
+      //   document.getElementById("reserveOverlay").style.display = "none";
+      // });
+      // borrowButtons.appendChild(confirmBtn);
+      // borrowButtons.appendChild(cancelBtn);
+      // backpackList.appendChild(borrowButtons);
+    }
+    document.getElementById("reserveOverlay").style.display = "block";
+  }
+
+    //Change Password
+
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+  
+    function handleSubmit(event) {
+      event.preventDefault();
+      const data = {
+        email: "Editor@gmail.com", // change your email address here for test purposes, erase this during deployment
+        old_password: currentPassword,
+        new_password: newPassword,
+        user_password: confirmPassword,
+      };
+      console.log(currentPassword);
+      console.log(newPassword);
+      console.log(confirmPassword);
+      axios.put(selectedDomain +'/userChangePassword/', data)
+        .then(response => {
+          console.log(response.data);
+          // add a success message to your UI if needed
+          // hide the overlay
+          toast.success("Password updated successfully");
+          handleCancel();
+        })
+        .catch(error => {
+          console.error(error);
+          if (error.response.status === 400) {
+            // handle a 400 conflict error
+            toast.error("Old password matches the new password");
+          }
+          if (error.response.status === 409) {
+            // handle a 409 conflict error
+            toast.error("Password update failed - password mismatched");
+          }
+          if (error.response.status === 404) {
+            // handle a 404 conflict error
+            toast.error("Current password is incorrect");
+          } 
+          if (error.response.status === 401) {
+            // handle any other error
+            toast.error("Password update failed");
+          }
+        });
     }
     
-    const dataPost = [
-     dataPostObj
-    ]
-    const returnDomain = require('../common/domainString')
-    const selectedDomain = returnDomain();
-    axios.post(selectedDomain + 'history/', dataPost)
-    .then((response) => {
-        refreshInventoryTable();
-        document.getElementById("addItemsOverlay").style.display ="none";
-        console.log("AXIOS.POST SUCCESSFUL: " + response);
-    })
-    .catch((error) => {
-      console.log("INSIDE ERROR!!!");
-      console.log(error);
-    });
-  }
-  
-  checkAll(false)
-  } 
+    function handleCancel() {
+      // hide the overlay
+      document.getElementById("myOverlay").style.display ="none";
+    }
 
   return (
 
@@ -236,7 +384,7 @@ function Borrow() {
               />
             </form>
           </div>
-          <div className={borrow.inventory}>
+          {/* <div className={borrow.inventory}>
             <p>For Selected Items</p>
           </div>
           <div>
@@ -244,56 +392,12 @@ function Borrow() {
               <i className="bx bxs-backpack icon" />
               Check Backpack
             </button>
-          </div>
-          <div className={borrow.inventory}>
-            <p>Click items to be selected</p>
-          </div>
-          {/* ROW 2 */}
-          <div className={borrow.row2}>
-            <button
-              className={`${borrow.update} ${borrow.category}`}
-              onClick={(event) => {
-                // const queryParams = new URLSearchParams();
-                handleReservation()
-                openFormReserve()
-                // selectedItems.forEach((itemCode) => {
-                //   queryParams.append("item", itemCode);
-                // });
-                // const url = `/Reservation?${queryParams.toString()}`;
-                // window.location.href = url;
-              }}
-            >
-              <i className="bx bxs-check-circle" />
-              Reserve Selected Items
-            </button>
-            <button
-              className={`${borrow.update} ${borrow.category}`}
-              onClick={(event) => {
-                // const queryParams = new URLSearchParams();
-                handleBorrow()
-                openFormBorrow()
-                // selectedItems.forEach((itemCode) => {
-                //   queryParams.append("item", itemCode);
-                // });
-                // const url = `/Reservation?${queryParams.toString()}`;
-                // window.location.href = url;
-              }}
-            >
-              <i className="bx bxs-check-circle" />
-              Borrow Selected Items
-            </button>
-            <button
-              className={`${borrow.update} ${borrow.category}`}
-              onClick={(event) => {
-                 const url = `/Reservation`;
-                 window.location.href = url;
-              }}
-            >
-              <i className="bx bxs-check-circle" />
-              Borrow Through Reservation ID
-            </button>
-          </div>
+          </div> */}
           <hr />
+          <div className={borrow.inventory}>
+            <p>Step 2. Select or unselect the items to be borrow or reserve</p>
+          </div>
+         
           <button className={`${borrow.check} ${borrow.item}`} onClick={() => checkAll(true)}>
             <i className="bx bxs-select-multiple" />
             <a
@@ -325,27 +429,27 @@ function Borrow() {
                       <div className={borrow.cardDivider}>
                         <h2>{listeditem.item_name}</h2>
                         <h3>ITEM-{listeditem.item_code}</h3>
-                        <input id={`${listeditem.item_code}`} 
-                        input name="reservableItems" 
-                        className={borrow.radio} 
-                        type="checkbox" 
-                        onClick={() => {
-                          const selectedIndex = selectedItems.indexOf(listeditem.item_code);
-                          if (selectedIndex === -1) {
-                            setSelectedItems([...selectedItems, listeditem.item_code]);
-                            
-                          } else {
-                            const newSelectedItems = [...selectedItems];
-                            newSelectedItems.splice(selectedIndex, 1);
-                            setSelectedItems(newSelectedItems);
-                          }
-                          
-                console.log(selectedItems)
-                        }}
+                        <input id={`${listeditem.item_code}`}
+                          input name="reservableItems"
+                          className={borrow.radio}
+                          type="checkbox"
+                          onClick={() => {
+                            const selectedIndex = selectedItems.indexOf(listeditem.item_code);
+                            if (selectedIndex === -1) {
+                              setSelectedItems([...selectedItems, listeditem.item_code]);
+
+                            } else {
+                              const newSelectedItems = [...selectedItems];
+                              newSelectedItems.splice(selectedIndex, 1);
+                              setSelectedItems(newSelectedItems);
+                            }
+
+                            console.log(selectedItems)
+                          }}
                         />
                       </div>
-                      <div className="card-section">
-                        <div className={borrow.category}>
+                      <div className="card-section" style={{ width: 300 }}>
+                        {/* <div className={borrow.category}>
                           <button className={`${borrow.reset} ${borrow.category}`} onClick={openFormReserve}>
                             <i className="bx bxs-file" />
                             Reserve
@@ -354,7 +458,7 @@ function Borrow() {
                             <i className="bx bxs-backpack" />
                             Borrow Now
                           </button>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
 
@@ -365,51 +469,147 @@ function Borrow() {
               }
             </div>
           </tbody>
+          <hr />
+          <div className={borrow.inventory}>
+            <p>Step 3. Perform an action</p>
+          </div>
+           {/* ROW 2 */}
+           <div className={borrow.row2}>
+            <button
+              className={`${borrow.update} ${borrow.category}`}
+              onClick={(event) => {
+                // const queryParams = new URLSearchParams();
+                // handleReservation()
+                if (selectedItems.length === 0) {
+                  event.preventDefault();
+                } else {
+                  openFormReserveSelectedItems();
+                }
+                // selectedItems.forEach((itemCode) => {
+                //   queryParams.append("item", itemCode);
+                // });
+                // const url = `/Reservation?${queryParams.toString()}`;
+                // window.location.href = url;
+              }}
+            >
+              <i className="bx bxs-check-circle" />
+              Reserve Selected Items
+            </button>
+            <button
+              className={`${borrow.update} ${borrow.category}`}
+              onClick={(event) => {
+                // const queryParams = new URLSearchParams();
+                // handleBorrow()
+                // openFormBorrow()
+                if (selectedItems.length === 0) {
+                  event.preventDefault();
+                } else {
+                  openFormBorrowSelectedItems();
+                }
+                // selectedItems.forEach((itemCode) => {
+                //   queryParams.append("item", itemCode);
+                // });
+                // const url = `/Reservation?${queryParams.toString()}`;
+                // window.location.href = url;
+              }}
+            >
+              <i className="bx bxs-check-circle" />
+              Borrow Selected Items
+            </button>
+          </div>
+          <hr />
+          <div className={borrow.inventory}>
+            <p>For Reserved Items, Navigation Button to View Reservation Table</p>
+          </div>
+          <button
+              className={`${borrow.check} ${borrow.category}`}
+              onClick={(event) => {
+                const url = `/Reservation`;
+                window.location.href = url;
+              }}
+            >
+              <i className="bx bxs-check-circle" />
+              Borrow Reservation
+            </button>
 
         </div>
       </section>
       <div id="myOverlay" className={borrow.overlay}>
         <div className={borrow.wrap}>
-          <h2>Change Password</h2>
-          <form>
-            <label htmlFor="username">Current Password:</label>
-            <input
-              type="text"
-              placeholder="Enter your current password"
-              id="currentPass"
-            />
-            <label htmlFor="username">New Password:</label>
-            <input type="text" placeholder="Enter your new password" id="newPass" />
-            <label htmlFor="username">Confirm Password:</label>
-            <input type="text" placeholder="Confirm password" id="conPass" />
-            <div className={borrow.buttons}>
+        <h2>Change Password</h2>
+            <form onSubmit={handleSubmit}>
+              <label htmlFor="currentPass">Current Password:</label>
               <input
-                className={`${borrow.action_btn} ${borrow.confirm}`}
-                type="submit"
-                value="Confirm"
+                type="password"
+                placeholder="Enter your current password" required
+                id="currentPass"
+                value={currentPassword}
+                onChange={(event) => setCurrentPassword(event.target.value)}
               />
+              <label htmlFor="newPass">New Password:</label>
               <input
-                className={`${borrow.action_btn} ${borrow.cancel}`}
-                type="submit"
-                value="Cancel"
+                type="password"
+                placeholder="Enter your new password" required
+                id="newPass"
+                value={newPassword}
+                onChange={(event) => setNewPassword(event.target.value)}
               />
-            </div>
-          </form>
-        </div>
+              <label htmlFor="conPass">Confirm Password:</label>
+              <input
+                type="password"
+                placeholder="Confirm password" required
+                id="conPass"
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+              />
+              <div className="buttons">
+                <input
+                  className="action_btn confirm"
+                  type="submit"
+                  value="Confirm"
+                />
+                <input 
+                  className="action_btn cancel"
+                  type="button"
+                  value="Cancel"
+                  onClick={handleCancel}
+                />
+              </div>
+            </form>
+         </div>
       </div>
+  <ToastContainer/>
       <div id="reserveOverlay" className={borrow.reserveOverlay}>
         <div className={borrow.reserveWrap}>
           <h1 id="reserveh1">
             <i className="bx bxs-info-circle" />
-            Action
+            List of Items to be Reserved
           </h1>
-          <h2 id="reserveh2">Would you like to reserve this item?</h2>
+          {/* <h2 id="reserveh2">Reserve Selected Item/s</h2> */}
+          <div className={borrow.backpack}>
+            <ol id="backpackList" className={borrow.backpacklist}>
+              <li>Ball</li>
+              <li>Projector</li>
+              <li>Chess</li>
+              <li>Jumping Ropes</li>
+            </ol>
+          </div>
           <form>
             <div className={borrow.buttons}>
               <input
                 className={`${borrow.action_btn} ${borrow.confirm}`}
                 type="submit"
                 value="Confirm"
+                onClick={(event) => {
+                  // const queryParams = new URLSearchParams();
+                  handleReservation()
+                  // openFormReserve()
+                  // selectedItems.forEach((itemCode) => {
+                  //   queryParams.append("item", itemCode);
+                  // });
+                  // const url = `/Reservation?${queryParams.toString()}`;
+                  // window.location.href = url;
+                }}
               />
               <input
                 className={`${borrow.action_btn} ${borrow.cancel}`}
@@ -422,9 +622,21 @@ function Borrow() {
       </div>
       <div id="borrowOverlay" className={borrow.borrowOverlay}>
         <div className={borrow.borrowWrap}>
-          <h2 id="borrowh2">Print Invoice</h2>
+          {/* <h2 id="borrowh2">List of items to be borrowed</h2> */}
+          <h1 id="reserveh1">
+            <i className="bx bxs-info-circle" />
+            List of Items to be Borrowed
+          </h1>
+          <div className={borrow.backpack}>
+            <ol id="backpackList2" className={borrow.backpacklist}>
+              <li>Ball</li>
+              <li>Projector</li>
+              <li>Chess</li>
+              <li>Jumping Ropes</li>
+            </ol>
+          </div>
           <form>
-            <div className={borrow.card}>
+            {/* <div className={borrow.card}>
               <img
                 className="card-img-top"
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUT4dzVBCJqmEcFm4gWT5dLwdTb3pTCTRNhA&usqp=CAU"
@@ -432,12 +644,22 @@ function Borrow() {
                 style={{ height: 300, width: 300 }}
               />
               <div className="card-body"></div>
-            </div>
+            </div> */}
             <div className={borrow.buttons}>
               <input
                 className={`${borrow.action_btn} ${borrow.confirm}`}
                 type="submit"
                 value="Confirm"
+                onClick={(event) => {
+                  // const queryParams = new URLSearchParams();
+                  handleBorrow()
+                  // openFormBorrow()
+                  // selectedItems.forEach((itemCode) => {
+                  //   queryParams.append("item", itemCode);
+                  // });
+                  // const url = `/Reservation?${queryParams.toString()}`;
+                  // window.location.href = url;
+                }}
               />
               <input
                 className={`${borrow.action_btn} ${borrow.cancel}`}
@@ -450,7 +672,7 @@ function Borrow() {
       </div>
       <div id="backpackOverlay" className={borrow.backpackOverlay}>
         <div className={borrow.backpackWrap}>
-          <h1 id="backpackh1">Items Borrowed</h1>
+          <h1 id="backpackh1">Selected Items</h1>
           <div className={borrow.backpack}>
             <ol id="backpackList" className={borrow.backpacklist}>
               <li>Ball</li>
@@ -460,7 +682,7 @@ function Borrow() {
             </ol>
           </div>
           <form>
-            <div className={borrow.buttons}>
+            {/* <div className={borrow.buttons}>
               <input
                 className={`${borrow.reset} ${borrow.category}`}
                 type="submit"
@@ -480,7 +702,16 @@ function Borrow() {
                 type="submit"
                 value="Borrow Now"
               />
-            </div>
+            </div> */}
+            {/* <div className={inventory.qr}>
+              <div className={inventory.buttons}>
+                <input
+                  className={`${inventory.buttonQR} ${inventory.confirm}`}
+                  type="submit"
+                  value="Confirm"
+                />
+              </div>
+            </div> */}
           </form>
         </div>
       </div>
@@ -513,27 +744,5 @@ function openFormReserve() {
 function openFormBorrow() {
   document.getElementById("borrowOverlay").style.display = "block";
 }
-
-function openFormBackpack() {
-  const checkboxes = document.querySelectorAll('input[name="reservableItems"]:checked');
-  const backpackList = document.getElementById('backpackList');
-  backpackList.innerHTML = '';
-  if (checkboxes.length === 0) {
-    backpackList.innerHTML = '<li>No items selected</li>';
-  } else {
-    checkboxes.forEach(checkbox => {
-      const itemName = checkbox.parentNode.parentNode.querySelector('h2').textContent;
-      const itemCode = checkbox.parentNode.parentNode.querySelector('h3').textContent;
-      const listItem = document.createElement('li');
-      listItem.textContent = `${itemName} (${itemCode})`;
-      backpackList.appendChild(listItem);
-    });
-  }
-  document.getElementById("backpackOverlay").style.display = "block";
-}
-
-
-
-
 
 export default Borrow
