@@ -17,6 +17,118 @@ import axios from "axios";
 // <GlobalStyle />
 
 function Userreserve() {
+
+  const [items, setItem] = useState([])
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  // hook
+  useEffect(() => {
+    refreshInventoryTable();
+  }, []);
+
+  // Get The Inventory
+  const refreshInventoryTable = () => {
+
+    const returnDomain = require('../common/domainString')
+    const selectedDomain = returnDomain();
+    axios.get(selectedDomain + "itemsView/")
+      .then(
+        response => {
+          setItem(response.data);
+        })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  // + Add Item using axios.post
+
+
+  // IN-ROW buttons
+  // update
+  // generate QR
+  function checkAll(checked) {
+    const newSelectedItems = checked
+      ? items.map((item) => item.item_code)
+      : [];
+
+    setSelectedItems(newSelectedItems);
+    const checkboxes = document.querySelectorAll('input[name="reservableItems"]');
+    checkboxes.forEach(checkbox => {
+      checkbox.checked = checked;
+    });
+    console.log(selectedItems)
+  }
+
+  function handleReservation(){
+    for (let x of selectedItems) {
+      var email
+      if (document.getElementById("number").value == null) {
+        email = ""
+      }
+      else {
+        email = document.getElementById("number").value
+      }
+    const dataPostObj = {
+      email: email,
+      item_code: x,
+      claim: 0 // num
+    }
+    
+    const dataPost = [
+     dataPostObj
+    ]
+    const returnDomain = require('../common/domainString')
+    const selectedDomain = returnDomain();
+    axios.post(selectedDomain + 'reservation/', dataPost)
+    .then((response) => {
+        refreshInventoryTable();
+        document.getElementById("addItemsOverlay").style.display ="none";
+        console.log("AXIOS.POST SUCCESSFUL: " + response);
+    })
+    .catch((error) => {
+      console.log("INSIDE ERROR!!!");
+      console.log(error);
+    });
+  }
+  
+  checkAll(false)
+  } 
+  
+  function handleBorrow(){
+    for (let x of selectedItems) {
+      var email
+      if (document.getElementById("number").value == null) {
+        email = ""
+      }
+      else {
+        email = document.getElementById("number").value
+      }
+    const dataPostObj = {
+      email: email,
+      item_code: x
+    }
+    
+    const dataPost = [
+     dataPostObj
+    ]
+    const returnDomain = require('../common/domainString')
+    const selectedDomain = returnDomain();
+    axios.post(selectedDomain + 'history/', dataPost)
+    .then((response) => {
+        refreshInventoryTable();
+        document.getElementById("addItemsOverlay").style.display ="none";
+        console.log("AXIOS.POST SUCCESSFUL: " + response);
+    })
+    .catch((error) => {
+      console.log("INSIDE ERROR!!!");
+      console.log(error);
+    });
+  }
+  
+  checkAll(false)
+  } 
+
   useRequireAuth();
   
   const navigate = useNavigate();
@@ -172,109 +284,79 @@ function Userreserve() {
       <div className={userreserve.inventory}>
         <p>Click items to be selected</p>
       </div>
+
+      <button
+              className={`${userreserve.update} ${userreserve.category}`}
+              onClick={(event) => {
+                // const queryParams = new URLSearchParams();
+                openFormUserReserve()
+                // selectedItems.forEach((itemCode) => {
+                //   queryParams.append("item", itemCode);
+                // });
+                // const url = `/Reservation?${queryParams.toString()}`;
+                // window.location.href = url;
+              }}
+            > <i className="bx bxs-check-circle" />
+            Reserve Selected Items</button>
+
       <hr />
-      <button className={`${userreserve.check} ${userreserve.item}`}>
-        <i className="bx bxs-select-multiple" />
-        <a
-          href="javascript:checkall('test','plan',true)"
-          style={{ textDecoration: "none" }}
-        >
-          Select All
-        </a>
-      </button>
-      <button className={`${userreserve.delete} ${userreserve.item}`}>
-        <i className="bx bxs-x-square" />
-        <a
-          href="javascript:checkall('test','plan',false)"
-          style={{ textDecoration: "none" }}
-        >
-          UnSelect All
-        </a>
-      </button>
-      <div className={userreserve.row}>
-        {/* <form name="test"> */}
-        <div className={userreserve.column}>
-        <div className={`${userreserve.card} w3-hover-shadow`}>
-            <div className={userreserve.cardDivider}>
-              <h2>BALL</h2>
-              <h3>ITEM-001</h3>
-              <input name="plan" className={userreserve.radio} type="checkbox" />
+                <button className={`${userreserve.check} ${userreserve.item}`} onClick={() => checkAll(true)}>
+            <i className="bx bxs-select-multiple" />
+            <a
+              href="javascript:checkall('test','reservableItems',true)"
+              style={{ textDecoration: "none" }}
+            >
+              Select All
+            </a>
+          </button>
+          <button className={`${userreserve.delete} ${userreserve.item}`} onClick={() => checkAll(false)}>
+            <i className="bx bxs-x-square" />
+            <a
+              href="javascript:checkall('test','reservableItems',false)"
+              style={{ textDecoration: "none" }}
+            >
+              UnSelect All
+            </a>
+          </button>
+          <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
+              {
+
+                items.map(
+                  listeditem => (
+
+                    <div className={`${userreserve.card} w3-hover-shadow`} style={{ margin: "10px" }}>
+                      <div className={userreserve.cardDivider}>
+                        <h2>{listeditem.item_name}</h2>
+                        <h3>ITEM-{listeditem.item_code}</h3>
+                        <input id={`${listeditem.item_code}`} 
+                        input name="reservableItems" 
+                        className={userreserve.radio} 
+                        type="checkbox" 
+                        onClick={() => {
+                          const selectedIndex = selectedItems.indexOf(listeditem.item_code);
+                          if (selectedIndex === -1) {
+                            setSelectedItems([...selectedItems, listeditem.item_code]);
+                            
+                          } else {
+                            const newSelectedItems = [...selectedItems];
+                            newSelectedItems.splice(selectedIndex, 1);
+                            setSelectedItems(newSelectedItems);
+                          }
+                          
+                console.log(selectedItems)
+                        }}
+                        />
+                      </div>
+                      <div className="card-section">
+                      </div>
+                    </div>
+
+                  )
+
+                )
+
+              }
             </div>
-            <div className="card-section">
-            <div className={userreserve.category}>
-                <button
-                  className={`${userreserve.reset } ${userreserve.category}`}
-                  onClick={openFormUserReserve}
-                >
-                  <i className="bx bxs-file" />
-                  Reserve
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className={userreserve.column}>
-          <div className={`${userreserve.card} w3-hover-shadow`}>
-            <div className={userreserve.cardDivider}>
-              <h2>BALL</h2>
-              <h3>ITEM-001</h3>
-              <input name="plan" className={userreserve.radio} type="checkbox" />
-            </div>
-            <div className="card-section">
-              <div className={userreserve.category}>
-                <button
-                  className={`${userreserve.reset } ${userreserve.category}`}
-                  onClick={openFormUserReserve}
-                >
-                  <i className="bx bxs-file" />
-                  Reserve
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className={userreserve.column}>
-          <div className={`${userreserve.card} w3-hover-shadow`}>
-            <div className={userreserve.cardDivider}>
-              <h2>BALL</h2>
-              <h3>ITEM-001</h3>
-              <input name="plan" className={userreserve.radio} type="checkbox" />
-            </div>
-            <div className="card-section">
-              <div className={userreserve.category}>
-                <button
-                  className={`${userreserve.reset } ${userreserve.category}`}
-                  onClick={openFormUserReserve}
-                >
-                  <i className="bx bxs-file" />
-                  Reserve
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className={userreserve.column}>
-          <div className={`${userreserve.card} w3-hover-shadow`}>
-            <div className={userreserve.cardDivider}>
-              <h2>BALL</h2>
-              <h3>ITEM-001</h3>
-              <input name="plan" className={userreserve.radio} type="checkbox" />
-            </div>
-            <div className="card-section">
-              <div className={userreserve.category}>
-                <button
-                  className={`${userreserve.reset } ${userreserve.category}`}
-                  onClick={openFormUserReserve}
-                >
-                  <i className="bx bxs-file" />
-                  Reserve
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* </form> */}
-      </div>
     </div>
   </section>
   <div id="myOverlay" className={userreserve.overlay}>
@@ -335,6 +417,7 @@ function Userreserve() {
             className={`${userreserve.action_btn} ${userreserve.confirm}`}
             type="submit"
             value="Confirm"
+            onclick = {() => {handleReservation()}}
           />
           <input
             className={`${userreserve.action_btn} ${userreserve.cancel}`}
@@ -349,7 +432,7 @@ function Userreserve() {
     <div className={userreserve.userBackpackWrap}>
       <h1 id={userreserve.userbackpackh1}>Items Borrowed</h1>
       <div className={userreserve.userbackpack}>
-        <ol className={userreserve.userbackpacklist}>
+        <ol id="backpackList" className={userreserve.userbackpacklist}>
           <li>Ball</li>
           <li>Projector</li>
           <li>Chess</li>
@@ -385,6 +468,20 @@ function openForm() {
 }
 
 function openFormUserBackpack() {
+    const checkboxes = document.querySelectorAll('input[name="reservableItems"]:checked');
+  const backpackList = document.getElementById('backpackList');
+  backpackList.innerHTML = '';
+  if (checkboxes.length === 0) {
+    backpackList.innerHTML = '<li>No items selected</li>';
+  } else {
+    checkboxes.forEach(checkbox => {
+      const itemName = checkbox.parentNode.parentNode.querySelector('h2').textContent;
+      const itemCode = checkbox.parentNode.parentNode.querySelector('h3').textContent;
+      const listItem = document.createElement('li');
+      listItem.textContent = `${itemName} (${itemCode})`;
+      backpackList.appendChild(listItem);
+    });
+  }
     document.getElementById("userBackpackOverlay").style.display ="block";
 }
 
