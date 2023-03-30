@@ -17,7 +17,6 @@ import axios from "axios";
 // <GlobalStyle />
 
 function Userreserve() {
-
   const [items, setItem] = useState([])
   const [selectedItems, setSelectedItems] = useState([]);
 
@@ -26,6 +25,7 @@ function Userreserve() {
     refreshInventoryTable();
   }, []);
 
+  
   // Get The Inventory
   const refreshInventoryTable = () => {
 
@@ -63,7 +63,7 @@ function Userreserve() {
   function handleReservation(){
     for (let x of selectedItems) {
     const dataPostObj = {
-      email: "asd",
+      email: "User",
       item_code: x,
       claim: 0 // num
     }

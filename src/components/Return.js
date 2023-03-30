@@ -1,3 +1,4 @@
+
 import returncss from '../css/return.module.css'
 import '../css/overlay.css'
 import React, { useState, useEffect, useRef } from "react";
@@ -12,6 +13,7 @@ import QrReader from "react-qr-scanner";
 
 function Return() {
   useRequireAuth(["Admin", "Editor"]);
+  const [note, setNote] = useState("");
   const [data, setData] = useState([]);
   const [storeResult, setstoreResult] = useState("");
   const navigate = useNavigate();
@@ -205,11 +207,14 @@ function Return() {
   function handleReturnItem (event) {
     event.preventDefault();
     const hist_id = document.getElementById("returnItem").getAttribute("data-item-code");
+    const notes = document.getElementById("returnItem").getAttribute("data-item-notes");
     const returnDomain = require('../common/domainString')
+    console.log(notes);
     const selectedDomain = returnDomain();
     console.log(selectedDomain + hist_id);
     const returnPut = {
-      history_id: hist_id
+      history_id: hist_id,
+      notes: notes
     }
     const returnPutArr = [
       returnPut
@@ -413,7 +418,7 @@ function Return() {
           </td>
           <td>
           <div className="category">
-                      <button className={`${returncss.update} ${returncss.category}`}  onClick={(e) => openFormReservation(item.history_id)}>
+                      <button className={`${returncss.update} ${returncss.category}`}  onClick={(e) => openFormReservation(item.history_id, item.notes)}>
                           <i className="bx bxs-book-content icon" />
                           Return Items
                         </button>
@@ -710,9 +715,11 @@ function openFormScanQR() {
 }
 
 
-function openFormReservation(hist_id) {
+function openFormReservation(hist_id, notes) {
   console.log(hist_id);
   document.getElementById("returnItem").setAttribute("data-item-code", hist_id);
+  console.log("pass this to openFromReservation:" + notes);
+  document.getElementById("returnItem").setAttribute("data-item-notes", notes);
   console.log("Succesfully set the attribute of data-item-code");
   document.getElementById("reservationOverlay").style.display = "block";
 }

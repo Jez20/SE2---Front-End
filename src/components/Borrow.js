@@ -6,17 +6,20 @@ import borrow from '../css/borrow.module.css'
 import '../css/overlay.css'
 import { ToastContainer, toast } from 'react-toastify';
 import { Helmet } from 'react-helmet';
-
-const id = sessionStorage.getItem('sessionid')
-console.log("Session ID: " + id)
-const returnDomain = require('../common/domainString')
-const selectedDomain = returnDomain();
+import { useNavigate } from 'react-router-dom';
+import { useRequireAuth } from "../services/useRequireAuth";
 
 
 function Borrow() {
   // states:
+  useRequireAuth(["Admin", "Editor"]);
   const [items, setItem] = useState([])
   const [selectedItems, setSelectedItems] = useState([]);
+  const id = sessionStorage.getItem('sessionid')
+  const returnDomain = require('../common/domainString')
+  const selectedDomain = returnDomain();
+  const [userRole, setUserRole] = useState(null);
+  const navigate = useNavigate();
 
   // hook
   useEffect(() => {
@@ -356,7 +359,7 @@ function Borrow() {
           </ul>
           <ul className={borrow.logOutMode}>
             <li>
-              <a href="#" onClick={handleLogout}>
+            <a href="#" onClick={handleLogout}>
                 <i className="bx bxs-log-out icon" />
                 <span className={borrow.linkName}>Logout</span>
               </a>
