@@ -62,15 +62,8 @@ function Userreserve() {
 
   function handleReservation(){
     for (let x of selectedItems) {
-      var email
-      if (document.getElementById("number").value == null) {
-        email = ""
-      }
-      else {
-        email = document.getElementById("number").value
-      }
     const dataPostObj = {
-      email: email,
+      email: "asd",
       item_code: x,
       claim: 0 // num
     }
@@ -95,40 +88,6 @@ function Userreserve() {
   checkAll(false)
   } 
   
-  function handleBorrow(){
-    for (let x of selectedItems) {
-      var email
-      if (document.getElementById("number").value == null) {
-        email = ""
-      }
-      else {
-        email = document.getElementById("number").value
-      }
-    const dataPostObj = {
-      email: email,
-      item_code: x
-    }
-    
-    const dataPost = [
-     dataPostObj
-    ]
-    const returnDomain = require('../common/domainString')
-    const selectedDomain = returnDomain();
-    axios.post(selectedDomain + 'history/', dataPost)
-    .then((response) => {
-        refreshInventoryTable();
-        document.getElementById("addItemsOverlay").style.display ="none";
-        console.log("AXIOS.POST SUCCESSFUL: " + response);
-    })
-    .catch((error) => {
-      console.log("INSIDE ERROR!!!");
-      console.log(error);
-    });
-  }
-  
-  checkAll(false)
-  } 
-
   useRequireAuth();
   
   const navigate = useNavigate();
@@ -289,6 +248,7 @@ function Userreserve() {
               className={`${userreserve.update} ${userreserve.category}`}
               onClick={(event) => {
                 // const queryParams = new URLSearchParams();
+                handleReservation()
                 openFormUserReserve()
                 // selectedItems.forEach((itemCode) => {
                 //   queryParams.append("item", itemCode);
