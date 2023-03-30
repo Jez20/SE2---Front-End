@@ -19,6 +19,7 @@ function Return() {
   const selectedDomain = returnDomain();
   
   const handleLogout = () => {
+    axios.delete(selectedDomain+ 'logout/')
     sessionStorage.removeItem('sessionid');
     sessionStorage.removeItem('role');
     navigate('/Login');
@@ -56,44 +57,62 @@ function Return() {
     }
   }; 
 
-  const generateQrCode = async () => {
-    try {
-          const response = await QRCode.toDataURL(text);
-          setImageUrl(response);
-    }catch (error) {
-      console.log(error);
-    }
-  }
-  const handleErrorFile = (error) => {
-    console.log(error);
-  }
-  const handleScanFile = (result) => {
-      if (result) {
-          setScanResultFile(result);
-      }
-  }
-  const onScanFile = () => {
-    qrRef.current.openImageDialog();
-  }
-  const handleErrorWebCam = (error) => {
-    console.log(error);
-  }
-  const handleScanWebCam = (result) => {
-    if (result){
-        setScanResultWebCam(result);
-    }
-   }
-
-
     const [delay, setDelay] = useState(100);
     const [result, setResult] = useState('No result');
   
     
     const handleScan = (result) => {
       if (result) {
-        setResult(result);
+        setResult(result.text);
+        console.log("Result:" + result.text);
+        handleScanQR(result.text);
       }
     }
+
+    const handleScanQR = (scannedItemCode) => {
+      try {
+        const scanItem = scannedItemCode;
+        const scannedItem = parseInt(scanItem);
+        console.log('Scanned Item Code:', scannedItemCode);
+        console.log('Data:', data);
+    
+        // find the history item for the scanned item code
+        const historyItem = data.find((item) => item.item_code.item_code === scannedItem);
+    
+        console.log('History Item:', historyItem);
+    
+        // if a history item is found for the scanned item code
+        if (historyItem) {
+          const hist_id = historyItem.history_id;
+          console.log('hist_id:', hist_id);
+          const returnDomain = require('../common/domainString');
+          const selectedDomain = returnDomain();
+          console.log(selectedDomain + hist_id);
+          const returnPut = {
+            history_id: hist_id,
+          };
+          const returnPutArr = [returnPut];
+          axios
+            .put(selectedDomain + 'history/returnItems/return', returnPutArr)
+            .then((response) => {
+              window.location.reload();
+              document.getElementById('markItemsOverlay').style.display = 'none';
+              toast.success("Successfully returned item");
+              console.log('AXIOS.PUT SUCCESSFUL:', response);
+            })
+            .catch((error) => {
+              console.log(error);
+              toast.error("Error in returning item");
+            });
+        } else {
+          console.log('No history found for itemcode:', scannedItemCode);
+          toast.error("No item code or invalid item code");
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error("Error in scanning item");
+      }
+    };
   
     const handleError = (err) => {
       console.error(err);
@@ -173,6 +192,15 @@ function Return() {
         console.log(error);
       });
   }
+
+  const handleEnterItemCode = (event) => {
+    event.preventDefault();
+    const itemCodeInput = document.getElementById('itemCodeInput');
+    const itemCode = itemCodeInput.value.trim();
+    if (itemCode) {
+      handleScanQR(itemCode);
+    }
+  };
   
   function handleReturnItem (event) {
     event.preventDefault();
@@ -307,17 +335,23 @@ function Return() {
                 <input
                   type="text"
                   className="number"
-                  name="phone"
-                  placeholder="Enter Reservation ID"
+                  name="itemCode"
+                  placeholder="Enter Item Code"
+                  id="itemCodeInput"
+                  required // added required attribute
                 />
                 <div>
-                  <button className={`${returncss.update} ${returncss.category}`}>
+                  <button
+                    className={`${returncss.update} ${returncss.category}`}
+                    onClick={handleEnterItemCode}
+                  >
                     <i className="bx bxs-id-card" />
-                    Add Reservation ID
+                    Enter Item Code
                   </button>
                 </div>
               </form>
             </div>
+
         {/* <div className={returncss.inventory}>
           <p>Step 2. Return Items</p>
         </div>
@@ -341,6 +375,7 @@ function Return() {
           <tr>
             <th>History ID</th>
             <th>Item Name</th>
+            <th>Item Code</th>
             <th>Borrower Name</th>
             <th>Date</th>
             <th>Time-in</th>
@@ -355,6 +390,7 @@ function Return() {
         <tr key={item.history_id}>
           <td>{item.history_id}</td>
           <td>{item.item_code.item_name}</td>
+          <td>{item.item_code.item_code}</td>
           <td>{`${item.email.first_name} ${item.email.last_name}`}</td>
           <td>{new Date(item.date_in).toLocaleDateString()}</td>
           <td>{new Date(item.date_in).toLocaleTimeString()}</td>

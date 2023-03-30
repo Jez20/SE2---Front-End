@@ -56,7 +56,7 @@ function Reservation() {
     console.log(currentPassword);
     console.log(newPassword);
     console.log(confirmPassword);
-    axios.put(selectedDomain +'/userChangePassword/', data)
+    axios.put(selectedDomain +'userChangePassword/', data)
       .then(response => {
         console.log(response.data);
         // add a success message to your UI if needed
@@ -99,12 +99,11 @@ function Reservation() {
 
 
 
-  const [emailFilter, setEmailFilter]  = useState('')
 
   const refreshInventoryTable = () => {
     const returnDomain = require('../common/domainString')
     const selectedDomain = returnDomain();
-    axios.get(selectedDomain + '/reservation/' + emailFilter)
+    axios.get(selectedDomain + 'reservation/' + document.getElementById("emailsearch").value)
       .then(
         response => {
           setItem(response.data);
@@ -214,7 +213,6 @@ function Reservation() {
               />
               <div>
                 <button className={`${borrow.update} ${borrow.category}`} onClick={() =>{
-                  setEmailFilter(document.getElementById("emailsearch").value)
                   refreshInventoryTable()}}>
                   <i className="bx bx-search icon" />
                   Find User

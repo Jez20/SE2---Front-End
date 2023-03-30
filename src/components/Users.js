@@ -57,6 +57,7 @@ function Users() {
         console.error(error);
       });
   };
+
   const handleResetPassword = (email) => {
     console.log(email);
     axios.put(selectedDomain + `editorResetPassword/`, {
@@ -71,6 +72,7 @@ function Users() {
       toast.error('Something Went Wrong');
     });
   };
+
   const handleUpdatePhoneNumber = (email) => {
     axios.put(selectedDomain + `user/${email}`, {
       phone_number: userData[email].newPhoneNumber,
@@ -126,7 +128,7 @@ const [confirmPassword, setConfirmPassword] = useState('');
 function handleSubmit(event) {
   event.preventDefault();
   const data = {
-    email: "Editor@gmail.com", // change your email address here for test purposes, erase this during deployment
+    email: "test", // change your email address here for test purposes, erase this during deployment
     old_password: currentPassword,
     new_password: newPassword,
     user_password: confirmPassword,
