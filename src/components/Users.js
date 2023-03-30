@@ -58,19 +58,17 @@ function Users() {
       });
   };
 
-  const handleResetPassword = (email) => {
-    console.log(email);
-    axios.put(selectedDomain + `editorResetPassword/`, {
-      email: email,
-    })
-    .then(response => {   
+  const handleResetPassword = async (email) => {
+    try {
+      const response = await axios.put(selectedDomain + `editorResetPassword/`, {
+        email: email,
+      });
       setUserData(response.data);
       toast.success('Successfully reset password');
-    })
-    .catch(error => {
+    } catch (error) {
       console.error(error);
       toast.error('Something Went Wrong');
-    });
+    }
   };
 
   const handleUpdatePhoneNumber = (email) => {
@@ -101,11 +99,11 @@ function Users() {
       setShowToast(false);
     }
   }, [showToast]);
-  const handleUpdateRole = (email) => {
-    axios.put(selectedDomain + `user/${email}`, {
-      role: userData[email].newRole
-    })
-    .then(response => {
+  const handleUpdateRole = async (email) => {
+    try {
+      const response = await axios.put(selectedDomain + `user/${email}`, {
+        role: userData[email].newRole
+      });
       setUserData(prevState => ({
         ...prevState,
         [email]: {
@@ -114,11 +112,10 @@ function Users() {
         }
       }));
       toast.success('Role has been updated successfully');
-    })
-    .catch(error => {
+    } catch (error) {
       console.error(error);
       toast.error('You have not changed anything');
-    });
+    }
   };
 
 const [currentPassword, setCurrentPassword] = useState('');
@@ -347,8 +344,9 @@ function handleCancel() {
                   <div className="category">
                     <button
                       className="update category"
-                      onClick={() => handleUpdatePhoneNumber(user.email)}
+                      // onClick={() => handleUpdatePhoneNumber(user.email)}
                       title={userRole !== "Editor" ? "You need to be an Editor to perform this action." : ""} disabled={userRole !== "Editor"}
+                      onClick={openFormUpdatePhone}
                     >
                       <i className="bx bxs-pencil action" />
                       Update Phone Number
@@ -356,7 +354,8 @@ function handleCancel() {
                     <button
                       className="update category"
                       title={userRole !== "Editor" ? "You need to be an Editor to perform this action." : ""} disabled={userRole !== "Editor"}
-                      onClick={() => handleUpdateRole(user.email)}
+                      onClick={openFormUpdateUserRole}
+                      // onClick={() => handleUpdateRole(user.email)}
                     >
                       <i className="bx bxs-pencil action" />
                       Update Role
@@ -364,7 +363,8 @@ function handleCancel() {
                     <button
                       className="reset category"
                       title={userRole !== "Editor" ? "You need to be an Editor to perform this action." : ""} disabled={userRole !== "Editor"}
-                      onClick={() => handleResetPassword(user.email)}
+                      // onClick={() => handleResetPassword(user.email)}
+                      onClick={openFormResetPassword}
                     >
                       <i className="bx bx-refresh" />
                       Reset Password
@@ -452,51 +452,118 @@ function handleCancel() {
       </form>
     </div>
   </div>
-  <div id="updateUsersOverlay" className="update-users-overlay">
-    <div className="update-users-wrap">
-      <h1 id="updateh1">
-        <i className="bx bxs-info-circle" /> Action{" "}
-      </h1>
-      <h2 id="updateh2">Would you like to update this person's information?</h2>
-      <form>
-        <div className="buttons">
-          <input
-            className="action_btn confirm"
-            type="submit"
-            value="Confirm"
-            
-          />
-          <input
-            className="action_btn cancel"
-            type="submit"
-            value="Cancel"
-          />
-        </div>
-      </form>
+  
+  {users.map((user, index) => (
+  <div key={index}>
+    <div id="updatePhoneOverlay" className="update-users-overlay">
+      <div className="update-users-wrap">
+        <h1 id="updateh1">
+          <i className="bx bxs-info-circle" /> Action{" "}
+        </h1>
+        <h2 id="updateh2">Would you like to update this person's phone number?</h2>
+        <form>
+          <div className="buttons">
+            <input
+              className="action_btn confirm"
+              type="submit"
+              value="Confirm"
+              onClick={(event) => {
+                // Custom function to handle phone number update
+                const handlePhoneNumberUpdate = () => {
+                  // Retrieve user email from user object
+                  const email = user.email;
+                  // Call function to update phone number
+                  handleUpdatePhoneNumber(email);
+                }
+              
+                // Call custom function to handle phone number update
+                handlePhoneNumberUpdate();
+              }}
+            />
+            <input
+              className="action_btn cancel"
+              type="submit"
+              value="Cancel"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="updateRoleOverlay" className="update-users-overlay">
+      <div className="update-users-wrap">
+        <h1 id="updateh1">
+          <i className="bx bxs-info-circle" /> Action{" "}
+        </h1>
+        <h2 id="updateh2">Would you like to update this person's role?</h2>
+        <form>
+          <div className="buttons">
+            <input
+              className="action_btn confirm"
+              type="submit"
+              value="Confirm"
+              onClick={(event) => {
+                // Custom function to handle role update
+                const handleRoleUpdate = () => {
+                  // Retrieve user email from user object
+                  const email = user.email;
+                  // Call function to update role
+                  handleUpdateRole(email);
+                }
+              
+                // Call custom function to handle role update
+                handleRoleUpdate();
+              }}
+            />
+            <input
+              className="action_btn cancel"
+              type="submit"
+              value="Cancel"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="resetPasswordOverlay" className="reset-password-overlay">
+      <div className="reset-password-wrap">
+        <h1 id="reseth1">
+          <i className="bx bxs-info-circle" /> Action{" "}
+        </h1>
+        <h2 id="reseth2">Would you like to reset this person's password?</h2>
+        <form>
+          <div className="buttons">
+            <input
+              className="action_btn confirm"
+              type="submit"
+              value="Confirm"
+              onClick={(event) => {
+                // Custom function to handle reset password
+                const handlePasswordReset = () => {
+                  // Retrieve user email from user object
+                  const email = user.email;
+                  // Call function to reset password
+                  handleResetPassword(email);
+                }
+                
+                // Call custom function to handle password reset
+                handlePasswordReset();
+              }}
+              
+            />
+            <input
+              className="action_btn cancel"
+              type="submit"
+              value="Cancel"
+            />
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-  <div id="resetPasswordOverlay" className="reset-password-overlay">
-    <div className="reset-password-wrap">
-      <h1 id="reseth1">
-        <i className="bx bxs-info-circle" /> Action{" "}
-      </h1>
-      <h2 id="reseth2">Would you like to reset this person's password?</h2>
-      <form>
-        <div className="buttons">
-          <input
-            className="action_btn confirm"
-            type="submit"
-            value="Confirm"
-          />
-          <input
-            className="action_btn cancel"
-            type="submit"
-            value="Cancel"
-          />
-        </div>
-      </form>
-    </div>
-  </div>
+))}
+
+  
 </div>
 
   )
@@ -506,6 +573,18 @@ function handleCancel() {
 
 function openForm() {
     document.getElementById("myOverlay").style.display ="block";
+}
+
+function openFormUpdateUserRole() {
+  document.getElementById("updateRoleOverlay").style.display ="block";
+}
+
+function openFormUpdatePhone() {
+  document.getElementById("updatePhoneOverlay").style.display ="block";
+}
+
+function openFormResetPassword() {
+  document.getElementById("resetPasswordOverlay").style.display ="block";
 }
 
 function openFormDeleteUsers() {

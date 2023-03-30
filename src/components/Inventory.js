@@ -762,9 +762,10 @@ function Inventory() {
                       <Grid container spacing={2}>
                         <Grid item xl={4} lg={4} md={6} sm={12} xs={12} >
                           {imageUrl ? (
-                            <a href={imageUrl} download>
-                              <img src={imageUrl} alt="img" style={{ width: '200px' }} />
-                            </a>) : null}
+                           <a href={imageUrl} download={`qr-code-${itemCode}.png`}>
+                           <img src={imageUrl} alt="img" style={{ width: '200px' }} />
+                         </a>
+                         ) : null}
                         </Grid>
                       </Grid>
                     </CardContent>
@@ -776,7 +777,11 @@ function Inventory() {
                       id="qr-code-text"
                       label="QR Code Text"
                       value={`Item Code: ${text}`}
-                      onChange={(e) => setText(e.target.value)}
+                      onChange={(e) => {
+                        setText(e.target.value);
+                        const code = e.target.value.split(':')[1].trim();
+                        setItemCode(code);
+                      }}
                       variant="outlined"
                       fullWidth
                       InputProps={{
