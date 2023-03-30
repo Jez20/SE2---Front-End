@@ -248,8 +248,8 @@ function Userreserve() {
               className={`${userreserve.update} ${userreserve.category}`}
               onClick={(event) => {
                 // const queryParams = new URLSearchParams();
+                
                 handleReservation()
-                openFormUserReserve()
                 // selectedItems.forEach((itemCode) => {
                 //   queryParams.append("item", itemCode);
                 // });
@@ -364,30 +364,7 @@ function Userreserve() {
          </div>
       </div>
   <ToastContainer/>
-  <div id="userReserveOverlay" className={userreserve.userReserveOverlay}>
-    <div className={userreserve.userReserveWrap}>
-      <h1 id="userh1">
-        <i className="bx bxs-info-circle" />
-        Action
-      </h1>
-      <h2 id="userh2">Would you like to reserve this item?</h2>
-      <form>
-        <div className={userreserve.buttons}>
-          <input
-            className={`${userreserve.action_btn} ${userreserve.confirm}`}
-            type="submit"
-            value="Confirm"
-            onclick = {() => {handleReservation()}}
-          />
-          <input
-            className={`${userreserve.action_btn} ${userreserve.cancel}`}
-            type="submit"
-            value="Cancel"
-          />
-        </div>
-      </form>
-    </div>
-  </div>
+  
   <div id="userBackpackOverlay" className={userreserve.userBackpackOverlay}>
     <div className={userreserve.userBackpackWrap}>
       <h1 id={userreserve.userbackpackh1}>Items Borrowed</h1>
@@ -404,13 +381,7 @@ function Userreserve() {
           <input
             className={`${userreserve.reset } ${userreserve.category}`}
             type="submit"
-            value="Reserve Now"
-            onClick={openFormReserve}
-          />
-          <input
-            className={`${userreserve.update } ${userreserve.category}`}
-            type="submit"
-            value="Borrow Now"
+            value="Close"
           />
         </div>
       </form>
