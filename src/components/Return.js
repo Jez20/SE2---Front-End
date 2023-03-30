@@ -19,6 +19,7 @@ function Return() {
   const selectedDomain = returnDomain();
   
   const handleLogout = () => {
+    axios.delete(selectedDomain+ 'logout/')
     sessionStorage.removeItem('sessionid');
     sessionStorage.removeItem('role');
     navigate('/Login');
@@ -55,34 +56,6 @@ function Return() {
       checkedHistoryIds([...checkedHistoryIds, history_id]);
     }
   }; 
-
-  // const generateQrCode = async () => {
-  //   try {
-  //         const response = await QRCode.toDataURL(text);
-  //         setImageUrl(response);
-  //   }catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-  // const handleErrorFile = (error) => {
-  //   console.log(error);
-  // }
-  // const handleScanFile = (result) => {
-  //     if (result) {
-  //         setScanResultFile(result);
-  //     }
-  // }
-  // const onScanFile = () => {
-  //   qrRef.current.openImageDialog();
-  // }
-  // const handleErrorWebCam = (error) => {
-  //   console.log(error);
-  // }
-  // const handleScanWebCam = (result) => {
-  //   if (result){
-  //       setScanResultWebCam(result);
-  //   }
-  //  }
 
     const [delay, setDelay] = useState(100);
     const [result, setResult] = useState('No result');
