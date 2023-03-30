@@ -57,6 +57,7 @@ function Users() {
         console.error(error);
       });
   };
+  
   const handleResetPassword = (email) => {
     console.log(email);
     axios.put(selectedDomain + `editorResetPassword/`, {
@@ -71,6 +72,7 @@ function Users() {
       toast.error('Something Went Wrong');
     });
   };
+
   const handleUpdatePhoneNumber = (email) => {
     axios.put(selectedDomain + `user/${email}`, {
       phone_number: userData[email].newPhoneNumber,
