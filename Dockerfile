@@ -1,4 +1,3 @@
-
 FROM node:16-alpine as builder
 
 WORKDIR /app
@@ -8,7 +7,7 @@ RUN yarn
 RUN yarn run build
 
 FROM nginx:latest
-
+RUN rm /etc/nginx/conf.d/default.conf
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 
 COPY ./nginx/server.crt /etc/ssl/certs/server.crt
