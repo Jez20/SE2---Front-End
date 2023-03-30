@@ -130,6 +130,7 @@ function Inventory() {
   const handleLogout = () => {
     sessionStorage.removeItem('sessionid');
     sessionStorage.removeItem('role');
+    axios.delete(selectedDomain+ 'logout/')
     navigate('/Login');
   };
   // hooks

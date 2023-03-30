@@ -26,6 +26,7 @@ function Reservation() {
 
 
   const handleLogout = () => {
+    axios.delete(selectedDomain+ 'logout/')
     sessionStorage.removeItem('sessionid');
     sessionStorage.removeItem('role');
     navigate('/Login');

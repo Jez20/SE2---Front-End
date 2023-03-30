@@ -57,6 +57,24 @@ function Borrow() {
     console.log(selectedItems)
   }
 
+  useEffect(() => {
+    const role = sessionStorage.getItem("role");
+    setUserRole(role);
+  }, []);
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('sessionid');
+    sessionStorage.removeItem('role');
+    navigate('/Login');
+    axios.delete(selectedDomain+ 'logout/')
+      .then(response => { 
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+
   function handleReservation() {
     for (let x of selectedItems) {
       var email
@@ -338,7 +356,7 @@ function Borrow() {
           </ul>
           <ul className={borrow.logOutMode}>
             <li>
-              <a href="/Login">
+              <a href="#" onClick={handleLogout}>
                 <i className="bx bxs-log-out icon" />
                 <span className={borrow.linkName}>Logout</span>
               </a>
