@@ -46,8 +46,8 @@ function Index() {
 
     doc.autoTable({
       startY: 50,
-      head: [["History ID", "First Name", "Last Name", "Email", "Role", "Item Name", "Date(Time-In)", "Date(Time-Out"]],
-      body: data.map((item) => [item.history_id, item.email.first_name, item.email.last_name, item.email.email, item.email.role.role_name, item.item_code.item_name, item.date_in, item.date_out]),
+      head: [["History ID", "First Name", "Last Name", "Email", "Role", "Item Name", "Date(Time-In)", "Date(Time-Out)", "Notes"]],
+      body: data.map((item) => [item.history_id, item.email.first_name, item.email.last_name, item.email.email, item.email.role.role_name, item.item_code.item_name, item.date_in, item.date_out, item.notes]),
     });
     doc.save(fileName);
     const overlay = document.getElementById("generateReportOverlay");
@@ -349,7 +349,7 @@ function Index() {
                   <th>Item Name</th>
                   <th>Date (Time-in)</th>
                   <th>Date (Time-out)</th>
-                  {/* <th>Text Sent</th> */}
+                  <th>Notes</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -364,7 +364,7 @@ function Index() {
                     <td>{item.item_code.item_name}</td>
                     <td>{item.date_in}</td>
                     <td>{item.date_out}</td>
-                    {/* <td>{item.texts}</td> */}
+                    <td>{item.notes}</td>
                     <td>
                     <div className={dashboard.actions}>
                     {/* <div className={`${dashboard.box} ${dashboard.edit}`} 
