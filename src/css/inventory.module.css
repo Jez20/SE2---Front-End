@@ -127,7 +127,6 @@ nav .menuItems{
     position: relative;
 }
 .navLinks li a:hover:before{
-    content: "";
     position: absolute;
     left: -7px;
     height: 5px;
@@ -159,10 +158,13 @@ nav.close li a .linkName{
     opacity: 0;
     pointer-events: none;
 }
-.navLinks li a:hover i,
+
+.navLinks li a:hover ,
 .navLinks li a:hover .linkName{
-    color: var(--primary-color);
+    background: var(--primary-color);
+    border-radius: 10px;
 }
+
 body.dark .navLinks li a:hover i,
 body.dark .navLinks li a:hover .linkName{
     color: var(--text-color);

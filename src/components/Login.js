@@ -94,7 +94,10 @@ return (
             />
             <div className="d-flex mb-5 align-items-center"></div>
             <p className="text-center">
-              <a href="#" onClick={handleRegisterClick} className="forgot-pass">
+            <a href="#" onClick={forgotPassClick} className="forgot-pass">
+                Forgot Password?
+              </a>
+              <a href="#" onClick={handleRegisterClick} className="no-acct">
                 Don't Have an Account Yet?
               </a>
             </p>
@@ -111,6 +114,18 @@ return (
 
 function handleRegisterClick() {
   toast.info('Please Contact Your School IT or staff for your Account Registration', {
+    position: 'bottom-center',
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+}
+
+function forgotPassClick() {
+  toast.info('Please contact your School IT or staff for resetting your password', {
     position: 'bottom-center',
     autoClose: 3000,
     hideProgressBar: true,
