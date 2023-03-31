@@ -63,7 +63,6 @@ function Userreserve() {
   function handleReservation(){
     for (let x of selectedItems) {
     const dataPostObj = {
-      email: "User",
       item_code: x,
       claim: 0 // num
     }
@@ -73,7 +72,7 @@ function Userreserve() {
     ]
     const returnDomain = require('../common/domainString')
     const selectedDomain = returnDomain();
-    axios.post(selectedDomain + 'reservation/', dataPost)
+    axios.post(selectedDomain + 'specificUserInsertReservations/', dataPost)
     .then((response) => {
         refreshInventoryTable();
         document.getElementById("addItemsOverlay").style.display ="none";
