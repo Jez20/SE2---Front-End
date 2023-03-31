@@ -1,4 +1,4 @@
 function returndomainString() {
-    return "https://localhost:8080/api/"
+    return "http://127.0.0.1:8000/api/"
 }
 module.exports = returndomainString;
