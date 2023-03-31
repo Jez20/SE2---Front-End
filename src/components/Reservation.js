@@ -26,7 +26,7 @@ function Reservation() {
 
 
   const handleLogout = () => {
-    axios.delete(selectedDomain+ 'logout/')
+    axios.delete(selectedDomain + 'logout/')
     sessionStorage.removeItem('sessionid');
     sessionStorage.removeItem('role');
     navigate('/Login');
@@ -36,7 +36,7 @@ function Reservation() {
   const [borrowitem, setBorrowItem] = useState("")
   const [borrowEmail, setBorrowEmail] = useState("")
 
-  
+
   useEffect(() => {
     refreshInventoryTable()
   }, []);
@@ -57,7 +57,7 @@ function Reservation() {
     console.log(currentPassword);
     console.log(newPassword);
     console.log(confirmPassword);
-    axios.put(selectedDomain +'userChangePassword/', data)
+    axios.put(selectedDomain + 'userChangePassword/', data)
       .then(response => {
         console.log(response.data);
         // add a success message to your UI if needed
@@ -191,30 +191,22 @@ function Reservation() {
               <i className="bx bxs-book-content icon" />
               <span className="text">Borrow Reservation</span>
             </div>
-            
+
             <div className={borrow.inventory}>
-              <p>Step 1. Input email of reservee</p>
+              <p>Input email to search reservation of reservees</p>
             </div>
             <div>
-              
-
-
-
-
-
-
-
-              
               <input
-                id ="emailsearch"
+                id="emailsearch"
                 type="text"
                 className="number"
                 name="phone"
                 placeholder="Enter Email"
               />
               <div>
-                <button className={`${borrow.update} ${borrow.category}`} onClick={() =>{
-                  refreshInventoryTable()}}>
+                <button className={`${borrow.update} ${borrow.category}`} onClick={() => {
+                  refreshInventoryTable()
+                }}>
                   <i className="bx bx-search icon" />
                   Find User
                 </button>
@@ -240,83 +232,83 @@ function Reservation() {
                   </tr>
                 </thead>
                 <tbody>
-                {
-                items.map(
-                  listeditem => (
+                  {
+                    items.map(
+                      listeditem => (
 
-                    <tr>
-                    <td>{listeditem.item_code.item_code}</td>
-                    <td>{listeditem.item_code.item_name}</td>
-                    <td>{listeditem.email}</td>
-                    <td>{listeditem.date_of_expiration}</td>
-                    <td>
-                      <div className="category">
-                        
-                        <button className={`${borrow.update} ${borrow.category}`} onClick={()=>{
-                          
-                          const dataPostObj = {
-                            reservation_id: listeditem.reservation_id,
-                            email: listeditem.email,
-                            item_code: listeditem.item_code.item_code,
-                            notes: " "
-                          }
-                          
-                          const dataPost = [
-                           dataPostObj
-                          ]
-                          const returnDomain = require('../common/domainString')
-                          const selectedDomain = returnDomain();
-                          axios.post(selectedDomain + 'confirmReservation/', dataPost)
-                          .then((response) => {
-                            
-                          refreshInventoryTable()
-                              document.getElementById("addItemsOverlay").style.display ="none";
-                              console.log("AXIOS.POST SUCCESSFUL: " + response);
-                          })
-                          .catch((error) => {
-                            console.log("INSIDE ERROR!!!");
-                            console.log(error);
-                          });
+                        <tr>
+                          <td>{listeditem.item_code.item_code}</td>
+                          <td>{listeditem.item_code.item_name}</td>
+                          <td>{listeditem.email}</td>
+                          <td>{listeditem.date_of_expiration}</td>
+                          <td>
+                            <div className="category">
 
+                              <button className={`${borrow.update} ${borrow.category}`} onClick={() => {
 
-                        }}>
-                          <i className="bx bx-plus icon" />
-                          Add to Record
-                        </button>
-                        <button
-                          className="delete category"
-                          onClick={() => {
+                                const dataPostObj = {
+                                  reservation_id: listeditem.reservation_id,
+                                  email: listeditem.email,
+                                  item_code: listeditem.item_code.item_code,
+                                  notes: " "
+                                }
 
-                            
-                      const returnDomain = require('../common/domainString')
-                      const selectedDomain = returnDomain();
-                            axios.delete(selectedDomain + 'reservation/' + listeditem.reservation_id)
-                              .then((response) => {
-                                
-                          refreshInventoryTable()
-                                document.getElementById("deleteItemsOverlay").style.display = "none";
-                                console.log("AXIOS.DELETE SUCCESSFUL: " + response);
-                              })
-                              .catch((error) => {
-                                console.log("INSIDE ERROR!!!");
-                                console.log(error);
-                              });
-                          }
+                                const dataPost = [
+                                  dataPostObj
+                                ]
+                                const returnDomain = require('../common/domainString')
+                                const selectedDomain = returnDomain();
+                                axios.post(selectedDomain + 'confirmReservation/', dataPost)
+                                  .then((response) => {
+
+                                    refreshInventoryTable()
+                                    document.getElementById("addItemsOverlay").style.display = "none";
+                                    console.log("AXIOS.POST SUCCESSFUL: " + response);
+                                  })
+                                  .catch((error) => {
+                                    console.log("INSIDE ERROR!!!");
+                                    console.log(error);
+                                  });
 
 
-                          }
-                        >
-                          <i className="bx bxs-trash icon" />
-                          Remove
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                    
-                  )
+                              }}>
+                                <i className="bx bx-plus icon" />
+                                Add to Record
+                              </button>
+                              <button
+                                className="delete category"
+                                onClick={() => {
 
-                )
-                } 
+
+                                  const returnDomain = require('../common/domainString')
+                                  const selectedDomain = returnDomain();
+                                  axios.delete(selectedDomain + 'reservation/' + listeditem.reservation_id)
+                                    .then((response) => {
+
+                                      refreshInventoryTable()
+                                      document.getElementById("deleteItemsOverlay").style.display = "none";
+                                      console.log("AXIOS.DELETE SUCCESSFUL: " + response);
+                                    })
+                                    .catch((error) => {
+                                      console.log("INSIDE ERROR!!!");
+                                      console.log(error);
+                                    });
+                                }
+
+
+                                }
+                              >
+                                <i className="bx bxs-trash icon" />
+                                Remove
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+
+                      )
+
+                    )
+                  }
                 </tbody>
               </table>
             </div>

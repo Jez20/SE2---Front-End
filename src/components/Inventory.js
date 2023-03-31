@@ -476,7 +476,7 @@ function Inventory() {
               </div>
               {/* ROW 1 */}
               <div className={inventory.inventory}>
-                <p>*NOTE: Ctrl + F to find equipments</p>
+                <p className="notef">*NOTE: Ctrl + F to find equipments</p>
               </div>
               {/* ROW 2 */}
               <div className={inventory.row2}>

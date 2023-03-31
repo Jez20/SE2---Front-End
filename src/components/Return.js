@@ -334,6 +334,8 @@ function Return() {
                 <i className="bx bx-qr-scan" />
                 Scan QR
               </button>
+              <hr/>
+              <p>Manual Input Code</p>
             </div>
             <div>
               <form>

@@ -246,7 +246,7 @@ function handleCancel() {
         </div>
         {/* ROW 1 */}
         <div className="inventory">
-          <p>*NOTE: Ctrl + F to find users</p>
+          <p className='notef'>*NOTE: Ctrl + F to find users</p>
           <p className='note'>⚠️ Only Editors can edit user credentials. Admins and Editors can add users ⚠️</p>
           <p className='note'>⚠️ Only Editors can promote Admins to Editors ⚠️</p>
           <p className='note'>⚠️ Resetting password will reset the password to the user's email ⚠️</p>

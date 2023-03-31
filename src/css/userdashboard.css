@@ -531,6 +531,11 @@ nav.close ~ .dashboard .top{
     color: var(--box5-color);
 }
 
+.notef{
+    font-weight: 600;
+    color: var(--text-color);
+}
+
 /*.top{
     display: flex;
     flex-direction: row;

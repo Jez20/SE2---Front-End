@@ -1145,11 +1145,15 @@ body {
   }
 
   .cardDivider {
+    height: 100%;
     background-color:#11B0FF; 
     border-radius: 3px;
     width: 100%;
     color: white;
     font-family: 'Poppins';
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
   }
 
 
