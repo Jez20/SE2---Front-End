@@ -18,6 +18,7 @@ if (id != null){
   console.log("WARNING: No Session ID found!");
 }
 
+// note: if it is regarding category filtering, use "Default"
 
 function Inventory() {
 
@@ -129,7 +130,7 @@ function Inventory() {
   const [itemCondition, setItemCondition] = useState("");
   const [itemCategoryField, setItemCategoryField] = useState("");
   const [conditionFilter, setConditionFilter] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('Default');
+  const [selectedCategory, setSelectedCategory] = useState('Default'); // contains the category ID
   const [dynamicCategory, setDynamicCategory] = useState([]);
   var itemStatus = ""
 
@@ -141,15 +142,71 @@ function Inventory() {
   };
   // hooks
   useEffect(() => {
-    refreshInventoryTable();
+    refreshInventoryTableGeneral();
     refreshCategoryTable();
   }, []);
 
-  // Get The Inventory
-  const refreshInventoryTable = () => {
+  // Get The Inventory With Filtering
+  const refreshInventoryTableFilter = () => {
     const returnDomain = require('../common/domainString')
     const selectedDomain = returnDomain();
-    axios.get(selectedDomain + 'inventory/' + conditionFilter)
+    /* conditions:
+      if categoryID is default/null but conditionFilter isn't, then use the old axios.get
+      if conditionFilter is default/null but categoryID isn't, then use inventory/categoryFilter/<int:categoryId>
+      if both are default/null , then use old axios.get
+      if both are NOT default/null, then use inventory/bothFilter/<int:categoryId>/<str:filter>
+     */
+    if (selectedCategory === 'Default' && conditionFilter !== ''){
+      axios.get(selectedDomain + 'inventory/' + conditionFilter) // old axios.get
+      .then(
+        response => {
+          setItem(response.data);
+          // put notification here that the table does not contain any items
+        })
+      .catch(error => {
+        toast.error("ERROR: Failed to generate Inventory table");
+        console.log(error);
+      });
+    } else if (conditionFilter === '' && selectedCategory !== 'Default'){
+      axios.get(selectedDomain + 'inventory/categoryFilter/' + selectedCategory) // categoryFilter endpoint
+      .then(
+        response => {
+          setItem(response.data);
+          // put notification here that the table does not contain any items
+        })
+      .catch(error => {
+        toast.error("ERROR: Failed to generate Inventory table");
+        console.log(error);
+      });
+    } else if (selectedCategory === 'Default' && conditionFilter === ''){
+      axios.get(selectedDomain + 'inventory/' + conditionFilter) // old axios.get
+      .then(
+        response => {
+          setItem(response.data);
+          // put notification here that the table does not contain any items
+        })
+      .catch(error => {
+        toast.error("ERROR: Failed to generate Inventory table");
+        console.log(error);
+      });
+    } else if (selectedCategory !== 'Default' && conditionFilter !== ''){
+      axios.get(selectedDomain + 'inventory/bothFilter/' + selectedCategory + '/' + conditionFilter) // both filters endpoint
+      .then(
+        response => {
+          setItem(response.data);
+          // put notification here that the table does not contain any items
+        })
+      .catch(error => {
+        toast.error("ERROR: Failed to generate Inventory table");
+        console.log(error);
+      });
+    }
+  }
+
+  const refreshInventoryTableGeneral = () => {
+    const returnDomain = require('../common/domainString')
+    const selectedDomain = returnDomain();
+    axios.get(selectedDomain + 'inventory/') // old axios.get
       .then(
         response => {
           setItem(response.data);
@@ -204,7 +261,7 @@ function Inventory() {
 
   function handleTableFilter(event) {
     event.preventDefault();
-    refreshInventoryTable();
+    refreshInventoryTableFilter();
   }
 
   function handleItemCategoryField(event) {
@@ -220,7 +277,7 @@ function Inventory() {
     console.log(selectedDomain + categ_code);
     axios.delete(selectedDomain + 'category/' + categ_code)
       .then((response) => {
-        refreshInventoryTable();
+        refreshInventoryTableGeneral();
         refreshCategoryTable();
         document.getElementById("deleteCategoryOverlay").style.display = "none";
         toast.success("Category deleted successfully");
@@ -248,7 +305,7 @@ function Inventory() {
     const selectedDomain = returnDomain();
     axios.post(selectedDomain + 'category/', categoryPostObj)
       .then((response) => {
-        refreshInventoryTable();
+        refreshInventoryTableGeneral();
         refreshCategoryTable();
         document.getElementById("addCategoryOverlay").style.display = "none";
         toast.success("Category added successfully");
@@ -288,7 +345,7 @@ function Inventory() {
     const selectedDomain = returnDomain();
     axios.post(selectedDomain + 'inventory/', dataPost)
       .then((response) => {
-        refreshInventoryTable();
+        refreshInventoryTableGeneral();
         document.getElementById("addItemsOverlay").style.display = "none";
         toast.success("Item added successfully");
         console.log("AXIOS.POST SUCCESSFUL: " + response);
@@ -334,7 +391,7 @@ function Inventory() {
 
           axios.put(selectedDomain + 'inventory/' + item_code, dataPut)
             .then((response) => {
-              refreshInventoryTable();
+              refreshInventoryTableGeneral();
               document.getElementById("updateItemsOverlay").style.display = "none";
               toast.success("Item updated successfully");
               console.log("AXIOS.PUT SUCCESSFUL: " + response);
@@ -364,7 +421,7 @@ function Inventory() {
     console.log("Item_Code is: " + item_code);
     axios.delete(selectedDomain + 'inventory/' + item_code)
       .then((response) => {
-        refreshInventoryTable();
+        refreshInventoryTableGeneral();
         document.getElementById("deleteItemsOverlay").style.display = "none";
         toast.success("Item deleted successfully"); // not working?
         console.log("AXIOS.DELETE SUCCESSFUL: " + response);
@@ -381,34 +438,29 @@ function Inventory() {
     return
   }
 
-  // cancel Button Handlers:
+  // cancel Button Handlers for overlays:
   function cancelDeleteCategoryOverlay() {
     document.getElementById("deleteCategoryOverlay").style.display = "none";
-    refreshInventoryTable();
     refreshCategoryTable();
   }
 
   function cancelAddCategoryOverlay() {
     document.getElementById("addCategoryOverlay").style.display = "none";
-    refreshInventoryTable();
     refreshCategoryTable();
   }
 
   function cancelAddItemsOverlay() {
     document.getElementById("addItemsOverlay").style.display = "none";
-    refreshInventoryTable();
     refreshCategoryTable();
   }
 
   function cancelUpdateItemsOverlay() {
     document.getElementById("updateItemsOverlay").style.display = "none";
-    refreshInventoryTable();
     refreshCategoryTable();
   }
 
   function cancelDeleteItemsOverlay() {
     document.getElementById("deleteItemsOverlay").style.display = "none";
-    refreshInventoryTable();
     refreshCategoryTable();
   }
 
@@ -502,6 +554,10 @@ function Inventory() {
               <div className={inventory.row2}>
                 <div className="row-1-select">
                   <form onSubmit={handleTableFilter}>
+                    <select id="categoryFilterDropdown" onChange={handleItemCategory}>
+                      <option value="Default">Item Category Filter/Default</option>
+                      {dynamicCategory}
+                    </select>
                     <select id="conditionFilterDropdown" onChange={handleConditionFilter}>
                       <option value="">Item Condition Filter/Default</option>
                       <option value="Working">Working</option>
@@ -918,7 +974,6 @@ function openForm() {
 
 function openFormDeleteItems(item_code) {
   document.getElementById("submitDeleteItem").setAttribute("data-item-code", item_code);
-  console.log("Succesfully set the attribute of data-item-code");
   document.getElementById("deleteItemsOverlay").style.display = "block";
 }
 
@@ -928,7 +983,6 @@ function openFormUpdateItems(item_code, item_name) {
   const itemNameUpdateItem = document.getElementById("itemNameUpdateItem");
   itemNameUpdateItem.value = item_name;
   document.getElementById("itemConditionUpdateItem").selectedIndex = 0;
-  console.log("Succesfully set the attribute of data-item-code");
   document.getElementById("updateItemsOverlay").style.display = "block";
 }
 
