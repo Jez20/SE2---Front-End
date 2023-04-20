@@ -97,18 +97,19 @@ function Adduser() {
                 />
               </div>
               <div className="form-group last mb-3">
-                <label htmlFor="phone">Phone Number:</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Enter phone number"
-                  id="phone"
-                  value={phone_number}
-                  onChange={handlePhoneNumberChange}
-                  maxLength="11"
-                  required
-                />
-              </div>
+  <label htmlFor="phone">Phone Number:</label>
+  <input
+    type="text"
+    className="form-control"
+    placeholder="Enter phone number"
+    id="phone"
+    value={phone_number}
+    onChange={handlePhoneNumberChange}
+    pattern="[0-9]{11}"
+    title="Please Enter 11 Digits"
+    required
+  />
+</div>
               <div className="form-group first">
                 <label htmlFor="firstName">First Name:</label>
                 <input

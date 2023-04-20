@@ -632,58 +632,58 @@ function Inventory() {
                   </button>
                 </div>
               </div>
-              <div className={inventory.activityData}>
-                <table className={inventory.table}>
-                  <thead>
-                    <tr>
-                      <th>Item Code</th>
-                      <th>Item Name</th>
-                      <th>Item Condition</th>
-                      <th>Category</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      items.map(
-                        row => (
-                          <tr key={row.item_code}>
-                            <td>{row.item_code}</td>
-                            <td>{row.item_name}</td>
-                            <td>{row.item_condition}</td>
-                            <td>{row.category.category_name}</td>
-                            <td>
-                              <div className={`${inventory.category}`}>
-                                <button className={`${inventory.update} ${inventory.category}`}
-                                  onClick={(e) => openFormUpdateItems(row.item_code, row.item_name)}>
-                                  <i className="bx bxs-pencil action"></i>
-                                  Update
-                                </button>
-                                <button type="button" className={`${inventory.generate} ${inventory.category}`}
-                                  onClick={() => handleQRCodeClick(row.item_code)}>
-                                  <i className="bx bx-qr"></i> Generate QR
-                                </button>
-                                {/* <input
-                                  className={`${inventory.action_btn} ${inventory.generate}`}
-                                  type="button"
-                                  value="Generate"
-                                  onClick={() => handleQRCodeClick(row.item_code)}
-                                /> */}
-                                <button className={`${inventory.del} ${inventory.category}`}
-                                  onClick={(e) => openFormDeleteItems(row.item_code)}>
-                                  <i className="bx bxs-trash-alt icon"></i> Delete
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        )
-                      )
-                    }
-                  </tbody>
-                </table>
-              </div>
+
+              <div className={`${inventory.activityData}`} style={{ overflowX: 'auto' }}>
+  <div className={`${inventory.scrollableTable}`} style={{ minWidth: '100%' }}>
+    <table className={`${inventory.table}`} style={{ minWidth: '100%' }}>
+      <thead>
+        <tr>
+          <th>Item Code</th>
+          <th>Item Name</th>
+          <th>Item Condition</th>
+          <th>Category</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          items.map(
+            row => (
+              <tr key={row.item_code}>
+                <td>{row.item_code}</td>
+                <td>{row.item_name}</td>
+                <td>{row.item_condition}</td>
+                <td>{row.category.category_name}</td>
+                <td>
+                  <div className={`${inventory.category}`}>
+                    <button className={`${inventory.update} ${inventory.category}`}
+                      onClick={(e) => openFormUpdateItems(row.item_code, row.item_name)}>
+                      <i className="bx bxs-pencil action"></i>
+                      Update
+                    </button>
+                    <button type="button" className={`${inventory.generate} ${inventory.category}`}
+                      onClick={() => handleQRCodeClick(row.item_code)}>
+                      <i className="bx bx-qr"></i> Generate QR
+                    </button>
+                    <button className={`${inventory.del} ${inventory.category}`}
+                      onClick={(e) => openFormDeleteItems(row.item_code)}>
+                      <i className="bx bxs-trash-alt icon"></i> Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            )
+          )
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
             </div>
-          </div>
+            </div>
+
         </section>
         <div id="myOverlay" className={inventory.overlay}>
           <div className={inventory.wrap}>

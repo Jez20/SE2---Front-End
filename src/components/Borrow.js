@@ -513,6 +513,7 @@ const filteredItems = selectedCategory === 'Default'
 
 
           <tbody>
+          <div style={{ height: "365px", overflow: "auto" }}>        
     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
       {filteredItems.map(listeditem => (
         <div className={`${borrow.card} w3-hover-shadow`} style={{ margin: "10px" }}>
@@ -552,6 +553,7 @@ const filteredItems = selectedCategory === 'Default'
           </div>
         </div>
       ))}
+    </div>
     </div>
   </tbody>
           <hr />

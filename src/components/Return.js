@@ -375,7 +375,7 @@ function Return() {
             Mark Items as Lost
           </button>
         </div> */}
-
+  <div style={{ height: "430px", overflow: "auto" }}>  
     <div className={returncss.activityData}>
       <table className={returncss.table}>
         <thead>
@@ -451,6 +451,7 @@ function Return() {
       ))}
         </tbody>
       </table>
+    </div>
     </div>
       </div>
     </div>

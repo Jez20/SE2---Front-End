@@ -383,6 +383,7 @@ function Index() {
                 Clear Logs
               </button>
             </div>
+            <div style={{ height: "400px", overflow: "auto" }}>
             <div className={dashboard.activityData}>
               <table className={dashboard.table}>
                 <thead>
@@ -451,6 +452,7 @@ function Index() {
                   ))}
                 </tbody>
               </table>
+            </div>
             </div>
           </div>
         </div>

@@ -750,6 +750,24 @@ select{
     float: right;
 }
 
+/* Scrollable table */
+
+.scrollableTable {
+    max-height: 645px;
+    overflow: auto;
+  }
+
+  .tableHeaderWrapper {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: white;
+  }
+
+  .table {
+    width: 100%;
+  }
+
 select{
     padding: 08px;
     border-radius: 5px;
