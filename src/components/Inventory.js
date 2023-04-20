@@ -155,13 +155,17 @@ function Inventory() {
       if conditionFilter is default/null but categoryID isn't, then use inventory/categoryFilter/<int:categoryId>
       if both are default/null , then use old axios.get
       if both are NOT default/null, then use inventory/bothFilter/<int:categoryId>/<str:filter>
+      NOTE(inside of if-else stmts): if no items in the table, say something like, no items here!
      */
     if (selectedCategory === 'Default' && conditionFilter !== ''){
       axios.get(selectedDomain + 'inventory/' + conditionFilter) // old axios.get
       .then(
         response => {
-          setItem(response.data);
-          // put notification here that the table does not contain any items
+          if (response.data.length === 0){
+            toast.error("WALANG LAMAN YUNG TABLE!"); // @jez - put something here pag wala items sa table
+          } else {
+            setItem(response.data);
+          }
         })
       .catch(error => {
         toast.error("ERROR: Failed to generate Inventory table");
@@ -171,8 +175,11 @@ function Inventory() {
       axios.get(selectedDomain + 'inventory/categoryFilter/' + selectedCategory) // categoryFilter endpoint
       .then(
         response => {
-          setItem(response.data);
-          // put notification here that the table does not contain any items
+          if (response.data.length === 0){
+            toast.error("WALANG LAMAN YUNG TABLE!"); // @jez - put something here pag wala items sa table
+          } else {
+            setItem(response.data);
+          }
         })
       .catch(error => {
         toast.error("ERROR: Failed to generate Inventory table");
@@ -182,8 +189,11 @@ function Inventory() {
       axios.get(selectedDomain + 'inventory/' + conditionFilter) // old axios.get
       .then(
         response => {
-          setItem(response.data);
-          // put notification here that the table does not contain any items
+          if (response.data.length === 0){
+            toast.error("WALANG LAMAN YUNG TABLE!"); // @jez - put something here pag wala items sa table
+          } else {
+            setItem(response.data);
+          }
         })
       .catch(error => {
         toast.error("ERROR: Failed to generate Inventory table");
@@ -193,8 +203,11 @@ function Inventory() {
       axios.get(selectedDomain + 'inventory/bothFilter/' + selectedCategory + '/' + conditionFilter) // both filters endpoint
       .then(
         response => {
-          setItem(response.data);
-          // put notification here that the table does not contain any items
+          if (response.data.length === 0){
+            toast.error("WALANG LAMAN YUNG TABLE!"); // @jez - put something here pag wala items sa table
+          } else {
+            setItem(response.data);
+          }
         })
       .catch(error => {
         toast.error("ERROR: Failed to generate Inventory table");
@@ -209,8 +222,11 @@ function Inventory() {
     axios.get(selectedDomain + 'inventory/') // old axios.get
       .then(
         response => {
-          setItem(response.data);
-          // put notification here that the table does not contain any items
+          if (response.data.length === 0){
+            toast.error("WALANG LAMAN YUNG TABLE!"); // @jez - put something here pag wala items sa table
+          } else {
+            setItem(response.data);
+          }
         })
       .catch(error => {
         toast.error("ERROR: Failed to generate Inventory table");
@@ -312,7 +328,7 @@ function Inventory() {
         console.log("AXIOS.POST SUCCESSFUL: " + response);
       })
       .catch((error) => {
-        console.log("INSIDE ERROR!!!");
+        toast.error("ERROR!");
         console.log(error);
       });
   }
@@ -351,7 +367,7 @@ function Inventory() {
         console.log("AXIOS.POST SUCCESSFUL: " + response);
       })
       .catch((error) => {
-        console.log("INSIDE ERROR!!!");
+        toast.error("ERROR!");
         console.log(error);
       });
   }
@@ -771,7 +787,7 @@ function Inventory() {
               <label htmlFor="username">Condition:</label>
               <div>
                 <select id="itemConditionAddItem"
-                  onChange={handleItemCondition} className={inventory.dropdown} >
+                  onChange={handleItemCondition} className={inventory.dropdown}>
                   <option value="Default">Select Item Condition</option>
                   <option value="Working">Working</option>
                   <option value="Maintenance">Maintenance</option>
