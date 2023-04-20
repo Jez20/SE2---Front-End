@@ -13,7 +13,12 @@ import QRCode from 'qrcode';
 import QrReader from "react-qr-scanner";
 
 const id = sessionStorage.getItem('sessionid')
-console.log("Session ID: " + id)
+if (id != null){
+  console.log("Session ID is successfully collected - (Reservation.js)");
+} else {
+  console.log("WARNING: No Session ID found!");
+}
+
 const returnDomain = require('../common/domainString')
 const selectedDomain = returnDomain();
 

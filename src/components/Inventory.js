@@ -12,7 +12,12 @@ import QRCode from 'qrcode';
 import QrReader from "react-qr-scanner";
 
 const id = sessionStorage.getItem('sessionid')
-console.log("Session ID: " + id)
+if (id != null){
+  console.log("Session ID is successfully collected - (Inventory.js)");
+} else {
+  console.log("WARNING: No Session ID found!");
+}
+
 
 function Inventory() {
 
@@ -91,6 +96,7 @@ function Inventory() {
       setImageUrl(response);
       setText(code.toString()); // set the value of the text input field
     } catch (error) {
+      toast.error("ERROR: Failed to generate QR code")
       console.log(error);
     }
   }
@@ -147,9 +153,11 @@ function Inventory() {
       .then(
         response => {
           setItem(response.data);
+          // put notification here that the table does not contain any items
         })
       .catch(error => {
-        console.error(error);
+        toast.error("ERROR: Failed to generate Inventory table");
+        console.log(error);
       });
   }
 
@@ -166,14 +174,14 @@ function Inventory() {
           data.forEach(category => {
             categoryHashMap[category.category_id] = category.category_name;
           });
-          //console.log(categoryHashMap);
           const dynamicCategoryOptions = Object.entries(categoryHashMap).map(([id, name]) => (
             <option key={id} value={id}>{name}</option>
           ));
           setDynamicCategory(dynamicCategoryOptions);
         })
       .catch(error => {
-        console.error(error);
+        toast.error("ERROR: Failed to refresh Category table");
+        console.log(error);
       });
   }
 
@@ -215,13 +223,17 @@ function Inventory() {
         refreshInventoryTable();
         refreshCategoryTable();
         document.getElementById("deleteCategoryOverlay").style.display = "none";
+        toast.success("Category deleted successfully");
         console.log("AXIOS.DELETE SUCCESSFUL: " + response);
       })
       .catch((error) => {
-        console.log("INSIDE ERROR!!!");
-        console.log(error);
+        if (error.response.status === 404){
+          toast.error("ERROR: Choose a valid Category option");
+          console.log(error);
+        } else {
+          toast.error("ERROR!");
+        } 
       });
-
   }
 
   // Add category
@@ -239,6 +251,7 @@ function Inventory() {
         refreshInventoryTable();
         refreshCategoryTable();
         document.getElementById("addCategoryOverlay").style.display = "none";
+        toast.success("Category added successfully");
         console.log("AXIOS.POST SUCCESSFUL: " + response);
       })
       .catch((error) => {
@@ -277,6 +290,7 @@ function Inventory() {
       .then((response) => {
         refreshInventoryTable();
         document.getElementById("addItemsOverlay").style.display = "none";
+        toast.success("Item added successfully");
         console.log("AXIOS.POST SUCCESSFUL: " + response);
       })
       .catch((error) => {
@@ -322,11 +336,17 @@ function Inventory() {
             .then((response) => {
               refreshInventoryTable();
               document.getElementById("updateItemsOverlay").style.display = "none";
+              toast.success("Item updated successfully");
               console.log("AXIOS.PUT SUCCESSFUL: " + response);
             })
             .catch((error) => {
-              console.log("INSIDE ERROR!!!");
-              console.log(error);
+              if (error.response.status === 400) {
+                // handle 400 Bad Request error.
+                toast.error("ERROR: Choose a valid Item Condition option");
+                console.log(error);
+              } else {
+                toast.error("ERROR!");
+              }
             });
         })
       .catch(error => {
@@ -334,7 +354,6 @@ function Inventory() {
       });
 
   }
-  // generate QR - front-end's job???
 
   // delete
   function deleteItem() {
@@ -347,10 +366,11 @@ function Inventory() {
       .then((response) => {
         refreshInventoryTable();
         document.getElementById("deleteItemsOverlay").style.display = "none";
+        toast.success("Item deleted successfully"); // not working?
         console.log("AXIOS.DELETE SUCCESSFUL: " + response);
       })
       .catch((error) => {
-        console.log("INSIDE ERROR!!!");
+        toast.error("ERROR: Failed to delete the item");
         console.log(error);
       });
   }
@@ -483,7 +503,7 @@ function Inventory() {
                 <div className="row-1-select">
                   <form onSubmit={handleTableFilter}>
                     <select id="conditionFilterDropdown" onChange={handleConditionFilter}>
-                      <option value="">Item Condition Filter</option>
+                      <option value="">Item Condition Filter/Default</option>
                       <option value="Working">Working</option>
                       <option value="Maintenance">Maintenance</option>
                       <option value="Retired">Retired</option>
@@ -543,7 +563,7 @@ function Inventory() {
                             <td>
                               <div className={`${inventory.category}`}>
                                 <button className={`${inventory.update} ${inventory.category}`}
-                                  onClick={(e) => openFormUpdateItems(row.item_code)}>
+                                  onClick={(e) => openFormUpdateItems(row.item_code, row.item_name)}>
                                   <i className="bx bxs-pencil action"></i>
                                   Update
                                 </button>
@@ -650,12 +670,12 @@ function Inventory() {
             <h2>Update Item</h2>
             <form id="updateItemsOverlayForm" onSubmit={updateItem}>
               <label htmlFor="username">Item Name:</label>
-              <input type="text" placeholder="Enter item name" id="updateItem"
+              <input id="itemNameUpdateItem" type="text" placeholder="Enter item name"
                 onChange={handleItemName} />
               <label htmlFor="username">Condition:</label>
               <div>
-                <select className={inventory.dropdown} onChange={handleItemCondition}>
-                  <option value="select">Item Condition Filter</option>
+                <select id="itemConditionUpdateItem" className={inventory.dropdown} onChange={handleItemCondition}>
+                  <option value="">Item Condition Filter/Default</option>
                   <option value="Working">Working</option>
                   <option value="Maintenance">Maintenance</option>
                   <option value="Retired">Retired</option>
@@ -668,6 +688,8 @@ function Inventory() {
                   id="submitUpdateItem"
                   className={`${inventory.action_btn} ${inventory.edit}`}
                   data-item-code=''
+                  data-item-name=""
+                  data-item-condition=""
                   type="submit"
                   value="Update"
                 />
@@ -687,12 +709,12 @@ function Inventory() {
             <form id="addItemsOverlayForm" onSubmit={handleSubmitAddItem}>
               <label htmlFor="username">Item Name:</label>
               <input type="text" placeholder="Enter item name"
-                id="addItem"
+                id="itemNameAddItem"
                 onChange={handleItemName}
               />
               <label htmlFor="username">Condition:</label>
               <div>
-                <select id="selectItemCondition"
+                <select id="itemConditionAddItem"
                   onChange={handleItemCondition} className={inventory.dropdown} >
                   <option value="Default">Select Item Condition</option>
                   <option value="Working">Working</option>
@@ -704,7 +726,7 @@ function Inventory() {
               </div>
               <label htmlFor="username">Category:</label>
               <div>
-                <select value={selectedCategory}
+                <select id="itemCategoryAddItem" value={selectedCategory}
                   onChange={handleItemCategory} className={inventory.dropdown}>
                   <option value="Default">Select Item Category</option>
                   {dynamicCategory}
@@ -733,7 +755,7 @@ function Inventory() {
             <h2>Add Category</h2>
             <form onSubmit={handleSubmitAddCategory}>
               <label htmlFor="username">Category:</label>
-              <input type="text" placeholder="Enter category name" id="addCategory"
+              <input id="categoryNameAddCategory" type="text" placeholder="Enter category name"
                 onChange={handleItemCategoryField} />
               <div className={inventory.buttons}>
                 <input
@@ -817,9 +839,9 @@ function Inventory() {
             <form onSubmit={handleSubmitDeleteCategory}>
               <label htmlFor="username">Categories:</label>
               <div>
-                <select value={selectedCategory}
+                <select id="itemCategoryDeleteCategory" value={selectedCategory}
                   onChange={handleItemCategory} className={inventory.dropdown}>
-                  <option value="Default">Select Item Category</option>
+                  <option value="">Select Item Category</option>
                   {dynamicCategory}
                 </select>
               </div>
@@ -901,21 +923,29 @@ function openFormDeleteItems(item_code) {
 }
 
 
-function openFormUpdateItems(item_code) {
+function openFormUpdateItems(item_code, item_name) {
   document.getElementById("submitUpdateItem").setAttribute("data-item-code", item_code);
+  const itemNameUpdateItem = document.getElementById("itemNameUpdateItem");
+  itemNameUpdateItem.value = item_name;
+  document.getElementById("itemConditionUpdateItem").selectedIndex = 0;
   console.log("Succesfully set the attribute of data-item-code");
   document.getElementById("updateItemsOverlay").style.display = "block";
 }
 
 function openFormAddItems() {
+  document.getElementById("itemNameAddItem").value = "";
+  document.getElementById("itemConditionAddItem").selectedIndex = 0;
+  document.getElementById("itemCategoryAddItem").selectedIndex = 0;
   document.getElementById("addItemsOverlay").style.display = "block";
 }
 
 function openFormAddCategory() {
+  document.getElementById("categoryNameAddCategory").value = "";
   document.getElementById("addCategoryOverlay").style.display = "block";
 }
 
 function openFormDeleteCategory() {
+  document.getElementById("itemCategoryDeleteCategory").selectedIndex = 0;
   document.getElementById("deleteCategoryOverlay").style.display = "block";
 }
 
