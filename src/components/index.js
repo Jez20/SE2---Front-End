@@ -78,7 +78,18 @@ function Index() {
     doc.autoTable({
       startY: 50,
       head: [["History ID", "First Name", "Last Name", "Email", "Role","Item Code", "Item Name", "Date(Time-In)", "Date(Time-Out)", "Notes"]],
-      body: data.map((item) => [item.history_id, item.email.first_name, item.email.last_name, item.email.email, item.email.role.role_name, item.item_code.item_code,item.item_code.item_name, item.date_in, item.date_out, item.notes]),
+      body: data.map((item) => 
+      [
+        item.history_id, 
+        item.email.first_name, 
+        item.email.last_name, 
+        item.email.email, 
+        item.email.role.role_name, 
+        item.item_code.item_code,
+        item.item_code.item_name, 
+        new Date(item.date_in).toLocaleString("en-US", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+        new Date(item.date_out).toLocaleString("en-US", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }), 
+        item.notes]),
       options: {
         margin: {horizontal:"auto"},
       }
@@ -399,8 +410,8 @@ function Index() {
                       <td>{item.email.role.role_name}</td>
                       <td>{item.item_code.item_code}</td>
                       <td>{item.item_code.item_name}</td>
-                      <td>{new Date(item.date_in).toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false})}</td>
-                      <td>{new Date(item.date_out).toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false})}</td>
+                      <td>{new Date(item.date_in).toLocaleString("en-US", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" })}</td>
+                      <td>{new Date(item.date_out).toLocaleString("en-US", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" })}</td>
                       <td>{item.notes}</td>
                       <td>
                         <div className={dashboard.actions}>
