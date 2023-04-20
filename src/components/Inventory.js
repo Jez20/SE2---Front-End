@@ -276,7 +276,6 @@ function Inventory() {
   }
 
   function handleTableFilter(event) {
-    event.preventDefault();
     refreshInventoryTableFilter();
   }
 
