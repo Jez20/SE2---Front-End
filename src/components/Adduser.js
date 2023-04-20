@@ -105,6 +105,7 @@ function Adduser() {
                   id="phone"
                   value={phone_number}
                   onChange={handlePhoneNumberChange}
+                  maxLength="11"
                   required
                 />
               </div>
@@ -135,7 +136,7 @@ function Adduser() {
               <div className="form-group last mb-3">
                 <label htmlFor="lastName">Password:</label>
                 <input
-                  type="text"
+                  type="password"
                   className="form-control"
                   placeholder="Enter User Password"
                   id="password"

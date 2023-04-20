@@ -224,19 +224,19 @@ function Index() {
         console.error(error);
         if (error.response.status === 400) {
           // handle a 400 conflict error
-          toast.error("Old password matches the new password");
+          toast.error("ERROR: Old password matches the new password");
         }
         if (error.response.status === 409) {
           // handle a 409 conflict error
-          toast.error("Password update failed - password mismatched");
+          toast.error("ERROR: Password update failed - password mismatched");
         }
         if (error.response.status === 404) {
           // handle a 404 conflict error
-          toast.error("Current password is incorrect");
+          toast.error("ERROR: Current password is incorrect");
         }
         if (error.response.status === 401) {
           // handle any other error
-          toast.error("Password update failed");
+          toast.error("ERROR: Password update failed");
         }
       });
   }
@@ -251,7 +251,7 @@ function Index() {
       await axios.delete(`${selectedDomain}history/clearLogs/clear`);
       toast.success("All records have been cleared");
     } catch (error) {
-      toast.error("An error occured");
+      toast.error("ERROR: An error occured");
     }
   }
 

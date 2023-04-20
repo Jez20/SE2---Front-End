@@ -20,10 +20,13 @@ function Borrow() {
   const selectedDomain = returnDomain();
   const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
+  const [selectedCategory, setSelectedCategory] = useState('Default'); // contains the category ID
+  const [dynamicCategory, setDynamicCategory] = useState([]);
 
   // hook
   useEffect(() => {
     refreshInventoryTable();
+    refreshCategoryTable();
   }, []);
 
   // Get The Inventory
@@ -272,27 +275,92 @@ function Borrow() {
           console.error(error);
           if (error.response.status === 400) {
             // handle a 400 conflict error
-            toast.error("Old password matches the new password");
+            toast.error("ERROR: Old password matches the new password");
           }
           if (error.response.status === 409) {
             // handle a 409 conflict error
-            toast.error("Password update failed - password mismatched");
+            toast.error("ERROR: Password update failed - password mismatched");
           }
           if (error.response.status === 404) {
             // handle a 404 conflict error
-            toast.error("Current password is incorrect");
+            toast.error("ERROR: Current password is incorrect");
           } 
           if (error.response.status === 401) {
             // handle any other error
-            toast.error("Password update failed");
+            toast.error("ERROR: Password update failed");
           }
         });
     }
-    
+
+      // Get the category table
+  const refreshCategoryTable = () => {
+    const returnDomain = require('../common/domainString')
+    const selectedDomain = returnDomain();
+    axios.get(selectedDomain + 'category/')
+      .then(
+        response => {
+          const data = response.data;
+          const categoryHashMap = {};
+
+          data.forEach(category => {
+            categoryHashMap[category.category_id] = category.category_name;
+          });
+          const dynamicCategoryOptions = Object.entries(categoryHashMap).map(([id, name]) => (
+            <option key={id} value={id}>{name}</option>
+          ));
+          setDynamicCategory(dynamicCategoryOptions);
+        })
+      .catch(error => {
+        toast.error("ERROR: Failed to refresh Category table");
+        console.log(error);
+      });
+  }
+
+    //handlers
     function handleCancel() {
       // hide the overlay
       document.getElementById("myOverlay").style.display ="none";
     }
+
+    function handleItemCategory(event) {
+      setSelectedCategory(event.target.value);
+    }
+
+  // Get the category table
+  useEffect(() => {
+    const returnDomain = require('../common/domainString')
+    const selectedDomain = returnDomain();
+    axios.get(selectedDomain + 'category/')
+      .then(
+        response => {
+          const data = response.data;
+          const categoryHashMap = {};
+
+          data.forEach(category => {
+            categoryHashMap[category.category_id] = category.category_name;
+          });
+          const dynamicCategoryOptions = Object.entries(categoryHashMap).map(([id, name]) => (
+            <option key={id} value={id}>{name}</option>
+          ));
+          setDynamicCategory(dynamicCategoryOptions);
+        })
+      .catch(error => {
+        toast.error("ERROR: Failed to refresh Category table");
+        console.log(error);
+      });
+  }, []);
+
+  // Handle category filter change
+  function handleItemCategory(event) {
+    setSelectedCategory(event.target.value);
+  }
+
+// Filter items based on selected category
+const filteredItems = selectedCategory === 'Default'
+  ? items
+  : items.filter(item => item.category.category_id === Number(selectedCategory));
+
+
 
   return (
 
@@ -418,6 +486,11 @@ function Borrow() {
           <div className={borrow.inventory}>
             <p>Step 2. Select or unselect the items to be borrow or reserve</p>
           </div>
+
+          <select id="categoryFilterDropdown" onChange={handleItemCategory}>
+                      <option value="Default">Item Category Filter/Default</option>
+                      {dynamicCategory}
+                    </select>
          
           <button className={`${borrow.check} ${borrow.item}`} onClick={() => checkAll(true)}>
             <i className="bx bxs-select-multiple" />
@@ -440,56 +513,47 @@ function Borrow() {
 
 
           <tbody>
-            <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
-              {
-
-                items.map(
-                  listeditem => (
-
-                    <div className={`${borrow.card} w3-hover-shadow`} style={{ margin: "10px" }}>
-                      <div className={borrow.cardDivider}>
-                        <h2>{listeditem.item_name}</h2>
-                        <h3>ITEM-{listeditem.item_code}</h3>
-                        <input id={`${listeditem.item_code}`}
-                          input name="reservableItems"
-                          className={borrow.radio}
-                          type="checkbox"
-                          onClick={() => {
-                            const selectedIndex = selectedItems.indexOf(listeditem.item_code);
-                            if (selectedIndex === -1) {
-                              setSelectedItems([...selectedItems, listeditem.item_code]);
-
-                            } else {
-                              const newSelectedItems = [...selectedItems];
-                              newSelectedItems.splice(selectedIndex, 1);
-                              setSelectedItems(newSelectedItems);
-                            }
-
-                            console.log(selectedItems)
-                          }}
-                        />
-                      </div>
-                      <div className="card-section" style={{ width: 300 }}>
-                        {/* <div className={borrow.category}>
-                          <button className={`${borrow.reset} ${borrow.category}`} onClick={openFormReserve}>
-                            <i className="bx bxs-file" />
-                            Reserve
-                          </button>
-                          <button className={`${borrow.update} ${borrow.category}`} onClick={openFormBorrow}>
-                            <i className="bx bxs-backpack" />
-                            Borrow Now
-                          </button>
-                        </div> */}
-                      </div>
-                    </div>
-
-                  )
-
-                )
-
-              }
-            </div>
-          </tbody>
+    <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
+      {filteredItems.map(listeditem => (
+        <div className={`${borrow.card} w3-hover-shadow`} style={{ margin: "10px" }}>
+          <div className={borrow.cardDivider}>
+            <h2>{listeditem.item_name}</h2>
+            <h3>ITEM-{listeditem.item_code}</h3>
+            <h2>{listeditem.category.category_name}</h2>
+            <input
+              id={`${listeditem.item_code}`}
+              input name="reservableItems"
+              className={borrow.radio}
+              type="checkbox"
+              onClick={() => {
+                const selectedIndex = selectedItems.indexOf(listeditem.item_code);
+                if (selectedIndex === -1) {
+                  setSelectedItems([...selectedItems, listeditem.item_code]);
+                } else {
+                  const newSelectedItems = [...selectedItems];
+                  newSelectedItems.splice(selectedIndex, 1);
+                  setSelectedItems(newSelectedItems);
+                }
+                console.log(selectedItems)
+              }}
+            />
+          </div>
+          <div className="card-section" style={{ width: 300 }}>
+            {/* <div className={borrow.category}>
+              <button className={`${borrow.reset} ${borrow.category}`} onClick={openFormReserve}>
+                <i className="bx bxs-file" />
+                Reserve
+              </button>
+              <button className={`${borrow.update} ${borrow.category}`} onClick={openFormBorrow}>
+                <i className="bx bxs-backpack" />
+                Borrow Now
+              </button>
+            </div> */}
+          </div>
+        </div>
+      ))}
+    </div>
+  </tbody>
           <hr />
           <div className={borrow.inventory}>
             <p>Step 3. Perform an action</p>

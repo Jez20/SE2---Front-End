@@ -53,19 +53,19 @@ function Inventory() {
         console.error(error);
         if (error.response.status === 400) {
           // handle a 400 conflict error
-          toast.error("Old password matches the new password");
+          toast.error("ERROR: Old password matches the new password");
         }
         if (error.response.status === 409) {
           // handle a 409 conflict error
-          toast.error("Password update failed - password mismatched");
+          toast.error("ERROR: Password update failed - password mismatched");
         }
         if (error.response.status === 404) {
           // handle a 404 conflict error
-          toast.error("Current password is incorrect");
+          toast.error("ERROR: Current password is incorrect");
         }
         if (error.response.status === 401) {
           // handle any other error
-          toast.error("Password update failed");
+          toast.error("ERROR: Password update failed");
         }
       });
   }
@@ -162,10 +162,14 @@ function Inventory() {
       .then(
         response => {
           if (response.data.length === 0){
-            toast.error("WALANG LAMAN YUNG TABLE!"); // @jez - put something here pag wala items sa table
+            toast.error("ERROR: There are no current items in the table", {
+              autoClose: false // set autoClose to false
+            }); // @jez - put something here pag wala items sa table
           } else {
             setItem(response.data);
           }
+          setItem(response.data);
+          // put notification here that the table does not contain any items
         })
       .catch(error => {
         toast.error("ERROR: Failed to generate Inventory table");
@@ -176,10 +180,14 @@ function Inventory() {
       .then(
         response => {
           if (response.data.length === 0){
-            toast.error("WALANG LAMAN YUNG TABLE!"); // @jez - put something here pag wala items sa table
+            toast.error("ERROR: There are no current items in the table", {
+          autoClose: false // set autoClose to false
+        }); // @jez - put something here pag wala items sa table
           } else {
             setItem(response.data);
           }
+          setItem(response.data);
+          // put notification here that the table does not contain any items
         })
       .catch(error => {
         toast.error("ERROR: Failed to generate Inventory table");
@@ -190,10 +198,14 @@ function Inventory() {
       .then(
         response => {
           if (response.data.length === 0){
-            toast.error("WALANG LAMAN YUNG TABLE!"); // @jez - put something here pag wala items sa table
+            toast.error("ERROR: There are no current items in the table", {
+          autoClose: false // set autoClose to false
+        }); // @jez - put something here pag wala items sa table
           } else {
             setItem(response.data);
           }
+          setItem(response.data);
+          // put notification here that the table does not contain any items
         })
       .catch(error => {
         toast.error("ERROR: Failed to generate Inventory table");
@@ -204,10 +216,14 @@ function Inventory() {
       .then(
         response => {
           if (response.data.length === 0){
-            toast.error("WALANG LAMAN YUNG TABLE!"); // @jez - put something here pag wala items sa table
+            toast.error("ERROR: There are no current items in the table", {
+          autoClose: false // set autoClose to false
+        }); // @jez - put something here pag wala items sa table
           } else {
             setItem(response.data);
           }
+          setItem(response.data);
+          // put notification here that the table does not contain any items
         })
       .catch(error => {
         toast.error("ERROR: Failed to generate Inventory table");
@@ -223,10 +239,14 @@ function Inventory() {
       .then(
         response => {
           if (response.data.length === 0){
-            toast.error("WALANG LAMAN YUNG TABLE!"); // @jez - put something here pag wala items sa table
+            toast.error("ERROR: There are no current items in the table", {
+          autoClose: false // set autoClose to false
+        }); // @jez - put something here pag wala items sa table
           } else {
             setItem(response.data);
           }
+          setItem(response.data);
+          // put notification here that the table does not contain any items
         })
       .catch(error => {
         toast.error("ERROR: Failed to generate Inventory table");
@@ -276,6 +296,7 @@ function Inventory() {
   }
 
   function handleTableFilter(event) {
+    event.preventDefault();
     refreshInventoryTableFilter();
   }
 
@@ -569,10 +590,6 @@ function Inventory() {
               <div className={inventory.row2}>
                 <div className="row-1-select">
                   <form onSubmit={handleTableFilter}>
-                    <select id="categoryFilterDropdown" onChange={handleItemCategory}>
-                      <option value="Default">Item Category Filter/Default</option>
-                      {dynamicCategory}
-                    </select>
                     <select id="conditionFilterDropdown" onChange={handleConditionFilter}>
                       <option value="">Item Condition Filter/Default</option>
                       <option value="Working">Working</option>
@@ -580,6 +597,10 @@ function Inventory() {
                       <option value="Retired">Retired</option>
                       <option value="Damaged">Damaged</option>
                       <option value="Lost">Lost</option>
+                    </select>
+                    <select id="categoryFilterDropdown" onChange={handleItemCategory}>
+                      <option value="Default">Item Category Filter/Default</option>
+                      {dynamicCategory}
                     </select>
                     <button
                       className={`${inventory.update} ${inventory.category} ${inventory.row2btns}`}

@@ -104,15 +104,15 @@ function Return() {
             })
             .catch((error) => {
               console.log(error);
-              toast.error("Error in returning item");
+              toast.error("ERROR: Error in returning item");
             });
         } else {
           console.log('No history found for itemcode:', scannedItemCode);
-          toast.error("No item code or invalid item code");
+          toast.error("ERROR: No item code or invalid item code");
         }
       } catch (error) {
         console.log(error);
-        toast.error("Error in scanning item");
+        toast.error("ERROR: Error in scanning item");
       }
     };
   
@@ -154,19 +154,19 @@ function Return() {
         console.error(error);
         if (error.response.status === 400) {
           // handle a 400 conflict error
-          toast.error("Old password matches the new password");
+          toast.error("ERROR: Old password matches the new password");
         }
         if (error.response.status === 409) {
           // handle a 409 conflict error
-          toast.error("Password update failed - password mismatched");
+          toast.error("ERROR: Password update failed - password mismatched");
         }
         if (error.response.status === 404) {
           // handle a 404 conflict error
-          toast.error("Current password is incorrect");
+          toast.error("ERROR: Current password is incorrect");
         } 
         if (error.response.status === 401) {
           // handle any other error
-          toast.error("Password update failed");
+          toast.error("ERROR: Password update failed");
         }
       });
   }

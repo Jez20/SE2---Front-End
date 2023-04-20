@@ -67,7 +67,7 @@ function Users() {
       toast.success('Successfully reset password');
     } catch (error) {
       console.error(error);
-      toast.error('Something Went Wrong');
+      toast.error('ERROR: Something Went Wrong');
     }
   };
 
@@ -90,7 +90,7 @@ function Users() {
     })
     .catch(error => {
       console.error(error);
-      toast.error('You have not changed anything');
+      toast.error('ERROR: You have not changed anything');
     });
   };
   useEffect(() => {
@@ -114,7 +114,7 @@ function Users() {
       toast.success('Role has been updated successfully');
     } catch (error) {
       console.error(error);
-      toast.error('You have not changed anything');
+      toast.error('ERROR: You have not changed anything');
     }
   };
 
@@ -145,19 +145,19 @@ function handleSubmit(event) {
       console.error(error);
       if (error.response.status === 400) {
         // handle a 400 conflict error
-        toast.error("Old password matches the new password");
+        toast.error("ERROR: Old password matches the new password");
       }
       if (error.response.status === 409) {
         // handle a 409 conflict error
-        toast.error("Password update failed - password mismatched");
+        toast.error("ERROR: Password update failed - password mismatched");
       }
       if (error.response.status === 404) {
         // handle a 404 conflict error
-        toast.error("Current password is incorrect");
+        toast.error("ERROR: Current password is incorrect");
       } 
       if (error.response.status === 401) {
         // handle any other error
-        toast.error("Password update failed");
+        toast.error("ERROR: Password update failed");
       }
     });
 }

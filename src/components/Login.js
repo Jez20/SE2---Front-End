@@ -44,7 +44,7 @@ function Login() {
   }
   catch (error){
     console.error(error)
-    toast.error('Invalid email or password');
+    toast.error('ERROR: Invalid email or password');
   }
 }
 
