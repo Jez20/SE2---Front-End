@@ -18,7 +18,7 @@ if (id != null){
   console.log("WARNING: No Session ID found!");
 }
 
-// note: if it is regarding category filtering, use "Default"
+// note: if it is regarding category filtering, use "Default" as value attribute
 
 function Inventory() {
 
@@ -155,7 +155,6 @@ function Inventory() {
       if conditionFilter is default/null but categoryID isn't, then use inventory/categoryFilter/<int:categoryId>
       if both are default/null , then use old axios.get
       if both are NOT default/null, then use inventory/bothFilter/<int:categoryId>/<str:filter>
-      NOTE(inside of if-else stmts): if no items in the table, say something like, no items here!
      */
     if (selectedCategory === 'Default' && conditionFilter !== ''){
       axios.get(selectedDomain + 'inventory/' + conditionFilter) // old axios.get
@@ -164,12 +163,11 @@ function Inventory() {
           if (response.data.length === 0){
             toast.error("ERROR: There are no current items in the table", {
               autoClose: false // set autoClose to false
-            }); // @jez - put something here pag wala items sa table
+            });
           } else {
             setItem(response.data);
           }
           setItem(response.data);
-          // put notification here that the table does not contain any items
         })
       .catch(error => {
         toast.error("ERROR: Failed to generate Inventory table");
@@ -182,12 +180,11 @@ function Inventory() {
           if (response.data.length === 0){
             toast.error("ERROR: There are no current items in the table", {
           autoClose: false // set autoClose to false
-        }); // @jez - put something here pag wala items sa table
+        });
           } else {
             setItem(response.data);
           }
           setItem(response.data);
-          // put notification here that the table does not contain any items
         })
       .catch(error => {
         toast.error("ERROR: Failed to generate Inventory table");
@@ -200,12 +197,11 @@ function Inventory() {
           if (response.data.length === 0){
             toast.error("ERROR: There are no current items in the table", {
           autoClose: false // set autoClose to false
-        }); // @jez - put something here pag wala items sa table
+        });
           } else {
             setItem(response.data);
           }
           setItem(response.data);
-          // put notification here that the table does not contain any items
         })
       .catch(error => {
         toast.error("ERROR: Failed to generate Inventory table");
@@ -218,12 +214,11 @@ function Inventory() {
           if (response.data.length === 0){
             toast.error("ERROR: There are no current items in the table", {
           autoClose: false // set autoClose to false
-        }); // @jez - put something here pag wala items sa table
+        });
           } else {
             setItem(response.data);
           }
           setItem(response.data);
-          // put notification here that the table does not contain any items
         })
       .catch(error => {
         toast.error("ERROR: Failed to generate Inventory table");
@@ -232,6 +227,7 @@ function Inventory() {
     }
   }
 
+  // refreshers
   const refreshInventoryTableGeneral = () => {
     const returnDomain = require('../common/domainString')
     const selectedDomain = returnDomain();
@@ -435,7 +431,7 @@ function Inventory() {
             .catch((error) => {
               if (error.response.status === 400) {
                 // handle 400 Bad Request error.
-                toast.error("ERROR: Choose a valid Item Condition option");
+                toast.error("ERROR: Invalid Item Name or Item Condition");
                 console.log(error);
               } else {
                 toast.error("ERROR!");
@@ -445,7 +441,6 @@ function Inventory() {
       .catch(error => {
         console.error(error);
       });
-
   }
 
   // delete
@@ -759,11 +754,11 @@ function Inventory() {
         </div>
         <div id="updateItemsOverlay" className={inventory.updateItemsOverlay}>
           <div className={inventory.updateItemsWrap}>
-            <h2>Update Item</h2>
+            <h2 id="updateItemHeader">Update Item</h2>
             <form id="updateItemsOverlayForm" onSubmit={updateItem}>
               <label htmlFor="username">Item Name:</label>
-              <input id="itemNameUpdateItem" type="text" placeholder="Enter item name"
-                onChange={handleItemName} />
+              <input id="itemNameUpdateItem" type="text" placeholder="Enter new item name" 
+              onChange={handleItemName} />
               <label htmlFor="username">Condition:</label>
               <div>
                 <select id="itemConditionUpdateItem" className={inventory.dropdown} onChange={handleItemCondition}>
@@ -1015,9 +1010,9 @@ function openFormDeleteItems(item_code) {
 
 
 function openFormUpdateItems(item_code, item_name) {
+  document.getElementById("itemNameUpdateItem").value = "";
   document.getElementById("submitUpdateItem").setAttribute("data-item-code", item_code);
-  const itemNameUpdateItem = document.getElementById("itemNameUpdateItem");
-  itemNameUpdateItem.value = item_name;
+  document.getElementById("updateItemHeader").innerText = "Update " + item_name;
   document.getElementById("itemConditionUpdateItem").selectedIndex = 0;
   document.getElementById("updateItemsOverlay").style.display = "block";
 }
