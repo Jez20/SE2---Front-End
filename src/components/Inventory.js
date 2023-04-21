@@ -162,7 +162,6 @@ function Inventory() {
         response => {
           if (response.data.length === 0){
             toast.error("ERROR: There are no current items in the table", {
-              autoClose: false // set autoClose to false
             });
           } else {
             setItem(response.data);
@@ -179,7 +178,6 @@ function Inventory() {
         response => {
           if (response.data.length === 0){
             toast.error("ERROR: There are no current items in the table", {
-          autoClose: false // set autoClose to false
         });
           } else {
             setItem(response.data);
@@ -196,7 +194,6 @@ function Inventory() {
         response => {
           if (response.data.length === 0){
             toast.error("ERROR: There are no current items in the table", {
-          autoClose: false // set autoClose to false
         });
           } else {
             setItem(response.data);
@@ -213,7 +210,6 @@ function Inventory() {
         response => {
           if (response.data.length === 0){
             toast.error("ERROR: There are no current items in the table", {
-          autoClose: false // set autoClose to false
         });
           } else {
             setItem(response.data);
