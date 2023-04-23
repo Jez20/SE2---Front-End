@@ -101,7 +101,7 @@ function Borrow() {
       ]
       const returnDomain = require('../common/domainString')
       const selectedDomain = returnDomain();
-      axios.post(selectedDomain + 'reservation/', dataPost)
+      axios.post(selectedDomain + 'specificUserInsertReservations/', dataPost)
         .then((response) => {
           refreshInventoryTable();
           document.getElementById("addItemsOverlay").style.display = "none";
