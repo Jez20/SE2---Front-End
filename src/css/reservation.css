@@ -870,7 +870,8 @@ div.activity-data .box{
 } */
 
 .update{
-    background-color: #66BB66;
+    /* background-color: #66BB66; */
+    background-color: #1199EE;
 }
 
 .generate{
@@ -882,7 +883,8 @@ div.activity-data .box{
 }
 
 .update:hover{
-    background-color: #559b55;
+    /* background-color: #559b55; */
+    background-color: #0b81ca;
 }
 
 .generate:hover{
@@ -910,6 +912,7 @@ div.activity-data .box{
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    margin-bottom: -10px;
   }
   label.checkbox input[type="checkbox"] {
     position: absolute;

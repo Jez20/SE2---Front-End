@@ -738,6 +738,24 @@ select{
     float: right;
 }
 
+/* Scrollable table */
+
+.scrollableTable {
+    max-height: 645px;
+    overflow: auto;
+  }
+
+  .tableHeaderWrapper {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: white;
+  }
+
+  .table {
+    width: 100%;
+  }
+
 select{
     padding: 08px;
     border-radius: 5px;
@@ -800,7 +818,7 @@ select{
 
 
 table{
-    margin-top: 10px;
+    /* margin-top: 10px; */
     border-collapse: collapse;
     border-radius: 10px;
     width: 100%;
@@ -1100,3 +1118,24 @@ div.activity-data .box{
         margin-left: 0px;
     }
 }
+
+.my-text-field{
+    padding: 10px;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    border:1px solid gray;
+    font-size: 15px;
+    border-radius: 5px;
+
+}
+
+#roleInput{
+    margin-bottom: 10px;
+
+}
+
+input[type="tel"] {
+    min-width: 200px;
+    margin-bottom: -5px;
+  }

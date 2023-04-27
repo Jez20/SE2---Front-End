@@ -286,14 +286,15 @@ nav.close ~ .dashboard .top{
     border-radius: 50%;
 }
 .dashboard .dashContent{
-    padding-top: 50px;
+    /* padding-top: 50px; */
 }
 .dashContent .title{
     display: flex;
     align-items: center;
-    margin: 60px 0 30px 0;
+    margin: 30px 0 30px 0;
 }
 .dashContent .title i{
+    /* margin-top: 100px; */
     position: relative;
     height: 35px;
     width: 35px;
@@ -310,6 +311,7 @@ nav.close ~ .dashboard .top{
     font-weight: 500;
     color: var(--text-color);
     margin-left: 10px;
+    /* margin-top: 100px; */
 }
 .dashContent .boxes{
     display: flex;
@@ -831,7 +833,7 @@ select{
 }
 
 table{
-    margin-top: 10px;
+    /* margin-top: 10px; */
     border-collapse: collapse;
     border-radius: 10px;
     width: 100%;

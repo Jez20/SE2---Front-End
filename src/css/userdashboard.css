@@ -147,14 +147,14 @@ body.dark li a:hover:before{
     color: var(--black-light-color);
     color: white;
 }
-.menu-items li a .link-name{
+.menu-items li a .linkName{
     font-size: 18px;
     font-weight: 400;
     color: var(--black-light-color);    
     transition: var(--tran-05);
     color: white;
 }
-nav.close li a .link-name{
+nav.close li a .linkName{
     opacity: 0;
     pointer-events: none;
 }
@@ -166,7 +166,7 @@ nav.close li a .link-name{
 }
 
 body.dark .nav-links li a:hover i,
-body.dark .nav-links li a:hover .link-name{
+body.dark .nav-links li a:hover .linkName{
     color: var(--text-color);
 }
 .menu-items .logout-mode{
@@ -399,11 +399,11 @@ nav.close ~ .dashboard .top{
         opacity: 1;
         pointer-events: auto;
     }
-    nav li a .link-name{
+    nav li a .linkName{
         opacity: 0;
         pointer-events: none;
     }
-    nav.close li a .link-name{
+    nav.close li a .linkName{
         opacity: 1;
         pointer-events: auto;
     }
@@ -452,11 +452,11 @@ nav.close ~ .dashboard .top{
         opacity: 0;
         pointer-events: none;
     }
-    nav li a .link-name{
+    nav li a .linkName{
         opacity: 0;
         pointer-events: none;
     }
-    nav.close li a .link-name{
+    nav.close li a .linkName{
         opacity: 0;
         pointer-events: none;
     }
@@ -492,11 +492,11 @@ nav.close ~ .dashboard .top{
         opacity: 0;
         pointer-events: none;
     }
-    nav li a .link-name{
+    nav li a .linkName{
         opacity: 0;
         pointer-events: none;
     }
-    nav.close li a .link-name{
+    nav.close li a .linkName{
         opacity: 0;
         pointer-events: none;
     }
@@ -819,12 +819,12 @@ select{
 
 
 
-table{
+/* table{
     margin-top: 10px;
     border-collapse: collapse;
     border-radius: 10px;
     width: 100%;
-}
+} */
   
 th, td{
     border: 1px solid whitesmoke;

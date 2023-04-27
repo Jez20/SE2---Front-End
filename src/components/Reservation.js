@@ -2,6 +2,7 @@ import borrow from '../css/borrow.module.css'
 import axios from "axios";
 import '../css/reservation.css'
 import '../css/overlay.css'
+import inventory from '../css/inventory.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useRequireAuth } from "../services/useRequireAuth";
 import React, { useEffect, useState, useRef } from 'react';
@@ -129,7 +130,7 @@ function Reservation() {
           <span className="logo_name">KLIA Inventory System</span>
         </div>
         <div className="menu-items">
-          <ul className="nav-links">
+          <ul className={inventory.navLinks}>
             <li>
               <a href="/Index">
                 <i className="bx bxs-dashboard icon" />
@@ -138,7 +139,7 @@ function Reservation() {
             </li>
             <li>
               <a href="/Borrow">
-                <i className="bx bxs-backpack icon" />
+                <i className="bx bxs-shopping-bags icon" />
                 <span className="link-name">Borrow Items</span>
               </a>
             </li>
@@ -167,6 +168,7 @@ function Reservation() {
               </a>
             </li>
           </ul>
+          <ul className="navLinks">
           <ul className="logout-mode">
             <li>
               <a href="#" onClick={handleLogout}>
@@ -180,6 +182,7 @@ function Reservation() {
               <div className="mode-toggle">
               </div>
             </li>
+          </ul>
           </ul>
         </div>
       </nav>
@@ -198,7 +201,7 @@ function Reservation() {
             </div>
 
             <div className={borrow.inventory}>
-              <p>Input email to search reservation of reservees</p>
+              <p>Step 1. Input email to search reservation of reservees or Leave it as blank</p>
             </div>
             <div>
               <input
@@ -222,12 +225,15 @@ function Reservation() {
                 <i className="bx bx-table" />
                 <span className="text">Reservation Table</span>
               </div>
+              <div className={borrow.inventory}>
+            <p>Step 2. Add to Record or Remove</p>
+          </div>
             </div>
             {/* ROW 2 */}
-            <div className="row-2"></div>
-            <div className="activity-data">
-              <table className="table">
-                <thead>
+            <div className={`${inventory.activityData}`} style={{ overflowX: 'auto',marginTop: '20px'}}>
+                <div className="scrollTable" style={{ minWidth: '100%', maxHeight: '450px'}}>
+                  <table className={`${inventory.table}`} style={{ minWidth: '100%'}}>
+                  <thead style={{ position: 'sticky', top: 0 }}>
                   <tr>
                     <th>Reservation ID</th>
                     <th>Item Name</th>
@@ -319,10 +325,11 @@ function Reservation() {
             </div>
           </div>
         </div>
+        </div>
       </section>
       <div id="myOverlay" className="overlay">
         <div className="wrap">
-          <h2>Change Password</h2>
+          <h2 style={{ fontSize: '2em', textAlign: 'center', padding: 0, marginBottom: 10}}>Change Password</h2>
           <form onSubmit={handleSubmit}>
             <label htmlFor="currentPass">Current Password:</label>
             <input
@@ -483,19 +490,17 @@ function openFormReservationScanQR() {
 
 function burger() {
   const body = document.querySelector("body"),
-    modeToggle = body.querySelector(".mode-toggle");
+     modeToggle = body.querySelector(".mode-toggle");
   const sidebar = body.querySelector("nav");
   const sidebarToggle = body.querySelector(".sidebar-toggle");
 
-  sidebarToggle.addEventListener("click", () => {
-    sidebar.classList.toggle("close");
-    if (sidebar.classList.contains("close")) {
+  sidebar.classList.toggle("close");
+  if(sidebar.classList.contains("close")){
       localStorage.setItem("status", "close");
-    }
-    else {
+  }
+  else {
       localStorage.setItem("status", "open");
-    }
-  })
+  }
 }
 
 const useStyles = makeStyles((theme) => ({

@@ -505,50 +505,51 @@ function Inventory() {
             </div>
             <span className={inventory.logo_name}>KLIA Inventory System</span>
           </div>
-          <div className={inventory.menuItems}>
+          <div className="menu-items">
             <ul className={inventory.navLinks}>
               <li>
                 <a href="/Index">
                   <i className="bx bxs-dashboard icon" />
-                  <span className={inventory.linkName}>Dashboard</span>
+                  <span className="link-name">Dashboard</span>
                 </a>
               </li>
               <li>
                 <a href="/Borrow">
-                  <i className="bx bxs-shopping-bags" />
-                  <span className={inventory.linkName}>Borrow Items</span>
+                  <i className="bx bxs-shopping-bags icon" />
+                  <span className="link-name">Borrow Items</span>
                 </a>
               </li>
               <li>
                 <a href="/Return">
                   <i className="bx bxs-book-content icon" />
-                  <span className={inventory.linkName}>Return Items</span>
+                  <span className="link-name">Return Items</span>
                 </a>
               </li>
               <li>
                 <a href="/Inventory">
                   <i className="bx bx-box icon" />
-                  <span className={inventory.linkName}>Inventory</span>
+                  <span className="link-name">Inventory</span>
                 </a>
               </li>
               <li>
                 <a href="/Users">
                   <i className="bx bxs-user icon" />
-                  <span className={inventory.linkName}>Users</span>
+                  <span className="link-name">Users</span>
                 </a>
               </li>
               <li>
-                <a className={inventory.openbtn} onClick={openForm}>
+                <a className="openbtn" onClick={openForm}>
                   <i className="bx bxs-lock-alt icon" />
-                  <span className={inventory.linkName}>Change Password</span>
+                  <span className="link-name">Change Password</span>
                 </a>
               </li>
             </ul>
-            <ul className={inventory.logoutMode}>
+            <ul className="navLinks">
+            <ul className="logout-mode">
               <li>
                 <a href="#" onClick={handleLogout}>
                   <i className="bx bxs-log-out icon" />
-                  <span className={inventory.linkName}>Logout</span>
+                  <span className="link-name">Logout</span>
                 </a>
               </li>
               <li className="mode">
@@ -558,17 +559,18 @@ function Inventory() {
                 </div>
               </li>
             </ul>
+            </ul>
           </div>
         </nav>
-        <section className={inventory.dashboard}>
-          <div className={inventory.top}>
-            <i className={`${inventory.sidebarToggle} uil uil-bars`} />
-            <div className={inventory.searchBox}>
+        <section className="dashboard">
+          <div className="top">
+              <i className="uil uil-bars sidebar-toggle" onClick={burger}/>
+            <div className="search-box">
               <h1>Inventory</h1>
             </div>
           </div>
           <div className={inventory.dashContent}>
-            <div className={inventory.activity}>
+            <div className={inventory.activity} style={{marginTop: '100px'}}>
               <div className={inventory.title}>
                 <i className="bx bx-box icon" />
                 <span className={inventory.text}>Inventory</span>
@@ -624,10 +626,10 @@ function Inventory() {
                 </div>
               </div>
 
-              <div className={`${inventory.activityData}`} style={{ overflowX: 'auto' }}>
-  <div className={`${inventory.scrollableTable}`} style={{ minWidth: '100%' }}>
+              <div className={`${inventory.activityData}`} style={{ overflowX: 'auto',marginTop: '70px'}}>
+  <div className={`${inventory.scrollableTable}`} style={{ minWidth: '100%', maxHeight: '610px'}}>
     <table className={`${inventory.table}`} style={{ minWidth: '100%' }}>
-      <thead>
+    <thead style={{ position: 'sticky', top: 0 }}>
         <tr>
           <th>Item Code</th>
           <th>Item Name</th>
@@ -649,12 +651,12 @@ function Inventory() {
                   <div className={`${inventory.category}`}>
                     <button className={`${inventory.update} ${inventory.category}`}
                       onClick={(e) => openFormUpdateItems(row.item_code, row.item_name)}>
-                      <i className="bx bxs-pencil action"></i>
+                      <i className="bx bxs-pencil action icon"></i>
                       Update
                     </button>
                     <button type="button" className={`${inventory.generate} ${inventory.category}`}
                       onClick={() => handleQRCodeClick(row.item_code)}>
-                      <i className="bx bx-qr"></i> Generate QR
+                      <i className="bx bx-qr icon"></i> Generate QR
                     </button>
                     <button className={`${inventory.del} ${inventory.category}`}
                       onClick={(e) => openFormDeleteItems(row.item_code)}>
@@ -678,7 +680,7 @@ function Inventory() {
         </section>
         <div id="myOverlay" className={inventory.overlay}>
           <div className={inventory.wrap}>
-            <h2>Change Password</h2>
+            <h2 style={{ fontSize: '2em', textAlign: 'center', padding: 0, marginBottom: 10}}>Change Password</h2>
             <form onSubmit={handleSubmit}>
               <label htmlFor="currentPass">Current Password:</label>
               <input
@@ -724,7 +726,7 @@ function Inventory() {
         <div id="deleteItemsOverlay" className={inventory.deleteItemsOverlay}>
           <div className={inventory.deleteItemsWrap}>
             <h1 id="deleteh1">
-              <i className="bx bxs-error icon" /> Warning!{" "}
+              <i className="bx bxs-error" style={{margin: 5 }}/> Warning!{" "}
             </h1>
             <h2 id="deleteh2">Would you like to delete this item?</h2>
             <form>
@@ -750,7 +752,7 @@ function Inventory() {
         </div>
         <div id="updateItemsOverlay" className={inventory.updateItemsOverlay}>
           <div className={inventory.updateItemsWrap}>
-            <h2 id="updateItemHeader">Update Item</h2>
+            <h2 id="updateItemHeader" style={{ fontSize: '2em', textAlign: 'center', padding: 0, marginBottom: 10}}>Update Item</h2>
             <form id="updateItemsOverlayForm" onSubmit={updateItem}>
               <label htmlFor="username">Item Name:</label>
               <input id="itemNameUpdateItem" type="text" placeholder="Enter new item name" 
@@ -788,7 +790,7 @@ function Inventory() {
         </div>
         <div id="addItemsOverlay" className={inventory.addItemsOverlay}>
           <div className={inventory.addItemsWrap}>
-            <h2>Add Item</h2>
+            <h2 style={{ fontSize: '2em', textAlign: 'center', padding: 0, marginBottom: 10}}>Add Item</h2>
             <form id="addItemsOverlayForm" onSubmit={handleSubmitAddItem}>
               <label htmlFor="username">Item Name:</label>
               <input type="text" placeholder="Enter item name"
@@ -835,7 +837,7 @@ function Inventory() {
         </div>
         <div id="addCategoryOverlay" className={inventory.addCategoryOverlay}>
           <div className={inventory.addCategoryWrap}>
-            <h2>Add Category</h2>
+            <h2 style={{ fontSize: '2em', textAlign: 'center', padding: 0, marginBottom: 10}}>Add Category</h2>
             <form onSubmit={handleSubmitAddCategory}>
               <label htmlFor="username">Category:</label>
               <input id="categoryNameAddCategory" type="text" placeholder="Enter category name"
@@ -858,7 +860,7 @@ function Inventory() {
         </div>
         <div id="generateQROverlay" className={inventory.generateQROverlay}>
           <div className={inventory.generateQRWrap}>
-            <h2>QR Generated</h2>
+            <h2 style={{ fontSize: '2em', textAlign: 'center', padding: 0, marginBottom: 10}}>QR Generated</h2>
             <form>
               <div className={inventory.card} style={{ width: "18rem" }}>
                 <Container className={classes.conatiner}>
@@ -918,7 +920,7 @@ function Inventory() {
         </div>
         <div id="deleteCategoryOverlay" className={inventory.deleteCategoryOverlay}>
           <div className={inventory.deleteCategoryWrap}>
-            <h2>Delete Category</h2>
+            <h2 style={{ fontSize: '2em', textAlign: 'center', padding: 0, marginBottom: 10}}>Delete Category</h2>
             <form onSubmit={handleSubmitDeleteCategory}>
               <label htmlFor="username">Categories:</label>
               <div>
@@ -1028,6 +1030,21 @@ function openFormAddCategory() {
 function openFormDeleteCategory() {
   document.getElementById("itemCategoryDeleteCategory").selectedIndex = 0;
   document.getElementById("deleteCategoryOverlay").style.display = "block";
+}
+
+function burger() {
+  const body = document.querySelector("body"),
+     modeToggle = body.querySelector(".mode-toggle");
+  const sidebar = body.querySelector("nav");
+  const sidebarToggle = body.querySelector(".sidebar-toggle");
+
+  sidebar.classList.toggle("close");
+  if(sidebar.classList.contains("close")){
+      localStorage.setItem("status", "close");
+  }
+  else {
+      localStorage.setItem("status", "open");
+  }
 }
 
 export default Inventory

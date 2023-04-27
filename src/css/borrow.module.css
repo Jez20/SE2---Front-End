@@ -807,7 +807,7 @@ select{
 
 
 table{
-    margin-top: 30px;
+    /* margin-top: 30px; */
     border-collapse: collapse;
     border-radius: 10px;
     width: 100%;
@@ -1193,6 +1193,8 @@ body {
     top: 0;
     left: 0;
     background: rgba(0,0,0,0.7);
+    max-height: 100vh; /* or any height you want */
+    overflow-y: auto;
 }
 
 /* #cardForm{
@@ -1251,9 +1253,15 @@ body {
     text-align: center;
 }
 
+/* .backpack {
+    text-align: center;
+    
+} */
+
 .backpack {
-    /* text-align: center; */
-}
+    max-height: 270px; /* or any other max-height value you prefer */
+    overflow-y: auto;
+  }
 
 .backpacklist
 {
@@ -1293,6 +1301,8 @@ body {
     top: 0;
     left: 0;
     background: rgba(0,0,0,0.7);
+    max-height: 100vh; /* or any height you want */
+    overflow-y: auto;
 }
 
 #borrowh1{
@@ -1537,3 +1547,19 @@ body {
     margin: 10px;
 }
 
+.cardText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.card {
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    border: 5px solid #33AAFF; /* Added border property */
+    transition: 0.3s;
+    /* padding: 20px; */
+  }

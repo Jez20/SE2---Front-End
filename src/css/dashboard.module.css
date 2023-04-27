@@ -293,12 +293,13 @@ nav.close ~ .dashboard .top{
     border-radius: 50%;
 }
 .dashboard .dashContent{
-    padding-top: 50px;
+    /* padding-top: 50px; */
 }
 .dashContent .title{
     display: flex;
     align-items: center;
     margin: 60px 0 30px 0;
+    margin-top: 100px;
 }
 .dashContent .title i{
     position: relative;
@@ -608,7 +609,7 @@ nav.close ~ .dashboard .top{
 }
 
 table{
-    margin-top: 30px;
+    /* margin-top: 30px; */
     border-collapse: collapse;
     border-radius: 10px;
     width: 100%;
@@ -946,6 +947,7 @@ div.activityData .box{
         margin-left: 0px;
         margin-top: 10px;
         padding-bottom: 10px;
+        width: auto;
     }
     
     .genRep{
@@ -1044,3 +1046,4 @@ div.activityData .box{
     display: inline;
     margin: 10px;
 }
+

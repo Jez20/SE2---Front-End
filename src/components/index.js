@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import dashboard from "../css/dashboard.module.css";
+import inventorycss from '../css/inventory.module.css';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { useRequireAuth } from "../services/useRequireAuth";
@@ -31,16 +32,16 @@ function Index() {
   useEffect(() => {
     const fromDateInput = document.getElementById("dateofbirth");
     const toDateInput = toDateInputRef.current;
-  
+
     const updateMinDate = () => {
       toDateInput.min = fromDateInput.value;
       if (toDateInput.value < fromDateInput.value) {
         toDateInput.value = fromDateInput.value;
       }
     };
-  
+
     fromDateInput.addEventListener("input", updateMinDate);
-  
+
     return () => {
       fromDateInput.removeEventListener("input", updateMinDate);
     };
@@ -77,21 +78,21 @@ function Index() {
 
     doc.autoTable({
       startY: 50,
-      head: [["History ID", "First Name", "Last Name", "Email", "Role","Item Code", "Item Name", "Date(Time-In)", "Date(Time-Out)", "Notes"]],
-      body: data.map((item) => 
-      [
-        item.history_id, 
-        item.email.first_name, 
-        item.email.last_name, 
-        item.email.email, 
-        item.email.role.role_name, 
-        item.item_code.item_code,
-        item.item_code.item_name, 
-        new Date(item.date_in).toLocaleString("en-US", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }),
-        new Date(item.date_out).toLocaleString("en-US", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }), 
-        item.notes]),
+      head: [["History ID", "First Name", "Last Name", "Email", "Role", "Item Code", "Item Name", "Date(Time-In)", "Date(Time-Out)", "Notes"]],
+      body: data.map((item) =>
+        [
+          item.history_id,
+          item.email.first_name,
+          item.email.last_name,
+          item.email.email,
+          item.email.role.role_name,
+          item.item_code.item_code,
+          item.item_code.item_name,
+          new Date(item.date_in).toLocaleString("en-US", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+          new Date(item.date_out).toLocaleString("en-US", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+          item.notes]),
       options: {
-        margin: {horizontal:"auto"},
+        margin: { horizontal: "auto" },
       }
     });
     doc.save(fileName);
@@ -258,72 +259,71 @@ function Index() {
   return (
     <div className={dashboard.App}>
       <nav>
-        <div className={dashboard.logoName}>
-          <div className={dashboard.logoImage}>
+        <div className="logo-name">
+          <div className="logo-image">
             <img src="images/logo.png" alt="" />
           </div>
-          <span className={dashboard.logo_name}>KLIA Inventory System</span>
+          <span className="logo_name">KLIA Inventory System</span>
         </div>
-        <div className={dashboard.menuItems}>
-          <ul className={dashboard.navLinks}>
+        <div className="menu-items">
+          <ul className="navLinks">
             <li>
               <a href="/Index">
                 <i className="bx bxs-dashboard icon" />
-                <span className={dashboard.linkName}>Dashboard</span>
+                <span className="link-name">Dashboard</span>
               </a>
             </li>
             <li>
               <a href="/Borrow">
-                <i className="bx bxs-shopping-bags" />
-                <span className={dashboard.linkName}>Borrow Items</span>
+                <i className="bx bxs-shopping-bags icon" />
+                <span className="link-name">Borrow Items</span>
               </a>
             </li>
             <li>
               <a href="/Return">
                 <i className="bx bxs-book-content icon" />
-                <span className={dashboard.linkName}>Return Items</span>
+                <span className="link-name">Return Items</span>
               </a>
             </li>
             <li>
               <a href="/Inventory">
                 <i className="bx bx-box icon" />
-                <span className={dashboard.linkName}>Inventory</span>
+                <span className="link-name">Inventory</span>
               </a>
             </li>
             <li>
               <a href="/Users">
                 <i className="bx bxs-user icon" />
-                <span className={dashboard.linkName}>Users</span>
+                <span className="link-name">Users</span>
               </a>
             </li>
             <li>
               <a className="openbtn" onClick={openForm}>
                 <i className="bx bxs-lock-alt icon" />
-                <span className={dashboard.linkName}>Change Password</span>
+                <span className="link-name">Change Password</span>
               </a>
             </li>
           </ul>
-          <ul className={dashboard.logOutMode}>
-            <li>
-              <a href="#" onClick={handleLogout}>
-                <i className="bx bxs-log-out icon" />
-                <span className={dashboard.linkName}>Logout</span>
-              </a>
-            </li>
-            <li className="mode">
-              <a href="#"></a>
-              <div className="mode-toggle"></div>
-            </li>
+          <ul className="navLinks">
+            <ul className="logout-mode">
+              <li>
+                <a href="#" onClick={handleLogout}>
+                  <i className="bx bxs-log-out icon" />
+                  <span className="link-name">Logout</span>
+                </a>
+              </li>
+              <li className="mode">
+                <a href="#"></a>
+                <div className="mode-toggle"></div>
+              </li>
+            </ul>
           </ul>
         </div>
       </nav>
-      <section className={dashboard.dashboard}>
-        <div className={dashboard.top}>
-          <i
-            className={`${dashboard.sidebarToggle} uil uil-bars`}
-            onClick={burger}
-          />
-          <div className={dashboard.searchBox}>
+      <section className="dashboard">
+        <div className="top">
+          <i className="uil uil-bars sidebar-toggle" onClick={burger} />
+          <div className="search-box">
             <h1>Dashboard</h1>
           </div>
         </div>
@@ -361,13 +361,14 @@ function Index() {
               </div>
             </div>
           </div>
-          <div className={dashboard.activity}>
-            <div className={dashboard.title}>
-              <i className="uil uil-clock-three" />
-              <span className={dashboard.text}>Recent Activity</span>
-            </div>
-            {/* ROW 2 */}
-            <div className={dashboard.row2}>
+          <div className={inventorycss.dashContent}>
+            <div className={inventorycss.activity}>
+              <div className={inventorycss.title}>
+                <i className="uil uil-clock-three" />
+                <span className={inventorycss.text}>Recent Activity</span>
+              </div>
+              {/* ROW 2 */}
+              {/* <div className={dashboard.row2}>
               <button className={dashboard.genRep} onClick={openFormGenerateReport}>
                 <i className="bx bxs-download" />
                 Generate Report
@@ -382,64 +383,85 @@ function Index() {
                 <i className="bx bx-menu-alt-right clear" />
                 Clear Logs
               </button>
-            </div>
-            <div style={{ height: "400px", overflow: "auto" }}>
-            <div className={dashboard.activityData}>
-              <table className={dashboard.table}>
-                <thead>
-                  <tr>
-                    <th>History ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Item Code</th>
-                    <th>Item Name</th>
-                    <th>Date (Time-in)</th>
-                    <th>Date (Time-out)</th>
-                    <th>Notes</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {history.map((item) => (
-                    <tr key={item.history_id}>
-                      <td>{item.history_id}</td>
-                      <td>{item.email.first_name}</td>
-                      <td>{item.email.last_name}</td>
-                      <td>{item.email.email}</td>
-                      <td>{item.email.role.role_name}</td>
-                      <td>{item.item_code.item_code}</td>
-                      <td>{item.item_code.item_name}</td>
-                      <td>{new Date(item.date_in).toLocaleString("en-US", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" })}</td>
-                      <td>{new Date(item.date_out).toLocaleString("en-US", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" })}</td>
-                      <td>{item.notes}</td>
-                      <td>
-                        <div className={dashboard.actions}>
-                          {/* <div className={`${dashboard.box} ${dashboard.edit}`} 
+            </div> */}
+              <div className={inventorycss.row2} style={{marginBottom: '30px'}}>
+                <div className="row-1-select">
+                    <select id="conditionFilterDropdown" onChange={handleSortChange}>
+                      <option value="asc">Date Filter</option>
+                      <option value="des">Default</option>
+                      <option value="asc">Ascending</option>
+                      <option value="des">Descending</option>
+                    </select>
+                </div>
+                <div className={inventorycss.row2btns}>
+                  <button className={`${inventorycss.generate} ${inventorycss.category}`} onClick={openFormGenerateReport}>
+                    <i className="bx bxs-download icon" />
+                    Generate Report
+                  </button>
+                  <button className={`${inventorycss.delete} ${inventorycss.category}`} onClick={openFormClear} title={userRole !== "Editor" ? "You need to be an Editor to perform this action." : ""} disabled={userRole !== "Editor"}>
+                    <i className="bx bx-menu-alt-right clear icon" />
+                    Clear Logs
+                  </button>
+                </div>
+              </div>
+
+              <div className={`${inventorycss.activityData}`} style={{ overflowX: 'auto', marginTop: '70px'}}>
+                <div className="scrollTable" style={{ minWidth: '100%', maxHeight: '430px'}}>
+                  <table className={`${inventorycss.table}`} style={{ minWidth: '100%' }}>
+                  <thead style={{ position: 'sticky', top: 0 }}>
+                      <tr>
+                        <th>History ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Item Code</th>
+                        <th>Item Name</th>
+                        <th>Date (Time-in)</th>
+                        <th>Date (Time-out)</th>
+                        <th>Notes</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {history.map((item) => (
+                        <tr key={item.history_id}>
+                          <td>{item.history_id}</td>
+                          <td>{item.email.first_name}</td>
+                          <td>{item.email.last_name}</td>
+                          <td>{item.email.email}</td>
+                          <td>{item.email.role.role_name}</td>
+                          <td>{item.item_code.item_code}</td>
+                          <td>{item.item_code.item_name}</td>
+                          <td>{new Date(item.date_in).toLocaleString("en-US", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" })}</td>
+                          <td>{new Date(item.date_out).toLocaleString("en-US", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" })}</td>
+                          <td>{item.notes}</td>
+                          <td>
+                            <div className={inventorycss.category}>
+                              {/* <div className={`${dashboard.box} ${dashboard.edit}`} 
                       onClick={openFormUpdateHistory}>
                       <i className="bx bxs-pencil action" />
                     </div> */}
-                          {/* <div
+                              {/* <div
                       className={`${dashboard.box} ${dashboard.delete}`}
                       onClick={(e) => openFormDeleteHistory(item.history_id)}
                     >
                       <i className="bx bxs-trash action" />
                     </div> */}
-                          <div
-                            className={`${dashboard.box} ${dashboard.delete}`}
-                            onClick={(e) => {
-                              if (userRole === "Editor") {
-                                openFormDeleteHistory(item.history_id);
-                              }
-                            }}
-                            disabled={userRole !== "Editor"}
-                            title={userRole !== "Editor" ? "You need to be an Editor to perform this action." : ""}
-                          >
-                            <i className="bx bxs-trash action" />
-                          </div>
-                        </div>
-                        {/* <div className={dashboard.actions}>
+                              <div
+                                className={`${inventorycss.box} ${inventorycss.delete}`}
+                                onClick={(e) => {
+                                  if (userRole === "Editor") {
+                                    openFormDeleteHistory(item.history_id);
+                                  }
+                                }}
+                                disabled={userRole !== "Editor"}
+                                title={userRole !== "Editor" ? "You need to be an Editor to perform this action." : ""}
+                              >
+                                <i className="bx bxs-trash action" />
+                              </div>
+                            </div>
+                            {/* <div className={dashboard.actions}>
                         <div
                           className={`${dashboard.box} ${dashboard.edit}} onClick={() => handleEdit(item)} > Edit </div> <div className={${dashboard.box} ${dashboard.delete}`}
                           onClick={() => handleDelete(item)}
@@ -447,18 +469,20 @@ function Index() {
                           Delete
                         </div>
                       </div> */}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              
             </div>
           </div>
         </div>
         <div id="myOverlay" className={dashboard.overlay}>
           <div className={dashboard.wrap}>
-            <h2>Change Password</h2>
+            <h2 style={{ fontSize: '2em', textAlign: 'center', padding: 0, marginBottom: 10}}>Change Password</h2>
             <form onSubmit={handleSubmit}>
               <label htmlFor="currentPass">Current Password:</label>
               <input
@@ -504,9 +528,9 @@ function Index() {
         <div id="clearOverlay" className={dashboard.clearOverlay}>
           <div className={dashboard.clearWrap}>
             <h1 id="clearh1">
-              <i className="bx bxs-error icon" /> Warning!{" "}
+              <i className="bx bxs-error" style={{margin: 5 }}/> Warning!{" "}
             </h1>
-            <h2 id="clearh2">
+            <h2 id="deleteh2">
               Performing this action is irreversable, Would you like to clear
               all logs?
             </h2>
@@ -560,9 +584,9 @@ function Index() {
         >
           <div className={dashboard.deleteHistoryWrap}>
             <h1 id="historyh1">
-              <i className="bx bxs-error icon" /> Warning!{" "}
+              <i className="bx bxs-error" style={{margin: 5 }}/> Warning!{" "}
             </h1>
-            <h2 id="historyh2">
+            <h2 id="deleteh2">
               Would you like to delete the selected record?
             </h2>
             <form>
@@ -586,8 +610,8 @@ function Index() {
         </div>
         <div id="generateReportOverlay" className={dashboard.generateReportOverlay}>
           <div className={dashboard.generateReportWrap}>
-            <h2 id="generateh1">Generate Report</h2>
-            <h2 id="generateh2">Select Date</h2>
+            <h2 style={{ fontSize: '2em', textAlign: 'center', padding: 0, marginBottom: 10}}>Generate Report</h2>
+            <h2 style={{ margin: 0, padding: 0, fontSize: 25, textAlign: 'center'}}>Select Date</h2>
             <form>
               <label htmlFor="dateofbirth">From:</label>
               <input
@@ -712,14 +736,13 @@ function burger() {
   const sidebar = body.querySelector("nav");
   const sidebarToggle = body.querySelector(".sidebar-toggle");
 
-  sidebarToggle.addEventListener("click", () => {
-    sidebar.classList.toggle("close");
-    if (sidebar.classList.contains("close")) {
-      localStorage.setItem("status", "close");
-    } else {
-      localStorage.setItem("status", "open");
-    }
-  });
+  sidebar.classList.toggle("close");
+  if (sidebar.classList.contains("close")) {
+    localStorage.setItem("status", "close");
+  }
+  else {
+    localStorage.setItem("status", "open");
+  }
 }
 
 export default Index;

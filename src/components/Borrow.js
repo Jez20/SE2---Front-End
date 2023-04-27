@@ -322,10 +322,6 @@ function Borrow() {
       document.getElementById("myOverlay").style.display ="none";
     }
 
-    function handleItemCategory(event) {
-      setSelectedCategory(event.target.value);
-    }
-
   // Get the category table
   useEffect(() => {
     const returnDomain = require('../common/domainString')
@@ -380,56 +376,57 @@ const filteredItems = selectedCategory === 'Default'
         />
       </Helmet>
       <nav>
-        <div className={borrow.logoName}>
-          <div className={borrow.logoImage}>
-            <img src="images/logo.png" alt="" />
-          </div>
-          <span className={borrow.logo_name}>KLIA Inventory System</span>
-        </div>
-        <div className={borrow.menuItems}>
-          <ul className={borrow.navLinks}>
+      <div className="logo-name">
+      <div className="logo-image">
+        <img src="images/logo.png" alt="" />
+      </div>
+      <span className="logo_name">KLIA Inventory System</span>
+    </div>
+    <div className="menu-items">
+      <ul className={inventory.navLinks}>
             <li>
               <a href="/Index">
                 <i className="bx bxs-dashboard icon" />
-                <span className={borrow.linkName}>Dashboard</span>
+                <span className="link-name">Dashboard</span>
               </a>
             </li>
             <li>
               <a href="/Borrow">
-                <i className="bx bxs-shopping-bags" />
-                <span className={borrow.linkName}>Borrow Items</span>
+                <i className="bx bxs-shopping-bags icon" />
+                <span className="link-name">Borrow Items</span>
               </a>
             </li>
             <li>
               <a href="/Return">
                 <i className="bx bxs-book-content icon" />
-                <span className={borrow.linkName}>Return Items</span>
+                <span className="link-name">Return Items</span>
               </a>
             </li>
             <li>
               <a href="/Inventory">
                 <i className="bx bx-box icon" />
-                <span className={borrow.linkName}>Inventory</span>
+                <span className="link-name">Inventory</span>
               </a>
             </li>
             <li>
               <a href="/Users">
                 <i className="bx bxs-user icon" />
-                <span className={borrow.linkName}>Users</span>
+                <span className="link-name">Users</span>
               </a>
             </li>
             <li>
               <a className="openbtn" onClick={openForm}>
                 <i className="bx bxs-lock-alt icon" />
-                <span className={borrow.linkName}>Change Password</span>
+                <span className="link-name">Change Password</span>
               </a>
             </li>
           </ul>
-          <ul className={borrow.logOutMode}>
+          <ul className="navLinks">
+          <ul className="logout-mode">
             <li>
             <a href="#" onClick={handleLogout}>
                 <i className="bx bxs-log-out icon" />
-                <span className={borrow.linkName}>Logout</span>
+                <span className="link-name">Logout</span>
               </a>
             </li>
             <li className="mode">
@@ -439,20 +436,21 @@ const filteredItems = selectedCategory === 'Default'
               </div>
             </li>
           </ul>
+          </ul>
         </div>
       </nav>
-      <section className={borrow.dashboard}>
-        <div className={borrow.top}>
-          <i className={`${borrow.sidebarToggle} uil uil-bars`} />
-          <div className={borrow.searchBox}>
+      <section className="dashboard">
+          <div className="top">
+              <i className="uil uil-bars sidebar-toggle" onClick={burger}/>
+            <div className="search-box">
             <h1>Borrow Items</h1>
           </div>
         </div>
-        <div className={borrow.dashContent}>
-          <div className={borrow.activity}>
-            <div className={borrow.title}>
+        <div className={inventory.dashContent}>
+          <div className={inventory.activity} style={{marginTop: '100px'}}>
+            <div className={inventory.title}>
               <i className="bx bxs-shopping-bags" />
-              <span className={borrow.text}>Borrow Items</span>
+              <span className={inventory.text}>Borrow Items</span>
             </div>
           </div>
           {/* ROW 1 */}
@@ -487,75 +485,103 @@ const filteredItems = selectedCategory === 'Default'
             <p>Step 2. Select or unselect the items to be borrow or reserve</p>
           </div>
 
-          <select id="categoryFilterDropdown" onChange={handleItemCategory}>
-                      <option value="Default">Item Category Filter/Default</option>
-                      {dynamicCategory}
-                    </select>
-         
-          <button className={`${borrow.check} ${borrow.item}`} onClick={() => checkAll(true)}>
-            <i className="bx bxs-select-multiple" />
-            <a
-              href="javascript:checkall('test','reservableItems',true)"
-              style={{ textDecoration: "none" }}
-            >
-              Select All
-            </a>
-          </button>
-          <button className={`${borrow.delete} ${borrow.item}`} onClick={() => checkAll(false)}>
-            <i className="bx bxs-x-square" />
-            <a
-              href="javascript:checkall('test','reservableItems',false)"
-              style={{ textDecoration: "none" }}
-            >
-              UnSelect All
-            </a>
-          </button>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+  <div style={{ marginBottom: "10px" }}>
+    <select id="categoryFilterDropdown" onChange={handleItemCategory}>
+      <option value="Default">Item Category Filter/Default</option>
+      {dynamicCategory}
+    </select>
+  </div>
 
+  <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: "10px" }}>
+    <button className={`${borrow.check} ${borrow.item}`} onClick={() => checkAll(true)}>
+      <i className="bx bxs-select-multiple icon" />
+      <a
+        href="javascript:checkall('test','reservableItems',true)"
+        style={{ textDecoration: "none" }}
+      >
+        Select All
+      </a>
+    </button>
+    <button className={`${borrow.delete} ${borrow.item}`} onClick={() => checkAll(false)}>
+      <i className="bx bxs-x-square icon" />
+      <a
+        href="javascript:checkall('test','reservableItems',false)"
+        style={{ textDecoration: "none" }}
+      >
+        UnSelect All
+      </a>
+    </button>
+  </div>
 
-          <tbody>
-          <div style={{ height: "365px", overflow: "auto" }}>        
-    <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
-      {filteredItems.map(listeditem => (
-        <div className={`${borrow.card} w3-hover-shadow`} style={{ margin: "10px" }}>
-          <div className={borrow.cardDivider}>
-            <h2>{listeditem.item_name}</h2>
-            <h3>ITEM-{listeditem.item_code}</h3>
-            <h2>{listeditem.category.category_name}</h2>
-            <input
-              id={`${listeditem.item_code}`}
-              input name="reservableItems"
-              className={borrow.radio}
-              type="checkbox"
-              onClick={() => {
-                const selectedIndex = selectedItems.indexOf(listeditem.item_code);
-                if (selectedIndex === -1) {
-                  setSelectedItems([...selectedItems, listeditem.item_code]);
-                } else {
-                  const newSelectedItems = [...selectedItems];
-                  newSelectedItems.splice(selectedIndex, 1);
-                  setSelectedItems(newSelectedItems);
-                }
-                console.log(selectedItems)
-              }}
-            />
-          </div>
-          <div className="card-section" style={{ width: 300 }}>
-            {/* <div className={borrow.category}>
-              <button className={`${borrow.reset} ${borrow.category}`} onClick={openFormReserve}>
-                <i className="bx bxs-file" />
-                Reserve
-              </button>
-              <button className={`${borrow.update} ${borrow.category}`} onClick={openFormBorrow}>
-                <i className="bx bxs-backpack" />
-                Borrow Now
-              </button>
-            </div> */}
-          </div>
+  <div style={{height: "440px", overflowY: "auto", overflowX: "hidden", maxWidth: "calc(100vw - 20px)" }}>
+  <div style={{display: "flex", flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-start", margin: "-10px" }}>
+    {filteredItems.map((listeditem, index) => (
+      <div
+        key={index}
+        className={`${borrow.card} w3-hover-shadow`}
+        style={{ margin: "10px", flex: "0 0 calc(25% - 20px)", cursor: "pointer", minHeight: "200px" }} // added minHeight property
+        onClick={() => {
+          const selectedIndex = selectedItems.indexOf(listeditem.item_code);
+          if (selectedIndex === -1) {
+            setSelectedItems([...selectedItems, listeditem.item_code]);
+          } else {
+            const newSelectedItems = [...selectedItems];
+            newSelectedItems.splice(selectedIndex, 1);
+            setSelectedItems(newSelectedItems);
+          }
+          console.log(selectedItems)
+        }}
+      >
+<div className={borrow.cardDivider}>
+  <div className={borrow.cardText}>
+    <h2>{listeditem.item_name}</h2>
+    <h3>ITEM-{listeditem.item_code}</h3>
+    <h2>{listeditem.category.category_name}</h2>
+  </div>
+  <input
+    id={`${listeditem.item_code}`}
+    input name="reservableItems"
+    className={borrow.radio}
+    type="checkbox"
+    checked={selectedItems.includes(listeditem.item_code)}
+    onChange={() => {
+      const selectedIndex = selectedItems.indexOf(listeditem.item_code);
+      if (selectedIndex === -1) {
+        setSelectedItems([...selectedItems, listeditem.item_code]);
+      } else {
+        const newSelectedItems = [...selectedItems];
+        newSelectedItems.splice(selectedIndex, 1);
+        setSelectedItems(newSelectedItems);
+      }
+      console.log(selectedItems)
+    }}
+  />
+</div>
+
+        <div className="card-section" style={{ width: 300 }}>
+          {/* <div className={borrow.category}>
+            <button className={`${borrow.reset} ${borrow.category}`} onClick={openFormReserve}>
+              <i className="bx bxs-file" />
+              Reserve
+            </button>
+            <button className={`${borrow.update} ${borrow.category}`} onClick={openFormBorrow}>
+              <i className="bx bxs-backpack" />
+              Borrow Now
+            </button>
+          </div> */}
         </div>
-      ))}
-    </div>
-    </div>
-  </tbody>
+      </div>
+    ))}
+  </div>
+</div>
+
+
+
+
+
+
+  </div>
           <hr />
           <div className={borrow.inventory}>
             <p>Step 3. Perform an action</p>
@@ -579,7 +605,7 @@ const filteredItems = selectedCategory === 'Default'
                 // window.location.href = url;
               }}
             >
-              <i className="bx bxs-check-circle" />
+              <i className="bx bxs-receipt icon" />
               Reserve Selected Items
             </button>
             <button
@@ -600,7 +626,7 @@ const filteredItems = selectedCategory === 'Default'
                 // window.location.href = url;
               }}
             >
-              <i className="bx bxs-check-circle" />
+              <i className="bx bxs-check-circle icon" />
               Borrow Selected Items
             </button>
           </div>
@@ -615,7 +641,7 @@ const filteredItems = selectedCategory === 'Default'
                 window.location.href = url;
               }}
             >
-              <i className="bx bxs-check-circle" />
+              <i className="bx bxs-backpack icon" />
               Borrow Reservation
             </button>
 
@@ -623,7 +649,7 @@ const filteredItems = selectedCategory === 'Default'
       </section>
       <div id="myOverlay" className={borrow.overlay}>
         <div className={borrow.wrap}>
-        <h2>Change Password</h2>
+        <h2 style={{ fontSize: '2em', textAlign: 'center', padding: 0, marginBottom: 10}}>Change Password</h2>
             <form onSubmit={handleSubmit}>
               <label htmlFor="currentPass">Current Password:</label>
               <input
@@ -669,11 +695,11 @@ const filteredItems = selectedCategory === 'Default'
       <div id="reserveOverlay" className={borrow.reserveOverlay}>
         <div className={borrow.reserveWrap}>
           <h1 id="reserveh1">
-            <i className="bx bxs-info-circle" />
+            <i className="bx bxs-info-circle" style={{margin: 5 }}/>
             List of Items to be Reserved
           </h1>
           {/* <h2 id="reserveh2">Reserve Selected Item/s</h2> */}
-          <div className={borrow.backpack}>
+          <div className={borrow.backpack} style={{ border: '3px solid #FFCC66', borderRadius: 10}}>
             <ol id="backpackList" className={borrow.backpacklist}>
               <li>Ball</li>
               <li>Projector</li>
@@ -711,10 +737,10 @@ const filteredItems = selectedCategory === 'Default'
         <div className={borrow.borrowWrap}>
           {/* <h2 id="borrowh2">List of items to be borrowed</h2> */}
           <h1 id="reserveh1">
-            <i className="bx bxs-info-circle" />
+            <i className="bx bxs-info-circle" style={{margin: 5 }}/>
             List of Items to be Borrowed
           </h1>
-          <div className={borrow.backpack}>
+          <div className={borrow.backpack} style={{ border: '3px solid #FFCC66', borderRadius: 10}}>
             <ol id="backpackList2" className={borrow.backpacklist}>
               <li>Ball</li>
               <li>Projector</li>
@@ -830,6 +856,21 @@ function openFormReserve() {
 
 function openFormBorrow() {
   document.getElementById("borrowOverlay").style.display = "block";
+}
+
+function burger() {
+  const body = document.querySelector("body"),
+     modeToggle = body.querySelector(".mode-toggle");
+  const sidebar = body.querySelector("nav");
+  const sidebarToggle = body.querySelector(".sidebar-toggle");
+
+  sidebar.classList.toggle("close");
+  if(sidebar.classList.contains("close")){
+      localStorage.setItem("status", "close");
+  }
+  else {
+      localStorage.setItem("status", "open");
+  }
 }
 
 export default Borrow

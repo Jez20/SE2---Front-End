@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import inventory from '../css/inventory.module.css';
 import userreserve from '../css/userreserve.module.css'
+import borrow from '../css/borrow.module.css'
 import '../css/overlay.css'
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -19,10 +21,13 @@ import axios from "axios";
 function Userreserve() {
   const [items, setItem] = useState([])
   const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('Default'); // contains the category ID
+  const [dynamicCategory, setDynamicCategory] = useState([]);
 
   // hook
   useEffect(() => {
     refreshInventoryTable();
+    refreshCategoryTable();
   }, []);
 
 
@@ -64,6 +69,7 @@ function Userreserve() {
     for (let x of selectedItems) {
       const dataPostObj = {
         item_code: x,
+        email: 'User@gmail.com', // HARDCODED USER EMAIL FOR TESTING PURPOSES!!!! DELETE AND UPDATE WHEN B.END IS FIXED!
         claim: 0 // num
       }
 
@@ -151,10 +157,59 @@ function Userreserve() {
       });
   }
 
-  function handleCancel() {
-    // hide the overlay
-    document.getElementById("myOverlay").style.display = "none";
-  }
+        // Get the category table
+        const refreshCategoryTable = () => {
+          const returnDomain = require('../common/domainString')
+          const selectedDomain = returnDomain();
+          axios.get(selectedDomain + 'category/')
+            .then(
+              response => {
+                const data = response.data;
+                const categoryHashMap = {};
+      
+                data.forEach(category => {
+                  categoryHashMap[category.category_id] = category.category_name;
+                });
+                const dynamicCategoryOptions = Object.entries(categoryHashMap).map(([id, name]) => (
+                  <option key={id} value={id}>{name}</option>
+                ));
+                setDynamicCategory(dynamicCategoryOptions);
+              })
+            .catch(error => {
+              toast.error("ERROR: Failed to refresh Category table");
+              console.log(error);
+            });
+        }
+      
+          //handlers
+          function handleCancel() {
+            // hide the overlay
+            document.getElementById("myOverlay").style.display ="none";
+          }
+      
+        // Get the category table
+        useEffect(() => {
+          const returnDomain = require('../common/domainString')
+          const selectedDomain = returnDomain();
+          axios.get(selectedDomain + 'category/')
+            .then(
+              response => {
+                const data = response.data;
+                const categoryHashMap = {};
+      
+                data.forEach(category => {
+                  categoryHashMap[category.category_id] = category.category_name;
+                });
+                const dynamicCategoryOptions = Object.entries(categoryHashMap).map(([id, name]) => (
+                  <option key={id} value={id}>{name}</option>
+                ));
+                setDynamicCategory(dynamicCategoryOptions);
+              })
+            .catch(error => {
+              toast.error("ERROR: Failed to refresh Category table");
+              console.log(error);
+            });
+        }, []);
 
   function openFormReserveSelectedItems() {
     const checkboxes = document.querySelectorAll('input[name="reservableItems"]:checked');
@@ -195,6 +250,15 @@ function Userreserve() {
     document.getElementById("userReserveOverlay").style.display = "block";
   }
 
+  function handleItemCategory(event) {
+    setSelectedCategory(event.target.value);
+  }
+
+  // Filter items based on selected category
+const filteredItems = selectedCategory === 'Default'
+? items
+: items.filter(item => item.category.category_id === Number(selectedCategory));
+
   return (
     <div>
       <Helmet>
@@ -212,61 +276,63 @@ function Userreserve() {
         />
       </Helmet>
       <nav>
-        <div className={userreserve.logoName}>
-          <div className={userreserve.logoImage}>
+        <div className="logo-name">
+          <div className="logo-image">
             <img src="images/logo.png" alt="" />
           </div>
-          <span className={userreserve.logo_name}>KLIA Inventory System</span>
+          <span className="logo_name">KLIA Inventory System</span>
         </div>
-        <div className={userreserve.menuItems}>
-          <ul className={userreserve.navLinks}>
+        <div className="menu-items">
+          <ul className="navLinks">
             <li>
               <a href="/Userdashboard">
                 <i className="bx bxs-dashboard icon" />
-                <span className={userreserve.linkName}>Dashboard</span>
+                <span className="link-name">Dashboard</span>
               </a>
             </li>
             <li>
               <a href="/Userreserve">
-                <i className="bx bxs-shopping-bags" />
-                <span className={userreserve.linkName}>Reserve Items</span>
+                <i className="bx bxs-shopping-bags icon" />
+                <span className="link-name">Reserve Items</span>
               </a>
             </li>
             <li>
               <a className="openbtn" onClick={openForm}>
                 <i className="bx bxs-lock-alt icon" />
-                <span className={userreserve.linkName}>Change Password</span>
+                <span className="link-name">Change Password</span>
               </a>
             </li>
           </ul>
-          <ul className={userreserve.logoutMode}>
-            <li>
-              <a href="#" onClick={handleLogout}>
-                <i className="bx bxs-log-out icon" />
-                <span className={userreserve.linkName}>Logout</span>
-              </a>
-            </li>
-            <li className="mode">
-              <a href="#">
-              </a>
-              <div className="mode-toggle">
-              </div>
-            </li>
+          <ul className="navLinks">
+            <ul className="logout-mode">
+              <li>
+                <a href="#" onClick={handleLogout}>
+                  <i className="bx bxs-log-out icon" />
+                  <span className="link-name">Logout</span>
+                </a>
+              </li>
+              <li className="mode">
+                <a href="#">
+                </a>
+                <div className="mode-toggle">
+                </div>
+              </li>
+            </ul>
           </ul>
         </div>
       </nav>
-      <section className={userreserve.dashboard}>
-        <div className={userreserve.top}>
-          <i className={`${userreserve.sidebarToggle} uil uil-bars`} onClick={burger} />
-          <div className={userreserve.searchBox}>
+      <section className="dashboard">
+        <div className="top">
+          <i className="uil uil-bars sidebar-toggle" onClick={burger} />
+          <div className="search-box">
             <h1>Reserve Items</h1>
           </div>
         </div>
-        <div className={userreserve.dashContent}>
-          <div className={userreserve.activity}>
-            <div className={userreserve.title}>
+        <div className={inventory.dashContent}>
+          <div className={inventory.activity} style={{marginTop: '100px'}}>
+            <div className={inventory.title}>
               <i className="bx bxs-shopping-bags" />
-              <span className={userreserve.text}>Reserve Items</span>
+              <span className={inventory.text}>Reserve Items</span>
             </div>
           </div>
           {/* <div className={userreserve.inventory}>
@@ -281,63 +347,100 @@ function Userreserve() {
           <div className={userreserve.inventory}>
             <p>Step 1. Select or unselect the items to be borrow or reserve</p>
           </div>
-          <button className={`${userreserve.check} ${userreserve.item}`} onClick={() => checkAll(true)}>
-            <i className="bx bxs-select-multiple" />
-            <a
-              href="javascript:checkall('test','reservableItems',true)"
-              style={{ textDecoration: "none" }}
-            >
-              Select All
-            </a>
-          </button>
-          <button className={`${userreserve.delete} ${userreserve.item}`} onClick={() => checkAll(false)}>
-            <i className="bx bxs-x-square" />
-            <a
-              href="javascript:checkall('test','reservableItems',false)"
-              style={{ textDecoration: "none" }}
-            >
-              UnSelect All
-            </a>
-          </button>
-          <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
-            {
 
-              items.map(
-                listeditem => (
+          <div style={{ display: "flex", flexDirection: "column" }}>
+  <div style={{ marginBottom: "10px" }}>
+    <select id="categoryFilterDropdown" onChange={handleItemCategory}>
+      <option value="Default">Item Category Filter/Default</option>
+      {dynamicCategory}
+    </select>
+  </div>
 
-                  <div className={`${userreserve.card} w3-hover-shadow`} style={{ margin: "10px" }}>
-                    <div className={userreserve.cardDivider}>
-                      <h2>{listeditem.item_name}</h2>
-                      <h3>ITEM-{listeditem.item_code}</h3>
-                      <input id={`${listeditem.item_code}`}
-                        input name="reservableItems"
-                        className={userreserve.radio}
-                        type="checkbox"
-                        onClick={() => {
-                          const selectedIndex = selectedItems.indexOf(listeditem.item_code);
-                          if (selectedIndex === -1) {
-                            setSelectedItems([...selectedItems, listeditem.item_code]);
-
-                          } else {
-                            const newSelectedItems = [...selectedItems];
-                            newSelectedItems.splice(selectedIndex, 1);
-                            setSelectedItems(newSelectedItems);
-                          }
-
-                          console.log(selectedItems)
-                        }}
-                      />
-                    </div>
-                    <div className="card-section">
-                    </div>
-                  </div>
-
-                )
-
-              )
-
-            }
+          <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: "10px" }}>
+            <button className={`${userreserve.check} ${userreserve.item}`} onClick={() => checkAll(true)}>
+              <i className="bx bxs-select-multiple icon" />
+              <a
+                href="javascript:checkall('test','reservableItems',true)"
+                style={{ textDecoration: "none" }}
+              >
+                Select All
+              </a>
+            </button>
+            <button className={`${userreserve.delete} ${userreserve.item}`} onClick={() => checkAll(false)}>
+              <i className="bx bxs-x-square icon" />
+              <a
+                href="javascript:checkall('test','reservableItems',false)"
+                style={{ textDecoration: "none" }}
+              >
+                UnSelect All
+              </a>
+            </button>
           </div>
+
+          <div style={{ height: "440px", overflowY: "auto", overflowX: "hidden", maxWidth: "calc(100vw - 20px)" }}>
+  <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-start", margin: "-10px" }}>
+    {filteredItems.map((listeditem, index) => (
+      <div
+        key={index}
+        className={`${borrow.card} w3-hover-shadow`}
+        style={{ margin: "10px", flex: "0 0 calc(25% - 20px)", cursor: "pointer", minHeight: "200px" }} // added minHeight property
+        onClick={() => {
+          const selectedIndex = selectedItems.indexOf(listeditem.item_code);
+          if (selectedIndex === -1) {
+            setSelectedItems([...selectedItems, listeditem.item_code]);
+          } else {
+            const newSelectedItems = [...selectedItems];
+            newSelectedItems.splice(selectedIndex, 1);
+            setSelectedItems(newSelectedItems);
+          }
+          console.log(selectedItems)
+        }}
+      >
+        <div className={borrow.cardDivider}>
+        <div className={borrow.cardText}>
+          <h2>{listeditem.item_name}</h2>
+          <h3>ITEM-{listeditem.item_code}</h3>
+          <h2>{listeditem.category.category_name}</h2>
+          </div>
+          <input
+            id={`${listeditem.item_code}`}
+            input name="reservableItems"
+            className={borrow.radio}
+            type="checkbox"
+            checked={selectedItems.includes(listeditem.item_code)}
+            onChange={() => {
+              const selectedIndex = selectedItems.indexOf(listeditem.item_code);
+              if (selectedIndex === -1) {
+                setSelectedItems([...selectedItems, listeditem.item_code]);
+              } else {
+                const newSelectedItems = [...selectedItems];
+                newSelectedItems.splice(selectedIndex, 1);
+                setSelectedItems(newSelectedItems);
+              }
+              console.log(selectedItems)
+            }}
+          />
+        </div>
+        <div className="card-section" style={{ width: 300 }}>
+          {/* <div className={borrow.category}>
+            <button className={`${borrow.reset} ${borrow.category}`} onClick={openFormReserve}>
+              <i className="bx bxs-file" />
+              Reserve
+            </button>
+            <button className={`${borrow.update} ${borrow.category}`} onClick={openFormBorrow}>
+              <i className="bx bxs-backpack" />
+              Borrow Now
+            </button>
+          </div> */}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+
+</div>
+
           <hr />
           <div className={userreserve.inventory}>
             <p>Step 2. Perform an action</p>
@@ -371,14 +474,14 @@ function Userreserve() {
                 // const url = `/Reservation?${queryParams.toString()}`;
                 // window.location.href = url;
               }}
-            > <i className="bx bxs-check-circle" />
+            > <i className="bx bxs-receipt icon" />
               Reserve Selected Items</button>
           </div>
         </div>
       </section>
       <div id="myOverlay" className={userreserve.overlay}>
         <div className={userreserve.wrap}>
-          <h2>Change Password</h2>
+          <h2 style={{marginTop: -5, fontSize: '2em', textAlign: 'center', padding: 0}}>Change Password</h2>
           <form onSubmit={handleSubmit}>
             <label htmlFor="currentPass">Current Password:</label>
             <input
@@ -428,11 +531,11 @@ function Userreserve() {
 
         <div class={userreserve.userReserveWrap}>
           <h1 id="reserveh1">
-            <i className="bx bxs-info-circle" />
+            <i className="bx bxs-info-circle" style={{margin: 5 }}/>
             List of Items to be Reserved
           </h1>
           {/* <h2 id="reserveh2">Reserve Selected Item/s</h2> */}
-          <div className={userreserve.backpack}>
+          <div className={userreserve.userbackpack} style={{ border: '3px solid #FFCC66', borderRadius: 10}}>
             <ol id="userbackpackList" className={userreserve.userbackpacklist}>
               <li>Ball</li>
               <li>Projector</li>
@@ -531,17 +634,15 @@ function burger() {
   const body = document.querySelector("body"),
     modeToggle = body.querySelector(".mode-toggle");
   const sidebar = body.querySelector("nav");
-  const sidebarToggle = body.querySelector(`.${userreserve.sidebarToggle}`);
+  const sidebarToggle = body.querySelector(".sidebar-toggle");
 
-  sidebarToggle.addEventListener("click", () => {
-    sidebar.classList.toggle("close");
-    if (sidebar.classList.contains("close")) {
-      localStorage.setItem("status", "close");
-    }
-    else {
-      localStorage.setItem("status", "open");
-    }
-  })
+  sidebar.classList.toggle("close");
+  if (sidebar.classList.contains("close")) {
+    localStorage.setItem("status", "close");
+  }
+  else {
+    localStorage.setItem("status", "open");
+  }
 }
 
 export default Userreserve
