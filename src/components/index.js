@@ -434,7 +434,12 @@ function Index() {
                           <td>{item.item_code.item_code}</td>
                           <td>{item.item_code.item_name}</td>
                           <td>{new Date(item.date_in).toLocaleString("en-US", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" })}</td>
-                          <td>{new Date(item.date_out).toLocaleString("en-US", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" })}</td>
+                          <td>
+                              {item.date_out ? 
+                                new Date(item.date_out).toLocaleString("en-US", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" })
+                               : 
+                                ""}
+                            </td>
                           <td>{item.notes}</td>
                           <td>
                             <div className={inventorycss.category}>
