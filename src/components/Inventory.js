@@ -161,7 +161,7 @@ function Inventory() {
       .then(
         response => {
           if (response.data.length === 0){
-            toast.error("ERROR: There are no current items in the table", {
+            toast.info("There are no current items in the table", {
             });
           } else {
             setItem(response.data);
@@ -169,7 +169,7 @@ function Inventory() {
           setItem(response.data);
         })
       .catch(error => {
-        toast.error("ERROR: Failed to generate Inventory table");
+        toast.error("Failed to generate Inventory table");
         console.log(error);
       });
     } else if (conditionFilter === '' && selectedCategory !== 'Default'){
@@ -177,7 +177,7 @@ function Inventory() {
       .then(
         response => {
           if (response.data.length === 0){
-            toast.error("ERROR: There are no current items in the table", {
+            toast.info("There are no current items in the table", {
         });
           } else {
             setItem(response.data);
@@ -193,7 +193,7 @@ function Inventory() {
       .then(
         response => {
           if (response.data.length === 0){
-            toast.error("ERROR: There are no current items in the table", {
+            toast.info("There are no current items in the table", {
         });
           } else {
             setItem(response.data);
@@ -209,7 +209,7 @@ function Inventory() {
       .then(
         response => {
           if (response.data.length === 0){
-            toast.error("ERROR: There are no current items in the table", {
+            toast.info("There are no current items in the table", {
         });
           } else {
             setItem(response.data);
@@ -231,7 +231,7 @@ function Inventory() {
       .then(
         response => {
           if (response.data.length === 0){
-            toast.error("ERROR: There are no current items in the table", {
+            toast.info("There are no current items in the table", {
           autoClose: false // set autoClose to false
         }); // @jez - put something here pag wala items sa table
           } else {
