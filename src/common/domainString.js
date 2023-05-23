@@ -1,4 +1,4 @@
 function returndomainString() {
-    return "http://127.0.0.1:8000/api/"
+    return process.env.DOMAINURL
 }
 module.exports = returndomainString;
